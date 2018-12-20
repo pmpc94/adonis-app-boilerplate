@@ -15,7 +15,7 @@ const Factory = use('Factory')
 
 class OrderSeeder {
   async run () {
-    const order = await Factory.model('App/Models/Order').make();
+    const order = await Factory.model('App/Models/Order').create(50);
     const orderProduct = await Factory.model('App/Models/OrderProduct').make();
 
     await order.orderProducts().save(orderProduct);

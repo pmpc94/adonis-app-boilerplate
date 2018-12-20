@@ -9,7 +9,7 @@ class Product extends Model {
   }
 
   orderProducts () {
-    return this.belongsTo('App/Models/OrderProduct')
+    return this.hasMany('App/Models/OrderProduct')
   }
 
   productImages () {
