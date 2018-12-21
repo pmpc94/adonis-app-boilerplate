@@ -52,25 +52,23 @@ Factory.blueprint('App/Models/Order', (faker) => {
   }
 });
 
-Factory.blueprint('App/Models/OrderProduct', async (faker) => {
-  var orderId = await helper.getRandomOrderId();
-  var productId = await helper.getRandomProductId();
+Factory.blueprint('App/Models/OrderProduct', async (faker, id, data) => {
   var quantity = faker.integer({ min: 1, max: 5 });
-  var price = await helper.getProductPrice(productId);
+  var product = await helper.getRandomProduct(data.id, quantity);
   return {
-    product_name: faker.name(),
-    price: await helper.updateOrderTotalPrice(orderId, quantity, price),
+    product_name: product[0][0].name,
+    price: product[0][0].price,
     quantity: quantity,
-    order_id: orderId,
-    product_id: productId
+    order_id: data.id,
+    product_id: product[0][0].id
   }
 });
 
 
-Factory.blueprint('App/Models/ProductImage', (faker) => {
+Factory.blueprint('App/Models/ProductImage', (faker, id, data) => {
   return {
     image_path: faker.url(),
-    thumbnail: faker.bool(),
-    product_id: helper.getRandomProductId()
+    thumbnail: 1,
+    product_id: data.id
   }
 });

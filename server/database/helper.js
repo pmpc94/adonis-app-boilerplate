@@ -1,10 +1,8 @@
 const User = use('App/Models/User');
 const Order = use('App/Models/Order');
+const OrderProduct = use('App/Models/OrderProduct');
 const Product = use('App/Models/Product');
-
-function generateRandomNumber(array) {
-  return Math.floor(Math.random() * array.rows.length) + 1; //+1 because because user_id must be greater than 0
-}
+const Database = use('Database')
 
 function getRandomElement(array) {
   var randomNumber = Math.floor(Math.random() * array.length);
@@ -12,45 +10,37 @@ function getRandomElement(array) {
 }
 
 async function getRandomCustomerId() {
-    var customers = await User.query().where('role', 'customer').fetch();
-    return generateRandomNumber(customers);
+    var customer = await Database.raw('select id from users where role = "customer" order by rand() limit 1')
+    var randomCustomerId = customer[0][0].id;
+    return randomCustomerId;
 }
 
 async function getRandomVendorId() {
-    var vendors = await User.query().where('role', 'vendor').fetch();
-    return generateRandomNumber(vendors);
+    var vendor = await Database.raw('select id from users where role = "vendor" order by rand() limit 1')
+    var randomVendorId = vendor[0][0].id;
+    return randomVendorId;
 }
 
 async function getRandomOrderId() {
-    var orders = await Order.query().select().fetch();
-    return generateRandomNumber(orders);
+    var order = await Database.raw('select id from orders order by rand() limit 1')
+    var orderId = order[0][0].id;
+    return orderId;
 }
 
-async function getRandomProductId() {
-    var products = await Product.query().select().fetch();
-    return generateRandomNumber(products);
-}
-
-async function updateOrderTotalPrice(orderId, quantity, price) {
-    var orderObject = await Order.query().where('id', orderId).fetch();
-    var total_price = orderObject.rows[0].total_price;
-    total_price = total_price + price;
-    await Order.query().where('id', orderId).merge({ total_price });
-    return price * quantity;
-}
-
-async function getProductPrice(product_id) {
-  var productPrice = await Product.query().where('id', product_id).fetch();
-  return productPrice.rows[0].price;
+async function getRandomProduct(orderId, quantity) {
+    var product = await Database.raw('select * from products order by rand() limit 1');
+    var order = await Order.query().where('id', orderId).select('total_price').fetch();
+    console.log(order);
+    var total_price = order.rows[0].total_price;
+    total_price += quantity * product[0][0].price;
+    await Order.query().where('id', orderId).update({ total_price });
+    return product;
 }
 
 module.exports = {
-  generateRandomNumber,
   getRandomElement,
   getRandomCustomerId,
   getRandomVendorId,
   getRandomOrderId,
-  getRandomProductId,
-  updateOrderTotalPrice,
-  getProductPrice
+  getRandomProduct
 }

@@ -15,7 +15,7 @@ const Factory = use('Factory')
 
 class OrderSeeder {
   async run () {
-      const order = await Factory.model('App/Models/Order').createMany(50);
+       await Factory.model('App/Models/Order').createMany(50);
   }
 }
 

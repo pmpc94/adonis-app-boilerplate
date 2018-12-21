@@ -15,7 +15,19 @@ const Factory = use('Factory')
 
 class ProductImageSeeder {
   async run () {
-    const productImage = await Factory.model('App/Models/ProductImage').createMany(200);
+    //make sure all products have at least one or more images associated
+    for(let i=1; i<=200; i++) {
+      await Factory.model('App/Models/ProductImage').create(
+      {
+        id: i
+      });
+    }
+    for(let i=1; i<=50; i++) {
+      await Factory.model('App/Models/ProductImage').create(
+      {
+        id: (Math.floor(Math.random() * 200) + 1)
+      });
+    }
   }
 }
 

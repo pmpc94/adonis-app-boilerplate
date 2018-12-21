@@ -15,7 +15,19 @@ const Factory = use('Factory')
 
 class OrdersProductsSeeder {
   async run () {
-      const orderProduct = await Factory.model('App/Models/OrderProduct').createMany(50);
+    //make sure all orders have at least one or more products associated
+    for(let i=1; i<=50; i++) {
+      await Factory.model('App/Models/OrderProduct').create(
+      {
+        id: i
+      });
+    }
+    for(let i=1; i<=50; i++) {
+      await Factory.model('App/Models/OrderProduct').create(
+      {
+        id: (Math.floor(Math.random() * 50) + 1)
+      });
+    }
   }
 }
 

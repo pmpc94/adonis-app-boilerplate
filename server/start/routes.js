@@ -19,19 +19,20 @@ const Route = use('Route')
 Route.group(() => {
 //AUTHENTICATION
   Route.post('login', 'UserController.login');
-  Route.post('resetPassword', 'UserController.reset')
+  Route.post('resetPassword', 'UserController.resetPassword');
 //ORDERS
   Route.get('orders', 'OrderController.index').middleware('auth');
-  Route.get('orders/:id', 'OrderController.index').middleware('auth');
+  Route.get('orders/:id', 'OrderController.show').middleware('auth');
   Route.patch('orders/:id', 'OrderController.update').middleware('auth');
 //PRODUCTS
   Route.get('products', 'ProductController.index').middleware('auth');
-  Route.get('products/:id', 'ProductController.index').middleware('auth');
-  Route.post('products', 'ProductController.create').middleware('auth');
+  Route.get('products/:id', 'ProductController.show').middleware('auth');
+  Route.post('products', 'ProductController.store').middleware('auth');
   Route.delete('products/:id', 'ProductController.destroy').middleware('auth');
   Route.patch('products/:id', 'ProductController.update').middleware('auth');
 }).prefix('auth');
 
 Route.group(() => {
-  Route.post('orders', 'OrderController.create');
+  Route.post('orders', 'OrderController.store').middleware('guest');
+  Route.get('products', 'ProductController.index').middleware('guest');
 }).prefix('customer')

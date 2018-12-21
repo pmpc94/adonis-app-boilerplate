@@ -8,8 +8,8 @@ class UserController {
     return token;
   }
 
-  async reset({ request }) {
-    
+  async resetPassword({ request }) {
+
   }
 }
 
