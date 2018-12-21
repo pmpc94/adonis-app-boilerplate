@@ -14,15 +14,11 @@
 /** @type {import('@adonisjs/lucid/src/Factory')} */
 const Factory = use('Factory');
 const Hash = use('Hash');
+const helper = require('./helper');
 
 var roleArray = ['customer', 'vendor'];
-var categoryArray = ['Terrestrial', 'Giant', 'Dwarf'];
+var categoryArray = ['terrestrial', 'giant', 'dwarf'];
 var statusArray = ['created', 'paid', 'canceled'];
-
-function generateRandomElement(array) {
-  var randomNumber = Math.floor(Math.random() * array.length);
-  return array[randomNumber];
-}
 
   Factory.blueprint('App/Models/User', async (faker) => {
   return {
@@ -30,7 +26,7 @@ function generateRandomElement(array) {
     lastName: faker.last(),
     email: faker.email(),
     password: await Hash.make(faker.password()),
-    role: generateRandomElement(roleArray)
+    role: helper.getRandomElement(roleArray)
   }
 });
 
@@ -38,18 +34,9 @@ Factory.blueprint('App/Models/Product', (faker) => {
   return {
     name: faker.name(),
     description: faker.sentence(),
-    category: generateRandomElement(categoryArray),
-    price: faker.floating({ min:0, max: 100}),
-    user_id: async () => {
-      return (await Factory.model('App/Models/User').create()).id
-    }
-  }
-});
-
-Factory.blueprint('App/Models/ProductImage', (faker) => {
-  return {
-    image_path: faker.url(),
-    thumbnail: faker.bool()
+    category: helper.getRandomElement(categoryArray),
+    price: faker.floating({ min:1, max: 50}),
+    user_id: helper.getRandomVendorId()
   }
 });
 
@@ -59,18 +46,31 @@ Factory.blueprint('App/Models/Order', (faker) => {
     last_name: faker.last(),
     address1: faker.address(),
     address2: faker.address(),
-    total_price: faker.floating({ min: 0, max: 100 }),
-    status: generateRandomElement(statusArray),
-    customer_id: async () => {
-      return (await Factory.model('App/Models/User').create()).id
-    }
+    total_price: 0,
+    status: helper.getRandomElement(statusArray),
+    customer_id: helper.getRandomCustomerId()
   }
 });
 
-Factory.blueprint('App/Models/OrderProduct', (faker) => {
+Factory.blueprint('App/Models/OrderProduct', async (faker) => {
+  var orderId = await helper.getRandomOrderId();
+  var productId = await helper.getRandomProductId();
+  var quantity = faker.integer({ min: 1, max: 5 });
+  var price = await helper.getProductPrice(productId);
   return {
     product_name: faker.name(),
-    price: faker.floating({ min:0, max: 100 }),
-    quantity: faker.integer({ min: 0, max: 20 })
+    price: await helper.updateOrderTotalPrice(orderId, quantity, price),
+    quantity: quantity,
+    order_id: orderId,
+    product_id: productId
+  }
+});
+
+
+Factory.blueprint('App/Models/ProductImage', (faker) => {
+  return {
+    image_path: faker.url(),
+    thumbnail: faker.bool(),
+    product_id: helper.getRandomProductId()
   }
 });
