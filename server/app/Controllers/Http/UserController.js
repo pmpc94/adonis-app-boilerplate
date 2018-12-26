@@ -1,7 +1,7 @@
 'use strict'
 
 const User = use('App/Models/User');
-const ElasticEmail = use('App/External/APIs/ElasticEmail');
+const Mail = use('Mail');
 
 class UserController {
 
@@ -14,12 +14,26 @@ class UserController {
   async resetPassword({ request, response }) {
     const { email } = request.all();
     const user = await User.findBy('email', email);
-    const emailParams = ElasticEmail.emailParams;
-    emailParams["to"] = user.email;
+
     if (!user) {
       return response.status(404).json({data: 'User does not exist'})
     }
-    return ElasticEmail.sendEmail(emailParams);
+
+    await Mail.send('emails.welcome', {}, (message) => {
+      message.from('pedro.carolina@polygon.pt')
+      message.to(email)
+    });
+
+    return response.status(200).json(user);
+  }
+
+  async updatePassword({ request, response }) {
+    const { email, password } = request.all();
+    const user = await User.findBy('email', email);
+    console.log(user);
+    user.merge(request.only('password'));
+    await user.save();
+    return response.status(200).json(user);
   }
 }
 

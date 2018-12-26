@@ -53,7 +53,7 @@ class ProductController {
     const user = await auth.getUser();
     const { id } = params;
     const product = await Product.find(id);
-    order.merge(request.all());
+    product.merge(request.all());
     await product.save();
     return response.status(200).json(product);
   }

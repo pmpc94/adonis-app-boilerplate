@@ -17,24 +17,25 @@
 const Route = use('Route')
 
 Route.group(() => {
-//ORDERS
+  //CUSTOMERS
+  Route.post('orders', 'OrderController.store').middleware('guest');
+  Route.get('products', 'ProductController.index').middleware('guest');
+}).prefix('customer');
+
+Route.group(() => {
+  //VENDORS
+  Route.post('login', 'UserController.login');
+  Route.post('resetPassword', 'UserController.resetPassword');
+  Route.post('updatePassword', 'UserController.updatePassword');
+
+  //ORDERS
   Route.get('orders', 'OrderController.index').middleware('auth');
   Route.get('orders/:id', 'OrderController.show').middleware('auth');
   Route.patch('orders/:id', 'OrderController.update').middleware('auth');
-//PRODUCTS
+  //PRODUCTS
   Route.get('products', 'ProductController.indexAll').middleware('auth');
   Route.get('products/:id', 'ProductController.show').middleware('auth');
   Route.post('products', 'ProductController.store').middleware('auth');
   Route.delete('products/:id', 'ProductController.destroy').middleware('auth');
   Route.patch('products/:id', 'ProductController.update').middleware('auth');
-}).prefix('auth');
-
-Route.group(() => {
-  Route.post('login', 'UserController.login');
-  Route.post('resetPassword', 'UserController.resetPassword');
-}).prefix('vendor')
-
-Route.group(() => {
-  Route.post('orders', 'OrderController.store').middleware('guest');
-  Route.get('products', 'ProductController.index').middleware('guest');
-}).prefix('customer')
+}).prefix('vendor');
