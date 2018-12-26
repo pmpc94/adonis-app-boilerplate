@@ -67,8 +67,8 @@ Factory.blueprint('App/Models/OrderProduct', async (faker, id, data) => {
 
 Factory.blueprint('App/Models/ProductImage', (faker, id, data) => {
   return {
-    image_path: faker.url(),
-    thumbnail: 1,
+    image_path: 'public/images/test-image.jpeg',
+    thumbnail: data.thumbnail,
     product_id: data.id
   }
 });

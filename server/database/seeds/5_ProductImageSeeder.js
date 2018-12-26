@@ -19,11 +19,13 @@ class ProductImageSeeder {
     for(let i=1; i<=200; i++) {
       await Factory.model('App/Models/ProductImage').create(
       {
-        id: i
+        id: i,
+        thumbnail: 1
       });
       await Factory.model('App/Models/ProductImage').create(
       {
-        id: (Math.floor(Math.random() * 200) + 1)
+        id: (Math.floor(Math.random() * 200) + 1),
+        thumbnail: 0
       });
     }
   }
