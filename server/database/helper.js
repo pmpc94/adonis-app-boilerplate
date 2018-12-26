@@ -30,7 +30,6 @@ async function getRandomOrderId() {
 async function getRandomProduct(orderId, quantity) {
     var product = await Database.raw('select * from products order by rand() limit 1');
     var order = await Order.query().where('id', orderId).select('total_price').fetch();
-    console.log(order);
     var total_price = order.rows[0].total_price;
     total_price += quantity * product[0][0].price;
     await Order.query().where('id', orderId).update({ total_price });

@@ -21,8 +21,6 @@ class OrdersProductsSeeder {
       {
         id: i
       });
-    }
-    for(let i=1; i<=50; i++) {
       await Factory.model('App/Models/OrderProduct').create(
       {
         id: (Math.floor(Math.random() * 50) + 1)

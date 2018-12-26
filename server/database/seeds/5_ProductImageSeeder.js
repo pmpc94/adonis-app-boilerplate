@@ -21,8 +21,6 @@ class ProductImageSeeder {
       {
         id: i
       });
-    }
-    for(let i=1; i<=50; i++) {
       await Factory.model('App/Models/ProductImage').create(
       {
         id: (Math.floor(Math.random() * 200) + 1)

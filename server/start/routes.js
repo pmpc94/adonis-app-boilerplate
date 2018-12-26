@@ -25,7 +25,7 @@ Route.group(() => {
   Route.get('orders/:id', 'OrderController.show').middleware('auth');
   Route.patch('orders/:id', 'OrderController.update').middleware('auth');
 //PRODUCTS
-  Route.get('products', 'ProductController.index').middleware('auth');
+  Route.get('products', 'ProductController.indexAll').middleware('auth');
   Route.get('products/:id', 'ProductController.show').middleware('auth');
   Route.post('products', 'ProductController.store').middleware('auth');
   Route.delete('products/:id', 'ProductController.destroy').middleware('auth');

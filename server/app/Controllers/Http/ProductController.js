@@ -4,16 +4,19 @@ const Product = use('App/Models/Product');
 
 class ProductController {
 
-  async index({ auth, request }) {
+  async index({ request, response }) {
+    var products = Product.all().fetch();
+    return response.status(200).json(products);
+  }
+
+  async indexAll({ auth, request }) {
     const user = await auth.getUser();
     return await user.products().fetch();
   }
 
-  async index({ request, response }) {
-    return response.status(200).json(Product.all());
-  }
-
-  async show({ auth, request, params }) {
+  async indexAll({ auth, request }) {
+    const user = await auth.getUser();
+    return await user.products().fetch();
   }
 
   async store({ auth, request, params }) {
