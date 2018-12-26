@@ -22,7 +22,7 @@ class OrderController {
       total_price,
       status
     } = request.all();
-    const user = await User.find(customer_id);console.log(user);
+    const user = await User.find(customer_id);
     if (!user) {
       return response.status(404).json({data: 'User does not exist'});
     }

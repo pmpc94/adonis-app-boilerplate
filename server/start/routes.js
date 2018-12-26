@@ -17,9 +17,6 @@
 const Route = use('Route')
 
 Route.group(() => {
-//AUTHENTICATION
-  Route.post('login', 'UserController.login');
-  Route.post('resetPassword', 'UserController.resetPassword');
 //ORDERS
   Route.get('orders', 'OrderController.index').middleware('auth');
   Route.get('orders/:id', 'OrderController.show').middleware('auth');
@@ -31,6 +28,11 @@ Route.group(() => {
   Route.delete('products/:id', 'ProductController.destroy').middleware('auth');
   Route.patch('products/:id', 'ProductController.update').middleware('auth');
 }).prefix('auth');
+
+Route.group(() => {
+  Route.post('login', 'UserController.login');
+  Route.post('resetPassword', 'UserController.resetPassword');
+}).prefix('vendor')
 
 Route.group(() => {
   Route.post('orders', 'OrderController.store').middleware('guest');
