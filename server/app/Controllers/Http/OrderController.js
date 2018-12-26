@@ -10,6 +10,7 @@ class OrderController {
   }
 
   async show({ auth, request, params }) {
+    
   }
 
   async store({ request, response }) {

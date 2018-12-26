@@ -12,10 +12,20 @@
 
 // import('@adonisjs/lucid/src/Factory')}
 const Factory = use('Factory');
+const User = use('App/Models/User');
 
 class UserSeeder {
   async run () {
-       await Factory.model('App/Models/User').createMany(100);
+    //create the Master User
+    const user = await User.create({
+      firstName: 'Pedro',
+      lastName: 'Carolina',
+      email: 'pedro.carolina@polygon.pt',
+      password: 'polygon', //SECURITY BREACH - FIX THIS LATER!!!!!!! THIS ONLY SERVES FOR TESTING :-)
+      role: 'vendor'
+    });
+
+    await Factory.model('App/Models/User').createMany(99);
   }
 }
 

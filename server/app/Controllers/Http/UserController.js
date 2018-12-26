@@ -30,7 +30,6 @@ class UserController {
   async updatePassword({ request, response }) {
     const { email, password } = request.all();
     const user = await User.findBy('email', email);
-    console.log(user);
     user.merge(request.only('password'));
     await user.save();
     return response.status(200).json(user);

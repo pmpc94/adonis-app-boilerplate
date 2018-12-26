@@ -1,17 +1,14 @@
 'use strict'
 
 const Product = use('App/Models/Product');
+const Database = use('Database');
 
 class ProductController {
 
   async index({ request, response }) {
-    var products = Product.all().fetch();
+    var page = request.input('page');
+    var products = await Database.from('products').paginate(page, 20);
     return response.status(200).json(products);
-  }
-
-  async indexAll({ auth, request }) {
-    const user = await auth.getUser();
-    return await user.products().fetch();
   }
 
   async indexAll({ auth, request }) {
@@ -25,8 +22,8 @@ class ProductController {
       name,
       description,
       category,
-      price
-      //thumbnail
+      price,
+      imagePath
     } = request.all();
     const product = new Product();
     product.fill({
@@ -34,9 +31,21 @@ class ProductController {
       description,
       category,
       price
-      //thumbnail
     });
+    const productImage = new ProductImage();
+    var arrayLength = imagePath.length;
+    if (arrayLength > 1) {
+      for (let i=0; i< arrayLength; i++) {
+        i == 0 ? thumbnail = 1 : thumbnail = 0;
+        productImage.fill({
+          image_path[i],
+          product.id,
+          thumbnail
+        });
+      }
+    }
     await user.products().save(product);
+    await product.productImages().save(productImage);
     return response.status(200).json(product);
   }
 
