@@ -27,8 +27,8 @@
     "@adonisjs/mail": "^3.0.9",
     "@adonisjs/session": "^1.0.27",
     "@adonisjs/shield": "^1.0.8",
-    "mysql": "^2.16.0",
-    "sqlite3": "^4.0.4"
+    "@adonisjs/validator": "^5.0.6",
+    "mysql": "^2.16.0"
   },
   "devDependencies": {},
   "autoload": {

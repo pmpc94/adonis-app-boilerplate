@@ -3,6 +3,7 @@
 const Env = use('Env')
 
 module.exports = {
+  from: Env.get('MAIL_FROM'),
   /*
   |--------------------------------------------------------------------------
   | Connection

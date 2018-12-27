@@ -1,6 +1,7 @@
 'use strict'
 
 const Product = use('App/Models/Product');
+const ProductImage = use('App/Models/ProductImage');
 const Database = use('Database');
 
 class ProductController {
@@ -17,32 +18,36 @@ class ProductController {
   }
 
   async store({ auth, request, params }) {
-    const user = await.auth.getUser();
+    const user = await auth.getUser();
+    console.log("REQUEST ALL", request.all());
     const {
       name,
       description,
       category,
       price,
-      imagePath
+      user_id,
+      image_path
     } = request.all();
+    console.log(name, image_path);
     const product = new Product();
     product.fill({
       name,
       description,
       category,
-      price
+      price,
+      user_id
     });
     const productImage = new ProductImage();
-    var arrayLength = imagePath.length;
-    if (arrayLength > 1) {
+    //TODO - RETRIEVE VARIABLE IMAGE_PATH
+    console.log(product);
+    var arrayLength = image_path.length;
       for (let i=0; i< arrayLength; i++) {
         i == 0 ? thumbnail = 1 : thumbnail = 0;
         productImage.fill({
-          image_path[i],
-          product.id,
+          image_path: image_path[i],
+          product: product.id,
           thumbnail
         });
-      }
     }
     await user.products().save(product);
     await product.productImages().save(productImage);

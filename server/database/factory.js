@@ -16,17 +16,13 @@ const Factory = use('Factory');
 const Hash = use('Hash');
 const helper = require('./helper');
 
-var roleArray = ['customer', 'vendor'];
-var categoryArray = ['terrestrial', 'giant', 'dwarf'];
-var statusArray = ['created', 'paid', 'canceled'];
-
   Factory.blueprint('App/Models/User', async (faker) => {
   return {
     firstName: faker.first(),
     lastName: faker.last(),
     email: faker.email(),
     password: await Hash.make(faker.password()),
-    role: helper.getRandomElement(roleArray)
+    role: helper.getRandomElement(helper.roleArray)
   }
 });
 
@@ -34,9 +30,9 @@ Factory.blueprint('App/Models/Product', (faker) => {
   return {
     name: faker.name(),
     description: faker.sentence(),
-    category: helper.getRandomElement(categoryArray),
+    category: helper.getRandomElement(helper.categoryArray),
     price: faker.floating({ min:1, max: 50}),
-    user_id: helper.getRandomVendorId()
+    user_id: helper.getRandomId('vendor')
   }
 });
 
@@ -47,8 +43,8 @@ Factory.blueprint('App/Models/Order', (faker) => {
     address1: faker.address(),
     address2: faker.address(),
     total_price: 0,
-    status: helper.getRandomElement(statusArray),
-    customer_id: helper.getRandomCustomerId()
+    status: helper.getRandomElement(helper.statusArray),
+    customer_id: helper.getRandomId('customer')
   }
 });
 
@@ -56,14 +52,13 @@ Factory.blueprint('App/Models/OrderProduct', async (faker, id, data) => {
   var quantity = faker.integer({ min: 1, max: 5 });
   var product = await helper.getRandomProduct(data.id, quantity);
   return {
-    product_name: product[0][0].name,
-    price: product[0][0].price,
+    product_name: product.rows[0].name,
+    price: product.rows[0].price,
     quantity: quantity,
     order_id: data.id,
-    product_id: product[0][0].id
+    product_id: product.rows[0].id
   }
 });
-
 
 Factory.blueprint('App/Models/ProductImage', (faker, id, data) => {
   return {

@@ -2,37 +2,32 @@
 
 const User = use('App/Models/User');
 const Mail = use('Mail');
+const Config = use('Config');
 
 class UserController {
 
-  async login({ request, auth }) {
+  async login({ request, auth, response }) {
     const { email, password } = request.all();
     const token = await auth.attempt(email, password);
-    return token;
+    return response.status(200).json({message: 'You were successfully logged in.', status: 200});
   }
 
   async resetPassword({ request, response }) {
     const { email } = request.all();
     const user = await User.findBy('email', email);
-
-    if (!user) {
-      return response.status(404).json({data: 'User does not exist'})
-    }
-
     await Mail.send('emails.welcome', {}, (message) => {
-      message.from('pedro.carolina@polygon.pt')
+      message.from(Config.get('mail.from'))
       message.to(email)
     });
-
-    return response.status(200).json(user);
+    return response.status(200).json({message: 'A request to change the password was sent to the provided email', status: 200});
   }
 
   async updatePassword({ request, response }) {
     const { email, password } = request.all();
     const user = await User.findBy('email', email);
-    user.merge(request.only('password'));
-    await user.save();
-    return response.status(200).json(user);
+    // user.merge(request.only('password'));
+    await user.save({ password });
+    return response.status(200).json({message: 'Your password was successfully updated', status: 200});
   }
 }
 

@@ -24,9 +24,9 @@ Route.group(() => {
 
 Route.group(() => {
   //VENDORS
-  Route.post('login', 'UserController.login');
-  Route.post('resetPassword', 'UserController.resetPassword');
-  Route.post('updatePassword', 'UserController.updatePassword');
+  Route.post('login', 'UserController.login').validator('Login');
+  Route.post('resetPassword', 'UserController.resetPassword').validator('ResetPassword');
+  Route.post('updatePassword', 'UserController.updatePassword').validator('UpdatePassword');
 
   //ORDERS
   Route.get('orders', 'OrderController.index').middleware('auth');
