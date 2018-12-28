@@ -21,13 +21,14 @@ class OrderController {
       last_name,
       address1,
       address2,
-      total_price,
       status,
       product_name,
       price,
       quantity,
-      order_id,
       product_id
+    } = request.all();
+    let {
+      total_price
     } = request.all();
     const order = new Order();
       order.fill({
@@ -45,11 +46,12 @@ class OrderController {
         product_name,
         price,
         quantity,
-        order_id,
+        order_id: order.id,
         product_id
       });
     await orderProduct.save();
     total_price = total_price + (quantity * price);
+    await order.merge({ total_price });
     await order.save({ total_price });
     return response.status(200).json({message: 'Your order was successfully created.', status: 200, data: order, errors: {}});
   }
