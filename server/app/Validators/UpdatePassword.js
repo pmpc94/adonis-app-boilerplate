@@ -21,6 +21,18 @@ class UpdatePassword {
       'password.required': 'You must provide a password'
     }
   }
+
+  async fails (errors) {
+    return this.ctx.response.status(400).json({
+        message: "Oops! Something went wrong with your request.",
+        status: 400,
+        errors
+    })
+  }
+
+  get formatter () {
+   return formatters.Vanilla
+ }
 }
 
 module.exports = UpdatePassword
