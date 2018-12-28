@@ -1,5 +1,7 @@
 'use strict'
 
+const { formatters } = use('Validator')
+
 class ResetPassword {
   get rules () {
     return {
@@ -24,6 +26,7 @@ class ResetPassword {
     return this.ctx.response.status(400).json({
         message: "Oops! Something went wrong with your request.",
         status: 400,
+        data: {},
         errors
     })
   }

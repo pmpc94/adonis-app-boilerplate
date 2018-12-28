@@ -3,14 +3,13 @@
 const User = use('App/Models/User');
 const Mail = use('Mail');
 const Config = use('Config');
-const ResponseService = use('App/Services/ResponseService');
 
 class UserController {
 
   async login({ request, auth, response }) {
     const { email, password } = request.all();
     const token = await auth.attempt(email, password);
-    ResponseService.sendSuccess(response, 'You were successfully logged in.', token);
+    return response.status(200).json({ message: 'You were successfully logged in.', status: 200, data: token, errors: {} } );
   }
 
   async resetPassword({ request, response }) {
@@ -20,15 +19,14 @@ class UserController {
       message.from(Config.get('mail.from'))
       message.to(email)
     });
-    ResponseService.sendSuccess(response, 'A request to change the password was sent to the provided email.', user);
+    return response.status(200).json({message: 'A request to change the password was sent to the provided email', status: 200, data: user, errors: {}});
   }
 
   async updatePassword({ request, response }) {
     const { email, password } = request.all();
     const user = await User.findBy('email', email);
-    // user.merge(request.only('password'));
     await user.save({ password });
-    ResponseService.sendSuccess(response, 'Your password was successfully updated.', user);
+    return response.status(200).json({message: 'Your password was successfully updated', status: 200, data: user, errors: {}});
   }
 }
 

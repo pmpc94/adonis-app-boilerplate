@@ -28,6 +28,7 @@ class Login {
     return this.ctx.response.status(400).json({
         message: "Oops! Something went wrong with your request.",
         status: 400,
+        data: {},
         errors
     })
   }

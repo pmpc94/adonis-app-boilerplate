@@ -1,6 +1,7 @@
 'use strict'
 
 const Order = use('App/Models/Order');
+const OrderProduct = use('App/Models/OrderProduct');
 const User = use('App/Models/User');
 
 class OrderController {
@@ -10,7 +11,7 @@ class OrderController {
   }
 
   async show({ auth, request, params }) {
-    
+
   }
 
   async store({ request, response }) {
@@ -21,17 +22,14 @@ class OrderController {
       address1,
       address2,
       total_price,
-      status
+      status,
+      product_name,
+      price,
+      quantity,
+      order_id,
+      product_id
     } = request.all();
-    const user = await User.find(customer_id);
-    if (!user) {
-      return response.status(404).json({data: 'User does not exist'});
-    }
-    else if (user.role ==='vendor') {
-      return response.status(404).json({data: 'User is not a customer'});
-    }
-    else if (user.role === 'customer') {
-      const order = new Order();
+    const order = new Order();
       order.fill({
         customer_id,
         first_name,
@@ -42,8 +40,18 @@ class OrderController {
         status
       });
     await order.save();
-    return response.status(200).json(order);
-    }
+    const orderProduct = new OrderProduct();
+      orderProduct.fill({
+        product_name,
+        price,
+        quantity,
+        order_id,
+        product_id
+      });
+    await orderProduct.save();
+    total_price = total_price + (quantity * price);
+    await order.save({ total_price });
+    return response.status(200).json({message: 'Your order was successfully created.', status: 200, data: order, errors: {}});
   }
 
   async update({ auth, request, params, response }) {

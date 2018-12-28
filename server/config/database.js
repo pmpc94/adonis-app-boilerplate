@@ -7,6 +7,7 @@ const Env = use('Env')
 const Helpers = use('Helpers')
 
 module.exports = {
+  password: Env.get('MASTER_USER'),
   /*
   |--------------------------------------------------------------------------
   | Default Connection

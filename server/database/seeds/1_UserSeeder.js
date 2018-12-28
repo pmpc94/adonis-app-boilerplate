@@ -13,6 +13,7 @@
 // import('@adonisjs/lucid/src/Factory')}
 const Factory = use('Factory');
 const User = use('App/Models/User');
+const Config = use('Config');
 
 class UserSeeder {
   async run () {
@@ -21,7 +22,7 @@ class UserSeeder {
       firstName: 'Pedro',
       lastName: 'Carolina',
       email: 'pedro.carolina@polygon.pt',
-      password: 'polygon', //SECURITY BREACH - FIX THIS LATER!!!!!!! THIS ONLY SERVES FOR TESTING :-)
+      password: Config.get('database.password'),
       role: 'vendor'
     });
 
