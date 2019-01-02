@@ -33,12 +33,7 @@ class OrderStore {
   }
 
   async fails (errors) {
-    return this.ctx.response.status(400).json({
-        message: "Oops! Something went wrong with your request.",
-        status: 400,
-        data: {},
-        errors
-    })
+    return this.ctx.response.unprocessableEntity('Oops! The data you inserted was not valid.', null, errors)
   }
 
   get formatter () {

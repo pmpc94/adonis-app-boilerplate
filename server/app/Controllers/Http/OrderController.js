@@ -53,7 +53,7 @@ class OrderController {
     total_price = total_price + (quantity * price);
     await order.merge({ total_price });
     await order.save({ total_price });
-    return response.status(200).json({message: 'Your order was successfully created.', status: 200, data: order, errors: {}});
+    response.ok('Your order was successfully created, order', order);
   }
 
   async update({ auth, request, params, response }) {

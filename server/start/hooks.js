@@ -60,7 +60,7 @@ const isVendorFn = async (data, field, message, args, get) => {
   }
 
   const [table, column] = args
-  
+
   const row = await Database.table(table).where(column, value).where('role', 'vendor').first()
 
   if (!row) {
