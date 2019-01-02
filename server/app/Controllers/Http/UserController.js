@@ -18,6 +18,7 @@ class UserController {
     await Mail.send('emails.welcome', {}, (message) => {
       message.from(Config.get('mail.from'))
       message.to(email)
+      message.subject('Please update your password.')
     });
     response.ok('A request to change the password was sent to the provided email.', user);
   }

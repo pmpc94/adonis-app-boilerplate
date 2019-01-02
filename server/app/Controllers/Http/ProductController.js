@@ -6,20 +6,29 @@ const Database = use('Database');
 
 class ProductController {
 
-  async index({ request, response }) {
+  async all({ request, response }) {
     var page = request.input('page');
     var products = await Database.from('products').paginate(page, 20);
-    return response.status(200).json(products);
+    response.ok('The clicked page has the following list of products.', products);
   }
 
-  async indexAll({ auth, request }) {
+  async index({ auth, request, response }) {
     const user = await auth.getUser();
-    return await user.products().fetch();
+    const products = await user.products().fetch();
+    response.ok('The list of your products.', products);
+    //TODO - VERIFY THAT THE USER HAS ACCESS TO THE RESOURCE (VALIDATOR PRODUCT)
+  }
+
+  async show({ auth, request, response }) {
+    const { id } = request.params;
+    const product = await Product.find(id);
+    response.ok('The product that you requested.', product);
+    //TODO - VERIFY THAT THE USER HAS ACCESS TO THE RESOURCE (VALIDATOR PRODUCT)
   }
 
   async store({ auth, request, params }) {
     const user = await auth.getUser();
-    console.log("REQUEST ALL", request.all());
+
     const {
       name,
       description,
@@ -51,25 +60,27 @@ class ProductController {
     }
     await user.products().save(product);
     await product.productImages().save(productImage);
-    return response.status(200).json(product);
+    response.ok('Your product was stored in the database.', product);
+    //TODO - VERIFY THAT THE USER HAS ACCESS TO THE RESOURCE (VALIDATOR PRODUCT)
   }
 
-  async destroy({ auth, request, params, response }) {
+  async destroy({ auth, request, response }) {
     const user = await auth.getUser();
-    const { id } = params;
+    const { id } = request.params;
     const product = await Product.find(id);
-    AuthorizationService.verifyPermission(product, user);
     await product.delete();
-    return response.status(200).json(product);
+    response.ok('Your product was deleted from the database.', product);
+    //TODO - VERIFY THAT THE USER HAS ACCESS TO THE RESOURCE (VALIDATOR PRODUCT DESTROY)
   }
 
-  async update({ auth, request, params }) {
+  async update({ auth, request, response }) {
     const user = await auth.getUser();
-    const { id } = params;
+    const { id } = request.params;
     const product = await Product.find(id);
     product.merge(request.all());
     await product.save();
-    return response.status(200).json(product);
+    response.ok('Your product was updated.', product);
+    //TODO - VERIFY THAT THE USER HAS ACCESS TO THE RESOURCE (VALIDATOR PRODUCT UPDATE)
   }
 }
 

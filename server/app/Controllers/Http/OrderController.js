@@ -2,16 +2,30 @@
 
 const Order = use('App/Models/Order');
 const OrderProduct = use('App/Models/OrderProduct');
+const Product = use ('App/Models/Product');
 const User = use('App/Models/User');
 
 class OrderController {
-  async index({ auth, request }) {
+  async index({ auth, request, response }) {
     const user = await auth.getUser();
-    return await user.orders().fetch();
+    const orders = await Order
+      .query()
+      .whereHas('orderProducts', (builder) => {
+        builder.join('products', 'order_products.product_id', '=', 'products.id').where('products.user_id', user.id)
+      }, '>', 0)
+      .with('orderProducts', (builder) => {
+        builder.join('products', 'order_products.product_id', '=', 'products.id').where('products.user_id', user.id)
+      })
+      .fetch()
+    response.ok('A list of your current customer orders.', orders);
+    //TODO - VERIFY THAT THE USER HAS ACCESS TO THE RESOURCE (VALIDATOR ORDER UPDATE)
   }
 
-  async show({ auth, request, params }) {
-
+  async show({ auth, request, response }) {
+    const { id } = request.params;
+    const order = await Order.find(id);
+    response.ok('The order that you requested.', order);
+    //TODO - VERIFY THAT THE USER HAS ACCESS TO THE RESOURCE (VALIDATOR ORDER UPDATE)
   }
 
   async store({ request, response }) {
@@ -19,6 +33,7 @@ class OrderController {
       customer_id,
       first_name,
       last_name,
+      email,
       address1,
       address2,
       status,
@@ -54,15 +69,22 @@ class OrderController {
     await order.merge({ total_price });
     await order.save({ total_price });
     response.ok('Your order was successfully created, order', order);
+    //TODO - SAVE USER
   }
 
-  async update({ auth, request, params, response }) {
+  async update({ auth, request, response }) {
     const user = await auth.getUser();
-    const { id } = params;
+    const { id } = request.params;
     const order = await Order.find(id);
     order.merge(request.only(['status']));
     await order.save();
-    return response.status(200).json(order);
+    response.ok('Your order was updated.', order)
+    //TODO - VERIFY THAT THE USER HAS ACCESS TO THE RESOURCE (VALIDATOR ORDER UPDATE)
+    //TODO - STATUS CAN BE CHANGED FROM:
+    // PAID -> CANCELED
+    // CREATED -> CANCELED
+    // CREATED -> PAID
+    // CANCELED -> [CANNOT BE CHANGED]
   }
 }
 

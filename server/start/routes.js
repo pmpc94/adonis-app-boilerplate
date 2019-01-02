@@ -19,7 +19,7 @@ const Route = use('Route')
 Route.group(() => {
   //CUSTOMERS
   Route.post('orders', 'OrderController.store').middleware('guest').validator('OrderStore');
-  Route.get('products', 'ProductController.index').middleware('guest');
+  Route.get('products', 'ProductController.all').middleware('guest');
 }).prefix('customer');
 
 Route.group(() => {
@@ -31,9 +31,9 @@ Route.group(() => {
   //ORDERS
   Route.get('orders', 'OrderController.index').middleware('auth');
   Route.get('orders/:id', 'OrderController.show').middleware('auth');
-  Route.patch('orders/:id', 'OrderController.update').middleware('auth');
+  Route.patch('orders/:id', 'OrderController.update').middleware('auth').validator('OrderUpdate');
   //PRODUCTS
-  Route.get('products', 'ProductController.listProducts').middleware('auth').validator('ProductStore');
+  Route.get('products', 'ProductController.index').middleware('auth');
   Route.get('products/:id', 'ProductController.show').middleware('auth');
   Route.post('storeProduct', 'ProductController.store').middleware('auth');
   Route.delete('products/:id', 'ProductController.destroy').middleware('auth');

@@ -7,6 +7,7 @@ hooks.after.providersBooted(() => {
   Validator.extend('exists', existsFn)
   Validator.extend('isCustomer', isCustomerFn)
   Validator.extend('isVendor', isVendorFn)
+  Validator.extend('hasAccess', hasAccessFn)
 })
 
 const existsFn = async (data, field, message, args, get) => {
@@ -65,5 +66,17 @@ const isVendorFn = async (data, field, message, args, get) => {
 
   if (!row) {
     throw message
+  }
+}
+
+const hasAccessFn = async (data, field, message, args, get) => {
+  const Database = use('Database')
+  const value = get(data, field)
+  if (!value) {
+    /**
+     * skip validation if value is not defined. `required` rule
+     * should take care of it.
+     */
+    return
   }
 }
