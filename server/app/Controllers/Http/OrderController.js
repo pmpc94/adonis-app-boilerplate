@@ -70,6 +70,7 @@ class OrderController {
     await order.save({ total_price });
     response.ok('Your order was successfully created, order', order);
     //TODO - SAVE USER
+    //TODO - DATABASE TRANSACTIONS
   }
 
   async update({ auth, request, response }) {

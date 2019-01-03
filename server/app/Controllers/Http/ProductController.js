@@ -3,6 +3,7 @@
 const Product = use('App/Models/Product');
 const ProductImage = use('App/Models/ProductImage');
 const Database = use('Database');
+const Helpers = use('Helpers');
 
 class ProductController {
 
@@ -26,18 +27,15 @@ class ProductController {
     //TODO - VERIFY THAT THE USER HAS ACCESS TO THE RESOURCE (VALIDATOR PRODUCT)
   }
 
-  async store({ auth, request, params }) {
+  async store({ auth, request, response }) {
     const user = await auth.getUser();
-
     const {
       name,
       description,
       category,
       price,
-      user_id,
-      image_path
+      user_id
     } = request.all();
-    console.log(name, image_path);
     const product = new Product();
     product.fill({
       name,
@@ -46,22 +44,32 @@ class ProductController {
       price,
       user_id
     });
-    const productImage = new ProductImage();
-    //TODO - RETRIEVE VARIABLE IMAGE_PATH
-    console.log(product);
-    var arrayLength = image_path.length;
-      for (let i=0; i< arrayLength; i++) {
-        i == 0 ? thumbnail = 1 : thumbnail = 0;
-        productImage.fill({
-          image_path: image_path[i],
-          product: product.id,
-          thumbnail
-        });
-    }
     await user.products().save(product);
-    await product.productImages().save(productImage);
+    const images = request.file('image_path', {
+       types: ['image'],
+       maxSize: '20mb',
+       allowedExtensions: ['jpg', 'png', 'jpeg']
+     })
+    await images.moveAll(Helpers.publicPath(`/images`), (file) => {
+      return {
+        name: `${new Date().getTime()}.${file.clientName}`
+      }
+    })
+    if (!images.movedAll()) {
+        return images.errors()
+    }
+    for (let i=0; i<images._files.length; i++) {
+      let productImage = new ProductImage();
+      productImage.fill({
+            image_path: `public/images/${images._files[i].clientName}`,
+            product_id: product.id,
+            thumbnail: i == 0 ? 1 : 0
+          });
+      await product.productImages().save(productImage);
+    }
     response.ok('Your product was stored in the database.', product);
     //TODO - VERIFY THAT THE USER HAS ACCESS TO THE RESOURCE (VALIDATOR PRODUCT)
+    //TODO - DATABASE TRANSACTIONS
   }
 
   async destroy({ auth, request, response }) {

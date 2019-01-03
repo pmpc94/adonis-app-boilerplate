@@ -35,7 +35,7 @@ Route.group(() => {
   //PRODUCTS
   Route.get('products', 'ProductController.index').middleware('auth');
   Route.get('products/:id', 'ProductController.show').middleware('auth');
-  Route.post('storeProduct', 'ProductController.store').middleware('auth');
+  Route.post('storeProduct', 'ProductController.store').middleware('auth').validator('StoreProduct');
   Route.delete('products/:id', 'ProductController.destroy').middleware('auth');
-  Route.patch('products/:id', 'ProductController.update').middleware('auth');
+  Route.patch('products/:id', 'ProductController.update').middleware('auth').validator('UpdateProduct');
 }).prefix('vendor');
