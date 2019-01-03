@@ -10,8 +10,8 @@ class OrderProductsSchema extends Schema {
       table.string('product_name', 255).notNullable()
       table.float('price').notNullable()
       table.integer('quantity').notNullable()
-      table.integer('order_id').unsigned().references('id').inTable('orders').onDelete('NO ACTION').onUpdate('NO ACTION')
-      table.integer('product_id').unsigned().references('id').inTable('products').onDelete('NO ACTION').onUpdate('NO ACTION')
+      table.integer('order_id').unsigned().references('orders.id').onDelete('NO ACTION').onUpdate('NO ACTION')
+      table.integer('product_id').unsigned().references('products.id').onDelete('NO ACTION').onUpdate('NO ACTION')
       table.timestamps()
     })
   }
