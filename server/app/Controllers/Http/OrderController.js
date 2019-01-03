@@ -18,14 +18,13 @@ class OrderController {
       })
       .fetch()
     response.ok('A list of your current customer orders.', orders);
-    //TODO - VERIFY THAT THE USER HAS ACCESS TO THE RESOURCE (VALIDATOR ORDER UPDATE)
   }
 
   async show({ auth, request, response }) {
     const { id } = request.params;
     const order = await Order.find(id);
     response.ok('The order that you requested.', order);
-    //TODO - VERIFY THAT THE USER HAS ACCESS TO THE RESOURCE (VALIDATOR ORDER UPDATE)
+    //TODO - AUTH USER VALIDATION
   }
 
   async store({ request, response }) {
@@ -79,7 +78,7 @@ class OrderController {
     const order = await Order.find(id);
     order.merge(request.only(['status']));
     await order.save();
-    response.ok('Your order was updated.', order)
+    response.ok('Your order was updated.', order);
     //TODO - VERIFY THAT THE USER HAS ACCESS TO THE RESOURCE (VALIDATOR ORDER UPDATE)
     //TODO - STATUS CAN BE CHANGED FROM:
     // PAID -> CANCELED

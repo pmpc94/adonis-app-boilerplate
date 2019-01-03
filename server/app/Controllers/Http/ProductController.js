@@ -17,14 +17,12 @@ class ProductController {
     const user = await auth.getUser();
     const products = await user.products().fetch();
     response.ok('The list of your products.', products);
-    //TODO - VERIFY THAT THE USER HAS ACCESS TO THE RESOURCE (VALIDATOR PRODUCT)
   }
 
   async show({ auth, request, response }) {
     const { id } = request.params;
     const product = await Product.find(id);
     response.ok('The product that you requested.', product);
-    //TODO - VERIFY THAT THE USER HAS ACCESS TO THE RESOURCE (VALIDATOR PRODUCT)
   }
 
   async store({ auth, request, response }) {
@@ -68,7 +66,6 @@ class ProductController {
       await product.productImages().save(productImage);
     }
     response.ok('Your product was stored in the database.', product);
-    //TODO - VERIFY THAT THE USER HAS ACCESS TO THE RESOURCE (VALIDATOR PRODUCT)
     //TODO - DATABASE TRANSACTIONS
   }
 
@@ -78,7 +75,6 @@ class ProductController {
     const product = await Product.find(id);
     await product.delete();
     response.ok('Your product was deleted from the database.', product);
-    //TODO - VERIFY THAT THE USER HAS ACCESS TO THE RESOURCE (VALIDATOR PRODUCT DESTROY)
   }
 
   async update({ auth, request, response }) {
@@ -88,7 +84,6 @@ class ProductController {
     product.merge(request.all());
     await product.save();
     response.ok('Your product was updated.', product);
-    //TODO - VERIFY THAT THE USER HAS ACCESS TO THE RESOURCE (VALIDATOR PRODUCT UPDATE)
   }
 }
 

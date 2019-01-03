@@ -24,18 +24,18 @@ Route.group(() => {
 
 Route.group(() => {
   //VENDORS
-  Route.post('login', 'UserController.login').validator('Login');
-  Route.post('resetPassword', 'UserController.resetPassword').validator('ResetPassword');
-  Route.post('updatePassword', 'UserController.updatePassword').validator('UpdatePassword');
+  Route.post('login', 'UserController.login').validator('UserLogin');
+  Route.post('resetPassword', 'UserController.resetPassword').validator('UserResetPassword');
+  Route.post('updatePassword', 'UserController.updatePassword').validator('UserUpdatePassword');
 
   //ORDERS
   Route.get('orders', 'OrderController.index').middleware('auth');
-  Route.get('orders/:id', 'OrderController.show').middleware('auth');
-  Route.patch('orders/:id', 'OrderController.update').middleware('auth').validator('OrderUpdate');
+  Route.get('orders/:id', 'OrderController.show').middleware('auth').validator('Authorization');
+  Route.patch('orders/:id', 'OrderController.update').middleware('auth').validator('Authorization');
   //PRODUCTS
   Route.get('products', 'ProductController.index').middleware('auth');
-  Route.get('products/:id', 'ProductController.show').middleware('auth');
-  Route.post('storeProduct', 'ProductController.store').middleware('auth').validator('StoreProduct');
-  Route.delete('products/:id', 'ProductController.destroy').middleware('auth');
-  Route.patch('products/:id', 'ProductController.update').middleware('auth').validator('UpdateProduct');
+  Route.get('products/:id', 'ProductController.show').middleware('auth').validator('Authorization');
+  Route.post('storeProduct', 'ProductController.store').middleware('auth').validator('ProductStore');
+  Route.delete('products/:id', 'ProductController.destroy').middleware('auth').validator('Authorization');
+  Route.patch('products/:id', 'ProductController.update').middleware('auth').validator('Authorization');
 }).prefix('vendor');

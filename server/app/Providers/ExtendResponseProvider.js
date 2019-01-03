@@ -44,6 +44,16 @@ class ExtendResponseProvider extends ServiceProvider {
           errors: errorMessages
         })
     })
+
+    Response.macro('unauthorized', function (message, data, errorMessages) {
+        this.status(422).json({
+          message: message,
+          status: 401,
+          code: 'UNAUTHORIZED',
+          data: data,
+          errors: errorMessages
+        })
+    })
   }
 }
 

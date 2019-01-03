@@ -2,7 +2,7 @@
 
 const { formatters } = use('Validator')
 
-class ResetPassword {
+class UserResetPassword {
   get rules () {
     return {
       email: 'required|email|exists:users,email'
@@ -31,4 +31,4 @@ class ResetPassword {
  }
 }
 
-module.exports = ResetPassword
+module.exports = UserResetPassword
