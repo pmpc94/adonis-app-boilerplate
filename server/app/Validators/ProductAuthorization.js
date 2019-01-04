@@ -2,12 +2,12 @@
 
 const { formatters } = use('Validator')
 
-class Authorization {
+class ProductAuthorization {
   get rules () {
-    const productId = this.ctx.params.id;
-    const userId = this.ctx.auth.user.id;
+    const product_id = this.ctx.params.id;
+    const user_id = this.ctx.auth.user.id;
     return {
-       user_id:`hasAuthorization:products,${productId},${userId}`
+       authorization:`hasAuthorization:products,${product_id},${user_id}`
     }
   }
 
@@ -20,4 +20,4 @@ class Authorization {
  }
 }
 
-module.exports = Authorization
+module.exports = ProductAuthorization

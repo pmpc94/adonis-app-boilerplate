@@ -24,7 +24,6 @@ class OrderController {
     const { id } = request.params;
     const order = await Order.find(id);
     response.ok('The order that you requested.', order);
-    //TODO - AUTH USER VALIDATION
   }
 
   async store({ request, response }) {
@@ -79,7 +78,6 @@ class OrderController {
     order.merge(request.only(['status']));
     await order.save();
     response.ok('Your order was updated.', order);
-    //TODO - VERIFY THAT THE USER HAS ACCESS TO THE RESOURCE (VALIDATOR ORDER UPDATE)
     //TODO - STATUS CAN BE CHANGED FROM:
     // PAID -> CANCELED
     // CREATED -> CANCELED

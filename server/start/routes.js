@@ -30,12 +30,12 @@ Route.group(() => {
 
   //ORDERS
   Route.get('orders', 'OrderController.index').middleware('auth');
-  Route.get('orders/:id', 'OrderController.show').middleware('auth').validator('Authorization');
-  Route.patch('orders/:id', 'OrderController.update').middleware('auth').validator('Authorization');
+  Route.get('orders/:id', 'OrderController.show').middleware('auth').validator('OrderAuthorization');
+  Route.patch('orders/:id', 'OrderController.update').middleware('auth').validator('OrderAuthorization');
   //PRODUCTS
   Route.get('products', 'ProductController.index').middleware('auth');
-  Route.get('products/:id', 'ProductController.show').middleware('auth').validator('Authorization');
+  Route.get('products/:id', 'ProductController.show').middleware('auth').validator('ProductAuthorization');
   Route.post('storeProduct', 'ProductController.store').middleware('auth').validator('ProductStore');
-  Route.delete('products/:id', 'ProductController.destroy').middleware('auth').validator('Authorization');
-  Route.patch('products/:id', 'ProductController.update').middleware('auth').validator('Authorization');
+  Route.delete('products/:id', 'ProductController.destroy').middleware('auth').validator('ProductAuthorization');
+  Route.patch('products/:id', 'ProductController.update').middleware('auth').validator('ProductAuthorization');
 }).prefix('vendor');

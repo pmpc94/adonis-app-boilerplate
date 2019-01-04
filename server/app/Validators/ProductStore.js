@@ -5,10 +5,10 @@ const { formatters } = use('Validator')
 class ProductStore {
   get rules () {
     return {
-      user_id: 'required|exists:users,id|isVendor:users,id',
+      user_id: 'required|exists:users,id|exists:users,id,role,vendor',
       name: 'required|string|min:3|max:255',
       description: 'required|string|min:3|max:255',
-      // category: 'required|string|min:3|max:255', TODO - ENUM: terrestrial, giant or drawrf
+      category: 'required|string|min:3|max:255|in:terrestrial,giant,dwarf',
       price: 'number|min:1'
     }
   }

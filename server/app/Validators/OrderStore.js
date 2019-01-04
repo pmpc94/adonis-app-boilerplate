@@ -3,10 +3,10 @@
 const { formatters } = use('Validator')
 
 class OrderStore {
-  //TODO - What if product_id != product_name? This CAN'T happen! Tp think about this :-)
+  //TODO - What if product_id.name != product_name? This CAN'T happen! To think about this :-)
   get rules () {
     return {
-      customer_id: 'required|exists:users,id|isCustomer:users,id',
+      customer_id: 'required|exists:users,id|exists:users,id,role,customer',
       first_name: 'required|string|min:3|max:255',
       last_name: 'required|string|min:3|max:255',
       email: 'required|email',
