@@ -6,6 +6,7 @@ hooks.after.providersBooted(() => {
 
   Validator.extend('exists', existsFn)
   Validator.extend('hasAuthorization', hasAuthorizationFn)
+  Validator.extend('validateStatus', validateStatusFn)
 })
 
 const existsFn = async (data, field, message, args, get) => {
@@ -54,6 +55,28 @@ const hasAuthorizationFn = async (data, field, message, args, get) => {
     }, '>', 0)
     .where('id', resource_id)
     .first()
+  }
+
+  if (!row) {
+    throw message
+  }
+}
+
+const validateStatusFn = async (data, field, message, args, get) => {
+  const Database = use('Database')
+
+  const [table, order_id, status] = args
+
+  let row = await Database.table(table).where('id', order_id).first()
+
+  if (row.status === 'paid' && status !== 'canceled') {
+    throw message
+  }
+  else if (row.status === 'created' && status !== 'canceled' && status !== 'paid') {
+    throw message
+  }
+  else if (row.status === 'canceled') {
+    throw message
   }
 
   if (!row) {

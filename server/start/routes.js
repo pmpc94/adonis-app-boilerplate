@@ -31,7 +31,7 @@ Route.group(() => {
   //ORDERS
   Route.get('orders', 'OrderController.index').middleware('auth');
   Route.get('orders/:id', 'OrderController.show').middleware('auth').validator('OrderAuthorization');
-  Route.patch('orders/:id', 'OrderController.update').middleware('auth').validator('OrderAuthorization');
+  Route.patch('orders/:id', 'OrderController.update').middleware('auth').validator('OrderAuthorization').validator('OrderUpdate');
   //PRODUCTS
   Route.get('products', 'ProductController.index').middleware('auth');
   Route.get('products/:id', 'ProductController.show').middleware('auth').validator('ProductAuthorization');

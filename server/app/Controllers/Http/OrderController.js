@@ -78,11 +78,6 @@ class OrderController {
     order.merge(request.only(['status']));
     await order.save();
     response.ok('Your order was updated.', order);
-    //TODO - STATUS CAN BE CHANGED FROM:
-    // PAID -> CANCELED
-    // CREATED -> CANCELED
-    // CREATED -> PAID
-    // CANCELED -> [CANNOT BE CHANGED]
   }
 }
 
