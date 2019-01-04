@@ -70,7 +70,6 @@ class ProductController {
   }
 
   async destroy({ auth, request, response }) {
-    const user = await auth.getUser();
     const { id } = request.params;
     const product = await Product.find(id);
     await product.delete();
@@ -78,7 +77,6 @@ class ProductController {
   }
 
   async update({ auth, request, response }) {
-    const user = await auth.getUser();
     const { id } = request.params;
     const product = await Product.find(id);
     product.merge(request.all());

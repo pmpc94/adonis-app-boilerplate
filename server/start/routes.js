@@ -37,5 +37,5 @@ Route.group(() => {
   Route.get('products/:id', 'ProductController.show').middleware('auth').validator('ProductAuthorization');
   Route.post('storeProduct', 'ProductController.store').middleware('auth').validator('ProductStore');
   Route.delete('products/:id', 'ProductController.destroy').middleware('auth').validator('ProductAuthorization');
-  Route.patch('products/:id', 'ProductController.update').middleware('auth').validator('ProductAuthorization');
+  Route.patch('products/:id', 'ProductController.update').middleware('auth').validator('ProductAuthorization').validator('ProductUpdate');
 }).prefix('vendor');
