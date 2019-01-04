@@ -53,29 +53,32 @@ class OrderController {
         role: 'customer'
       });
     }
-    const order = new Order();
-      order.fill({
-        first_name,
-        last_name,
-        address1,
-        address2,
-        total_price,
-        status
-      });
-    await order.save();
-    const orderProduct = new OrderProduct();
-      orderProduct.fill({
-        product_name,
-        price,
-        quantity,
-        order_id: order.id,
-        product_id
-      });
-    await orderProduct.save();
-    total_price = total_price + (quantity * price);
-    await order.merge({ total_price });
-    await order.save({ total_price });
-    response.ok('Your order was successfully created, order', order);
+    if (user.role != 'customer') {
+      return response.unprocessableEntity('Oops! The data you inserted was not valid.', null, 'Invalid Data');
+    }
+      const order = new Order();
+        order.fill({
+          first_name,
+          last_name,
+          address1,
+          address2,
+          total_price,
+          status
+        });
+      await order.save();
+      const orderProduct = new OrderProduct();
+        orderProduct.fill({
+          product_name,
+          price,
+          quantity,
+          order_id: order.id,
+          product_id
+        });
+      await orderProduct.save();
+      total_price = total_price + (quantity * price);
+      await order.merge({ total_price });
+      await order.save({ total_price });
+      response.ok('Your order was successfully created, order', order);
     //TODO - DATABASE TRANSACTIONS
   }
 

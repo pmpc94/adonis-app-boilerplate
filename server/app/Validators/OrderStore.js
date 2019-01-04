@@ -9,7 +9,7 @@ class OrderStore {
     return {
       first_name: 'required|string|min:3|max:255',
       last_name: 'required|string|min:3|max:255',
-      email: 'required|email',
+      email: 'required|email', //TODO - VENDORS CANNOT CREATE A NEW ORDER
       address1: 'required|string|min:3|max:255',
       address2: 'string',
       total_price: 'number|min:1',
