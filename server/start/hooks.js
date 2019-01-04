@@ -21,7 +21,7 @@ const existsFn = async (data, field, message, args, get) => {
   }
 
   const [table, column] = args
-  
+
   const query = Database.query()
           .from(table)
           .where(column, value)

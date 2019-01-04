@@ -4,6 +4,7 @@ const Order = use('App/Models/Order');
 const OrderProduct = use('App/Models/OrderProduct');
 const Product = use ('App/Models/Product');
 const User = use('App/Models/User');
+const Config = use('Config');
 
 class OrderController {
   async index({ auth, request, response }) {
@@ -28,7 +29,6 @@ class OrderController {
 
   async store({ request, response }) {
     const {
-      customer_id,
       first_name,
       last_name,
       email,
@@ -43,9 +43,18 @@ class OrderController {
     let {
       total_price
     } = request.all();
+    let user = await User.findBy('email', email);
+    if (!user) {
+       user = await User.create({
+        firstName: first_name,
+        lastName: last_name,
+        email: email,
+        password: Config.get('database.password'),
+        role: 'customer'
+      });
+    }
     const order = new Order();
       order.fill({
-        customer_id,
         first_name,
         last_name,
         address1,
@@ -67,7 +76,6 @@ class OrderController {
     await order.merge({ total_price });
     await order.save({ total_price });
     response.ok('Your order was successfully created, order', order);
-    //TODO - SAVE USER
     //TODO - DATABASE TRANSACTIONS
   }
 

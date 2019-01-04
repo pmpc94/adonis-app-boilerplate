@@ -5,7 +5,7 @@ const { formatters } = use('Validator')
 class ProductStore {
   get rules () {
     return {
-      user_id: 'required|exists:users,id|exists:users,id,role,vendor',
+      user_id: 'required|exists:users,id,role,vendor',
       name: 'required|string|min:3|max:255',
       description: 'required|string|min:3|max:255',
       category: 'required|string|min:3|max:255|in:terrestrial,giant,dwarf',
