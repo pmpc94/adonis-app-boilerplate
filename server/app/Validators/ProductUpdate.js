@@ -17,7 +17,11 @@ class ProductUpdate {
     return {
       'user_id.required': 'You must provide a user id.',
       'name.required': 'You must provide a name.',
-      'description.required': 'You must provide a description.'
+      'description.required': 'You must provide a description.',
+      'category.required': 'You must provide a category.',
+      'category.in': 'You must provide a valid category',
+      'price.number': 'You must insert a valid number',
+      'price.min': 'You must insert a minimum value of 1.'
     }
   }
 

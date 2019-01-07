@@ -14,7 +14,6 @@ class OrderStore {
       address2: 'string',
       total_price: 'number|min:1',
       status: 'equals:created',
-      price: 'number|min:1',
       quantity: 'number|min:1',
       product_id: 'required|existsArray:products,id'
     }
@@ -28,9 +27,10 @@ class OrderStore {
       'email.required': 'You must provide a email address.',
       'email.email': 'You must provide a valid email address.',
       'address1.required': 'You must provide an address.',
-      'product_name.required': 'You must provide a product name.',
-      'order_id': 'You must provide an order id.',
-      'product_id': 'You must provide a product id.'
+      'total_price.number': 'You must insert a minimum value of 1.', //TO CORRECT - IT IS ACCEPTING NEGATIVE VALUES
+      'status': 'You must insert a status equals to created.',
+      'quantity.number': 'You must insert a valid number.', //TO CORRECT - IT IS ACCEPTING NEGATIVE VALUES
+      'product_id.existsArray': 'You must provide valid products id.'
     }
   }
 

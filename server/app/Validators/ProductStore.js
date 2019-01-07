@@ -18,6 +18,9 @@ class ProductStore {
       'user_id.required': 'You must provide a user id.',
       'name.required': 'You must provide a name.',
       'description.required': 'You must provide a description.'
+      // 'category.required': 'You must provide a category.', //TO CORRECT - IT IS NOT ACCEPTING REQUIRED
+      // 'category.in': 'You must provide a valid category', //TO CORRECT - IT IS NOT ACCEPTING IN
+      // 'price.number': 'You must insert a valid number' //TO CORRECT - IT ACCEPTS NEGATIVE VALUES
     }
   }
 
