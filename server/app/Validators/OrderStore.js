@@ -5,19 +5,18 @@ const { formatters } = use('Validator')
 class OrderStore {
 
   get rules () {
-    const product = this.ctx.request.only('product_id');
+    const order = this.ctx.request.only(['product_id', 'email']);
     return {
       first_name: 'required|string|min:3|max:255',
       last_name: 'required|string|min:3|max:255',
-      email: 'required|email', //TODO - VENDORS CANNOT CREATE A NEW ORDER
+      email: `required|email|validateOrder:users,${order.email}`,
       address1: 'required|string|min:3|max:255',
       address2: 'string',
       total_price: 'number|min:1',
       status: 'equals:created',
-      product_name: `required|exists:products,name,id,${product.product_id}`,
       price: 'number|min:1',
       quantity: 'number|min:1',
-      product_id: 'required|number|exists:products,id'
+      product_id: 'required|existsArray:products,id'
     }
   }
 

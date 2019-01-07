@@ -26,6 +26,9 @@ class ProductController {
   }
 
   async store({ auth, request, response }) {
+    const trx = await Database.beginTransaction()
+
+    try {
     const user = await auth.getUser();
     const {
       name,
@@ -34,15 +37,15 @@ class ProductController {
       price,
       user_id
     } = request.all();
-    const product = new Product();
-    product.fill({
+    const product = await Product.create({
       name,
       description,
       category,
       price,
       user_id
-    });
-    await user.products().save(product);
+    }, trx);
+
+    await user.products().save(product, trx);
     const images = request.file('image_path', {
        types: ['image'],
        maxSize: '20mb',
@@ -57,16 +60,18 @@ class ProductController {
         return images.errors()
     }
     for (let i=0; i<images._files.length; i++) {
-      let productImage = new ProductImage();
-      productImage.fill({
-            image_path: `public/images/${images._files[i].clientName}`,
-            product_id: product.id,
-            thumbnail: i == 0 ? 1 : 0
-          });
-      await product.productImages().save(productImage);
+      let productImage = await ProductImage.create({
+        image_path: `public/images/${images._files[i].clientName}`,
+        product_id: product.id,
+        thumbnail: i == 0 ? 1 : 0
+          }, trx);
+      await product.productImages().save(productImage, trx);
     }
+    trx.commit();
     response.ok('Your product was stored in the database.', product);
-    //TODO - DATABASE TRANSACTIONS
+  } catch(error) {
+    throw error;
+  }
   }
 
   async destroy({ auth, request, response }) {

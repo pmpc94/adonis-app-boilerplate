@@ -5,6 +5,7 @@ const OrderProduct = use('App/Models/OrderProduct');
 const Product = use ('App/Models/Product');
 const User = use('App/Models/User');
 const Config = use('Config');
+const Database = use('Database');
 
 class OrderController {
   async index({ auth, request, response }) {
@@ -28,58 +29,55 @@ class OrderController {
   }
 
   async store({ request, response }) {
-    const {
-      first_name,
-      last_name,
-      email,
-      address1,
-      address2,
-      status,
-      product_name,
-      price,
-      quantity,
-      product_id
-    } = request.all();
-    let {
-      total_price
-    } = request.all();
-    let user = await User.findBy('email', email);
-    if (!user) {
-       user = await User.create({
-        firstName: first_name,
-        lastName: last_name,
-        email: email,
-        password: Config.get('database.password'),
-        role: 'customer'
-      });
-    }
-    if (user.role != 'customer') {
-      return response.unprocessableEntity('Oops! The data you inserted was not valid.', null, 'Invalid Data');
-    }
-      const order = new Order();
-        order.fill({
-          first_name,
-          last_name,
-          address1,
-          address2,
-          total_price,
-          status
-        });
-      await order.save();
-      const orderProduct = new OrderProduct();
-        orderProduct.fill({
-          product_name,
-          price,
+    const trx = await Database.beginTransaction()
+
+    try {
+      const {
+        first_name,
+        last_name,
+        email,
+        address1,
+        address2,
+        status,
+        quantity,
+        product_id
+      } = request.all();
+    let { total_price } = request.all();
+    let user = await User.findOrCreate({ email }, {
+      firstName: first_name,
+      lastName: last_name,
+      email: email,
+      password: 'useless',
+      role: 'customer'
+    }, trx);
+      const order = await Order.create({
+        customer_id: user.id,
+        first_name,
+        last_name,
+        address1,
+        address2,
+        total_price,
+        status
+      }, trx);
+
+      for (let i=0; i<product_id.length; i++) {
+        const product = await Product.find(product_id[i]);
+        await order.orderProducts().create({
+          product_name: product.name,
+          price: product.price,
           quantity,
           order_id: order.id,
-          product_id
-        });
-      await orderProduct.save();
-      total_price = total_price + (quantity * price);
-      await order.merge({ total_price });
-      await order.save({ total_price });
-      response.ok('Your order was successfully created, order', order);
-    //TODO - DATABASE TRANSACTIONS
+          product_id: product_id[i]
+        }, trx);
+        total_price = total_price + (quantity * product.price);
+      }
+          order.merge({ total_price });
+          await order.save(trx);
+          trx.commit();
+        response.ok('Your order was successfully created.', order);
+      } catch(error) {
+        throw error;
+      }
   }
 
   async update({ auth, request, response }) {

@@ -5,12 +5,15 @@ hooks.after.providersBooted(() => {
   const Validator = use('Validator')
 
   Validator.extend('exists', existsFn)
+  Validator.extend('existsArray', existsArrayFn)
   Validator.extend('hasAuthorization', hasAuthorizationFn)
   Validator.extend('validateStatus', validateStatusFn)
+  Validator.extend('validateOrder', validateOrderFn)
 })
 
 const existsFn = async (data, field, message, args, get) => {
   const Database = use('Database')
+
   const value = get(data, field)
   if (!value) {
     /**
@@ -23,15 +26,40 @@ const existsFn = async (data, field, message, args, get) => {
   const [table, column] = args
 
   const query = Database.query()
-          .from(table)
-          .where(column, value)
-  if (args.length==4) {
-    query.where(args[2], args[3])
-  }
+            .from(table)
+            .where(column, value)
+    if (args.length==4) {
+      query.where(args[2], args[3])
+    }
 
-  const row = await query.first()
+  const row = await query.first();
 
   if (!row) {
+    throw message
+  }
+}
+
+const existsArrayFn = async (data, field, message, args, get) => {
+  const Database = use('Database')
+
+  const value = get(data, field)
+  if (!value) {
+    /**
+     * skip validation if value is not defined. `required` rule
+     * should take care of it.
+     */
+    return
+  }
+
+  const [table, column] = args
+
+  const query = Database.query()
+            .from(table)
+            .whereIn(column, value)
+
+  const row = await query.count('* as length');
+  
+  if (row[0].length !== value.length) {
     throw message
   }
 }
@@ -67,7 +95,7 @@ const validateStatusFn = async (data, field, message, args, get) => {
 
   const [table, order_id, status] = args
 
-  let row = await Database.table(table).where('id', order_id).first()
+  const row = await Database.table(table).where('id', order_id).first()
 
   if (row.status === 'paid' && status !== 'canceled') {
     throw message
@@ -82,4 +110,24 @@ const validateStatusFn = async (data, field, message, args, get) => {
   if (!row) {
     throw message
   }
+}
+
+const validateOrderFn = async (data, field, message, args, get) => {
+  const Database = use('Database')
+
+  const [table, email] = args;
+
+  const row = await Database.table(table).where('email', email).first()
+
+  if (!row) {
+    //do nothing, the customer does not exist and will be created in the controller
+  }
+  else if (row.role === 'customer') {
+    //do nothing, validator passes
+  }
+  else if (row.role ==='vendor') {
+    //Let's catch this pokeError!
+    throw message
+  }
+
 }

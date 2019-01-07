@@ -54,6 +54,16 @@ class ExtendResponseProvider extends ServiceProvider {
           errors: errorMessages
         })
     })
+
+    Response.macro('unavailable', function (message, data, errorMessages) {
+        this.status(503).json({
+          message: message,
+          status: 503,
+          code: 'SERVICE UNAVAILABLE',
+          data: data,
+          errors: errorMessages
+        })
+    })
   }
 }
 
