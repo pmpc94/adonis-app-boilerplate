@@ -8,7 +8,8 @@ hooks.after.providersBooted(() => {
   Validator.extend('existsArray', existsArrayFn)
   Validator.extend('hasAuthorization', hasAuthorizationFn)
   Validator.extend('validateStatus', validateStatusFn)
-  Validator.extend('validateOrder', validateOrderFn)
+  Validator.extend('validateCustomer', validateCustomerFn)
+  Validator.extend('validateQuantity', validateQuantityFn)
 })
 
 const existsFn = async (data, field, message, args, get) => {
@@ -112,12 +113,10 @@ const validateStatusFn = async (data, field, message, args, get) => {
   }
 }
 
-const validateOrderFn = async (data, field, message, args, get) => {
+const validateCustomerFn = async (data, field, message, args, get) => {
   const Database = use('Database')
 
-  const [table, email] = args;
-
-  const row = await Database.table(table).where('email', email).first()
+  const row = await Database.table('users').where('email', data.email).first()
 
   if (!row) {
     //do nothing, the customer does not exist and will be created in the controller
@@ -129,5 +128,13 @@ const validateOrderFn = async (data, field, message, args, get) => {
     //Let's catch this pokeError!
     throw message
   }
+}
 
+const validateQuantityFn = async (data, field, message, args, get) => {
+  const Database = use('Database')
+
+  const hasNegative = data.quantity.some(value => value.amount < 0);
+
+  if (hasNegative)
+    throw message
 }

@@ -5,15 +5,14 @@ const { formatters } = use('Validator')
 class OrderStore {
 
   get rules () {
-    const order = this.ctx.request.only(['product_id', 'email']);
     return {
       first_name: 'required|string|min:3|max:255',
       last_name: 'required|string|min:3|max:255',
-      email: `required|email|validateOrder:users,${order.email}`,
+      email: 'required|email|validateCustomer',
       address1: 'required|string|min:3|max:255',
       address2: 'string',
       status: 'equals:created',
-      quantity: 'number|range:0,999',
+      quantity: 'validateQuantity',
       product_id: 'required|existsArray:products,id'
     }
   }
@@ -25,10 +24,10 @@ class OrderStore {
       'last_name.required': 'You must provide a last name.',
       'email.required': 'You must provide a email address.',
       'email.email': 'You must provide a valid email address.',
+      'email.validateCustomer': 'You must provide a valid customer.',
       'address1.required': 'You must provide an address.',
+      'quantity.validateQuantity': 'You must provide a positive quantity.',
       'status': 'You must insert a status equals to created.',
-      'quantity.number': 'You must insert a valid number.',
-      'quantity.range': 'You must insert a positive number.',
       'product_id.existsArray': 'You must provide valid products id.'
     }
   }

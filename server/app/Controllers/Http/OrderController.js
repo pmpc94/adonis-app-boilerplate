@@ -66,17 +66,16 @@ class OrderController {
         total_price,
         status
       }, trx);
-
       for (let i=0; i<product_id.length; i++) {
         const product = await Product.find(product_id[i]);
-        await order.orderProducts().create({
+        const orderProduct = await order.orderProducts().create({
           product_name: product.name,
           price: product.price,
-          quantity,
+          quantity: quantity.filter(value => value.id === product_id[i])[0].amount,
           order_id: order.id,
           product_id: product_id[i]
         }, trx);
-        total_price = total_price + (quantity * product.price);
+        total_price = total_price + (orderProduct.quantity * product.price);
       }
       var stripe = require("stripe")(Config.get('stripe.secret'));
 
@@ -92,8 +91,8 @@ class OrderController {
       trx.commit();
       response.ok('Your order was successfully created.', order);
     } catch(error) {
-      trx.rollback();
       response.errorHandler({}, error);
+      trx.rollback();
     }
   }
 
