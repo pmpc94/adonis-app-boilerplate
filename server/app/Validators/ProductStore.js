@@ -9,7 +9,7 @@ class ProductStore {
       name: 'required|string|min:3|max:255',
       description: 'required|string|min:3|max:255',
       category: 'required|string|min:3|max:255|in:terrestrial,giant,dwarf',
-      price: 'number|min:1'
+      price: 'number|range:0,999'
     }
   }
 
@@ -17,10 +17,11 @@ class ProductStore {
     return {
       'user_id.required': 'You must provide a user id.',
       'name.required': 'You must provide a name.',
-      'description.required': 'You must provide a description.'
+      'description.required': 'You must provide a description.',
       // 'category.required': 'You must provide a category.', //TO CORRECT - IT IS NOT ACCEPTING REQUIRED
       // 'category.in': 'You must provide a valid category', //TO CORRECT - IT IS NOT ACCEPTING IN
-      // 'price.number': 'You must insert a valid number' //TO CORRECT - IT ACCEPTS NEGATIVE VALUES
+      'price.number': 'You must insert a valid number',
+      'price.range': 'You must insert a positive number'
     }
   }
 
@@ -29,8 +30,8 @@ class ProductStore {
   }
 
   get formatter () {
-   return formatters.Vanilla
- }
+    return formatters.Vanilla
+  }
 }
 
 module.exports = ProductStore

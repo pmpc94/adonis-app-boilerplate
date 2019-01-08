@@ -17,8 +17,8 @@ class OrderUpdate {
   }
 
   get formatter () {
-   return formatters.Vanilla
- }
+    return formatters.Vanilla
+  }
 }
 
 module.exports = OrderUpdate

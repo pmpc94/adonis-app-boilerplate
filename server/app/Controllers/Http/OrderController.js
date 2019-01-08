@@ -9,8 +9,9 @@ const Database = use('Database');
 
 class OrderController {
   async index({ auth, request, response }) {
-    const user = await auth.getUser();
-    const orders = await Order
+    try {
+      const user = await auth.getUser();
+      const orders = await Order
       .query()
       .whereHas('orderProducts', (builder) => {
         builder.join('products', 'order_products.product_id', '=', 'products.id').where('products.user_id', user.id)
@@ -19,18 +20,24 @@ class OrderController {
         builder.join('products', 'order_products.product_id', '=', 'products.id').where('products.user_id', user.id)
       })
       .fetch()
-    response.ok('A list of your current customer orders.', orders);
+      response.ok('A list of your current customer orders.', orders);
+    } catch (error) {
+      response.errorHandler({}, error);
+    }
   }
 
   async show({ auth, request, response }) {
-    const { id } = request.params;
-    const order = await Order.find(id);
-    response.ok('The order that you requested.', order);
+    try {
+      const { id } = request.params;
+      const order = await Order.find(id);
+      response.ok('The order that you requested.', order);
+    } catch (error) {
+      response.errorHandler({}, error);
+    }
   }
 
   async store({ request, response }) {
-    const trx = await Database.beginTransaction()
-
+    const trx = await Database.beginTransaction();
     try {
       const {
         first_name,
@@ -42,14 +49,14 @@ class OrderController {
         quantity,
         product_id
       } = request.all();
-    let { total_price } = request.all();
-    let user = await User.findOrCreate({ email }, {
-      firstName: first_name,
-      lastName: last_name,
-      email: email,
-      password: 'useless',
-      role: 'customer'
-    }, trx);
+      let total_price = 0;
+      let user = await User.findOrCreate({ email }, {
+        firstName: first_name,
+        lastName: last_name,
+        email: email,
+        password: 'useless',
+        role: 'customer'
+      }, trx);
       const order = await Order.create({
         customer_id: user.id,
         first_name,
@@ -71,22 +78,36 @@ class OrderController {
         }, trx);
         total_price = total_price + (quantity * product.price);
       }
-          order.merge({ total_price });
-          await order.save(trx);
-          trx.commit();
-        response.ok('Your order was successfully created.', order);
-      } catch(error) {
-        throw error;
-      }
+      var stripe = require("stripe")(Config.get('stripe.secret'));
+
+      await stripe.charges.create({
+        amount: Math.floor(total_price),
+        currency: "eur",
+        source: "tok_visa", // obtained with Stripe.js
+        description: `Charge for ${email}`,
+        receipt_email: email
+      });
+      order.merge({ total_price });
+      await order.save(trx);
+      trx.commit();
+      response.ok('Your order was successfully created.', order);
+    } catch(error) {
+      trx.rollback();
+      response.errorHandler({}, error);
+    }
   }
 
   async update({ auth, request, response }) {
-    const user = await auth.getUser();
-    const { id } = request.params;
-    const order = await Order.find(id);
-    order.merge(request.only(['status']));
-    await order.save();
-    response.ok('Your order was updated.', order);
+    try {
+      const user = await auth.getUser();
+      const { id } = request.params;
+      const order = await Order.find(id);
+      order.merge(request.only(['status']));
+      await order.save();
+      response.ok('Your order was updated.', order);
+    } catch (error) {
+      response.errorHandler({}, error);
+    }
   }
 }
 

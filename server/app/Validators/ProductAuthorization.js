@@ -7,7 +7,7 @@ class ProductAuthorization {
     const product_id = this.ctx.params.id;
     const user_id = this.ctx.auth.user.id;
     return {
-       authorization:`hasAuthorization:products,${product_id},${user_id}`
+      authorization:`hasAuthorization:products,${product_id},${user_id}`
     }
   }
 
@@ -16,8 +16,8 @@ class ProductAuthorization {
   }
 
   get formatter () {
-   return formatters.Vanilla
- }
+    return formatters.Vanilla
+  }
 }
 
 module.exports = ProductAuthorization

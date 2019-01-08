@@ -12,7 +12,7 @@ class UserLogin {
 
   get sanitizationRules () {
     return {
-       email: 'normalize_email'
+      email: 'normalize_email'
     }
   }
 
@@ -29,8 +29,8 @@ class UserLogin {
   }
 
   get formatter () {
-   return formatters.Vanilla
- }
+    return formatters.Vanilla
+  }
 }
 
 module.exports = UserLogin

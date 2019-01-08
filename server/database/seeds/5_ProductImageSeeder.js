@@ -18,17 +18,17 @@ class ProductImageSeeder {
     //make sure all products have at least one or more images associated
     for(let i=1; i<=200; i++) {
       await Factory.model('App/Models/ProductImage').create(
-      {
-        id: i,
-        thumbnail: 1
-      });
-      await Factory.model('App/Models/ProductImage').create(
-      {
-        id: (Math.floor(Math.random() * 200) + 1),
-        thumbnail: 0
-      });
+        {
+          id: i,
+          thumbnail: 1
+        });
+        await Factory.model('App/Models/ProductImage').create(
+          {
+            id: (Math.floor(Math.random() * 200) + 1),
+            thumbnail: 0
+          });
+        }
+      }
     }
-  }
-}
 
-module.exports = ProductImageSeeder
+    module.exports = ProductImageSeeder

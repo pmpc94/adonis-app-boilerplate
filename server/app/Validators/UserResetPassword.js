@@ -11,7 +11,7 @@ class UserResetPassword {
 
   get sanitizationRules () {
     return {
-       email: 'normalize_email'
+      email: 'normalize_email'
     }
   }
 
@@ -27,8 +27,8 @@ class UserResetPassword {
   }
 
   get formatter () {
-   return formatters.Vanilla
- }
+    return formatters.Vanilla
+  }
 }
 
 module.exports = UserResetPassword

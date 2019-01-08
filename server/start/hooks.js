@@ -17,20 +17,20 @@ const existsFn = async (data, field, message, args, get) => {
   const value = get(data, field)
   if (!value) {
     /**
-     * skip validation if value is not defined. `required` rule
-     * should take care of it.
-     */
+    * skip validation if value is not defined. `required` rule
+    * should take care of it.
+    */
     return
   }
 
   const [table, column] = args
 
   const query = Database.query()
-            .from(table)
-            .where(column, value)
-    if (args.length==4) {
-      query.where(args[2], args[3])
-    }
+  .from(table)
+  .where(column, value)
+  if (args.length==4) {
+    query.where(args[2], args[3])
+  }
 
   const row = await query.first();
 
@@ -45,20 +45,20 @@ const existsArrayFn = async (data, field, message, args, get) => {
   const value = get(data, field)
   if (!value) {
     /**
-     * skip validation if value is not defined. `required` rule
-     * should take care of it.
-     */
+    * skip validation if value is not defined. `required` rule
+    * should take care of it.
+    */
     return
   }
 
   const [table, column] = args
 
   const query = Database.query()
-            .from(table)
-            .whereIn(column, value)
+  .from(table)
+  .whereIn(column, value)
 
   const row = await query.count('* as length');
-  
+
   if (row[0].length !== value.length) {
     throw message
   }
@@ -71,7 +71,7 @@ const hasAuthorizationFn = async (data, field, message, args, get) => {
   let row = null;
 
   if (table == 'products') {
-     row = await Database.table(table).where('id', resource_id).where('user_id', user_id).first()
+    row = await Database.table(table).where('id', resource_id).where('user_id', user_id).first()
   }
   else if (table == 'orders') {
     const Order = use('App/Models/Order');

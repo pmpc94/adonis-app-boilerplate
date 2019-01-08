@@ -16,7 +16,7 @@ const Factory = use('Factory');
 const Hash = use('Hash');
 const helper = require('./helper');
 
-  Factory.blueprint('App/Models/User', async (faker) => {
+Factory.blueprint('App/Models/User', async (faker) => {
   return {
     firstName: faker.first(),
     lastName: faker.last(),

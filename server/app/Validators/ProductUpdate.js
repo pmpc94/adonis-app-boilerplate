@@ -30,8 +30,8 @@ class ProductUpdate {
   }
 
   get formatter () {
-   return formatters.Vanilla
- }
+    return formatters.Vanilla
+  }
 }
 
 module.exports = ProductUpdate
