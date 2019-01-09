@@ -39,3 +39,5 @@ Route.group(() => {
   Route.delete('products/:id', 'ProductController.destroy').middleware('auth').validator('ProductAuthorization');
   Route.patch('products/:id', 'ProductController.update').middleware('auth').validator('ProductAuthorization').validator('ProductUpdate');
 }).prefix('vendor');
+
+Route.post('webhooks', 'StripeController.store');

@@ -44,7 +44,8 @@ Factory.blueprint('App/Models/Order', (faker) => {
     address2: faker.address(),
     total_price: 0,
     status: helper.getRandomElement(helper.statusArray),
-    customer_id: helper.getRandomId('customer')
+    customer_id: helper.getRandomId('customer'),
+    stripe_customer_id: faker.word()
   }
 });
 

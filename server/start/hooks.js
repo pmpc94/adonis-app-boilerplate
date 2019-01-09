@@ -134,7 +134,7 @@ const validateQuantityFn = async (data, field, message, args, get) => {
   const Database = use('Database')
 
   const hasNegative = data.quantity.some(value => value.amount < 0);
-
+  
   if (hasNegative)
     throw message
 }
