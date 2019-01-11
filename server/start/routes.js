@@ -41,3 +41,14 @@ Route.group(() => {
 }).prefix('vendor');
 
 Route.post('webhooks', 'StripeController.store');
+
+Route.on('/').render('landing')
+Route.on('/about').render('landing')
+Route.on('/shop').render('landing')
+Route.on('/catalogue').render('landing')
+Route.on('/arrivals').render('landing')
+Route.on('/contacts').render('landing')
+Route.on('/thanks').render('landing')
+Route.on('/cart').render('landing')
+Route.on('/checkout').render('landing')
+Route.on('*').render('landing')

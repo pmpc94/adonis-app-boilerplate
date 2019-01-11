@@ -1,0 +1,47 @@
+
+// Fonts
+@import url('https://fonts.googleapis.com/css?family=Mukta:300,400,700');
+
+// Variables
+@import 'variables';
+
+// Bootstrap
+@import '~bootstrap/scss/bootstrap';
+// @import '~vue2-animate/src/sass/vue2-animate';
+
+//@import "bootstrap/functions";
+//@import "bootstrap/variables";
+//@import "bootstrap/mixins";
+
+/* Base */
+@import 'site-base';
+/* Navbar */
+@import 'site-navbar';
+/* Blocks */
+@import 'site-blocks';
+
+[disabled] {
+  cursor: not-allowed;
+}
+
+a {
+  cursor: pointer;
+}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+}
+
+.width-100 {
+  width: 100% !important;
+}
+
+.pointer {
+  cursor: pointer;
+}

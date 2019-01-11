@@ -17,13 +17,21 @@ const Config = use('Config');
 
 class UserSeeder {
   async run () {
-    //create the Master User
-    const user = await User.create({
+    //create the Master Users
+    const vendor = await User.create({
       firstName: 'Pedro',
       lastName: 'Carolina',
       email: 'pedro.carolina@polygon.pt',
       password: Config.get('database.password'),
       role: 'vendor'
+    });
+
+    const customer = await User.create({
+      firstName: 'Pedro',
+      lastName: 'Carolina',
+      email: 'pmpcwork@hotmail.com',
+      password: Config.get('database.password'),
+      role: 'customer'
     });
 
     await Factory.model('App/Models/User').createMany(99);

@@ -6,7 +6,9 @@
   "main": "index.js",
   "scripts": {
     "start": "node server.js",
-    "test": "node ace test"
+    "test": "node ace test",
+    "watch": "node node_modules/cross-env/dist/bin/cross-env.js NODE_ENV=development webpack --watch --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+    "prod": "node node_modules/cross-env/dist/bin/cross-env.js NODE_ENV=production webpack --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
   },
   "keywords": [
     "adonisjs",
@@ -28,10 +30,34 @@
     "@adonisjs/session": "^1.0.27",
     "@adonisjs/shield": "^1.0.8",
     "@adonisjs/validator": "^5.0.6",
+    "bootstrap": "^4.2.1",
     "mysql": "^2.16.0",
     "stripe": "^6.20.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/plugin-proposal-class-properties": "^7.2.3",
+    "@babel/plugin-syntax-jsx": "^7.2.0",
+    "@babel/plugin-transform-runtime": "^7.2.0",
+    "@babel/preset-env": "^7.2.3",
+    "@babel/register": "^7.0.0",
+    "axios": "^0.18.0",
+    "babel-helper-vue-jsx-merge-props": "^2.0.3",
+    "babel-plugin-syntax-jsx": "^6.18.0",
+    "babel-plugin-transform-vue-jsx": "^3.7.0",
+    "laravel-mix": "^3.0.0",
+    "resolve-url-loader": "^2.3.1",
+    "sass": "^1.16.0",
+    "sass-loader": "^7.1.0",
+    "url-loader": "^1.1.2",
+    "vee-validate": "^2.1.5",
+    "vue": "^2.5.21",
+    "vue-cookie": "^1.1.4",
+    "vue-loader": "^15.5.1",
+    "vue-router": "^3.0.2",
+    "vue-slider-component": "^2.8.5",
+    "vue-template-compiler": "^2.5.21"
+  },
   "autoload": {
     "App": "./app"
   }
