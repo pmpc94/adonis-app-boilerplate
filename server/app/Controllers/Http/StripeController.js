@@ -23,11 +23,17 @@ class StripeController {
 
       const orderProducts = await order.orderProducts().fetch()
       console.log("ORDER", orderProducts.toJSON())
+
       await Mail.send('emails.confirmed', orderProducts.toJSON(), (message) => {
         message.from(Config.get('mail.from'))
         message.to(email)
         message.subject('Your order is confirmed.')
       });
+
+      //TODO - GET VENDORS
+      //Iterate through vendors length
+      //send email to each vendor with correspondent orderProducts
+
       response.ok('Your order was successfully charged.', order);
     } catch (error) {
       response.errorHandler({}, error);

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Order Confirmed</title>
+  <title>Orders</title>
   {{ style('style') }}
 </head>
 <body>
@@ -10,10 +10,10 @@
     <div class="logo"></div>
     <div class="title"></div>
     <div class="subtitle">
-      <h1>You ordered the following product(s):</h1>
+      <h1>Your received the following order:</h1>
       <ul>
         @each(orderProduct in orderProducts)
-        <li> {{ orderProduct.product_name }} {{ orderProduct.price }} {{ orderProduct.quantity }}</li>
+        <li> {{ orderProduct.product_name }} {{ orderProduct.price }} {{ orderProduct.quantity }} </li>
         @endeach
       </ul>
     </div>
