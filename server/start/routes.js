@@ -20,6 +20,7 @@ Route.group(() => {
   //CUSTOMERS
   Route.post('orders', 'OrderController.store').middleware('guest').validator('OrderStore');
   Route.get('products', 'ProductController.all').middleware('guest');
+  //TODO - GET PRODUCT SELECTED BY CUSTOMER
 }).prefix('customer');
 
 Route.group(() => {

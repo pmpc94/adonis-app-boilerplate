@@ -9,8 +9,8 @@ class ProductController {
 
   async all({ request, response }) {
     try {
-      var page = request.input('page');
-      var products = await Database.from('products').paginate(page, 20);
+      const page = request.input('page');
+      const products = await Database.from('products').paginate(page, 20);
       response.ok('The clicked page has the following list of products.', products);
     } catch (error) {
       response.errorHandler({}, error);
