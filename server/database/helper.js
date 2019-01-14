@@ -11,9 +11,9 @@ function getRandomElement(array) {
   return array[randomNumber];
 }
 
-async function getRandomId(role) {
-    const user = await User.query().select('id').where('role', role).orderByRaw('RAND()').limit(1).fetch();
-    return user.rows[0].id;
+async function getRandomUser(role) {
+    const user = await User.query().select('id', 'email').where('role', role).orderByRaw('RAND()').limit(1).fetch();
+    return user.rows[0];
 }
 
 async function getRandomOrderId() {
@@ -35,7 +35,7 @@ module.exports = {
   categoryArray,
   statusArray,
   getRandomElement,
-  getRandomId,
+  getRandomUser,
   getRandomOrderId,
   getRandomProduct
 }

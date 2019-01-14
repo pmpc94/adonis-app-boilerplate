@@ -10,13 +10,51 @@
     <div class="logo"></div>
     <div class="title"></div>
     <div class="subtitle">
-      <h1>You ordered the following product(s):</h1>
+      <h1>Hi {{ first_name }} {{ last_name }}. </h1>
+      <p>Thank you for your purchase, see your order details below.</p>
+      <p>Order number #{{ order_id }}</p>
       <ul>
-        @each(orderProduct in orderProducts)
-        <li> {{ orderProduct.product_name }} {{ orderProduct.price }} {{ orderProduct.quantity }}</li>
-        @endeach
+        <table>
+          <tr>
+            <th>Product Name</th>
+            <th>Quantity</th>
+            <th>Price</th>
+          </tr>
+          @each(orderProduct in orderProducts)
+          <tr>
+            <td>{{ orderProduct.product_name }}</td>
+            <td>{{ orderProduct.quantity }}</td>
+            <td>{{ orderProduct.price }}</td>
+          </tr>
+          @endeach
+          <tfoot>
+            <tr>
+              <th colspan="2">Total :</th>
+              <td>{{ total }}</td>
+            </tr>
+          </tfoot>
+        </table>
       </ul>
     </div>
-    </section>
-  </body>
-  </html>
+    <p>Thank you for choosing us!</p>
+  </section>
+</body>
+</html>
+
+<style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+</style>

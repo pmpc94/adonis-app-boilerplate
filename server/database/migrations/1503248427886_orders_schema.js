@@ -14,7 +14,8 @@ class OrdersSchema extends Schema {
       table.string('address2', 255)
       table.float('total_price').notNullable()
       table.enum('status', ['created', 'paid', 'canceled']).notNullable()
-      table.string('stripe_customer_id', 255)
+      table.string('stripe_customer_id', 255).notNullable()
+      table.string('receipt_email', 255).notNullable()
       table.timestamps()
     })
   }

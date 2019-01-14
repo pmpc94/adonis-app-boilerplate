@@ -26,17 +26,19 @@ Factory.blueprint('App/Models/User', async (faker) => {
   }
 });
 
-Factory.blueprint('App/Models/Product', (faker) => {
+Factory.blueprint('App/Models/Product', async (faker) => {
+  const randomUser = await helper.getRandomUser('vendor')
   return {
     name: faker.name(),
     description: faker.sentence(),
     category: helper.getRandomElement(helper.categoryArray),
     price: faker.floating({ min:1, max: 50}),
-    user_id: helper.getRandomId('vendor')
+    user_id: randomUser.id
   }
 });
 
-Factory.blueprint('App/Models/Order', (faker) => {
+Factory.blueprint('App/Models/Order', async (faker) => {
+  const randomUser = await helper.getRandomUser('customer');
   return {
     first_name: faker.first(),
     last_name: faker.last(),
@@ -44,14 +46,15 @@ Factory.blueprint('App/Models/Order', (faker) => {
     address2: faker.address(),
     total_price: 0,
     status: helper.getRandomElement(helper.statusArray),
-    customer_id: helper.getRandomId('customer'),
-    stripe_customer_id: faker.word()
+    customer_id: randomUser.id,
+    stripe_customer_id: faker.word(),
+    receipt_email: randomUser.email
   }
 });
 
 Factory.blueprint('App/Models/OrderProduct', async (faker, id, data) => {
-  var quantity = faker.integer({ min: 1, max: 5 });
-  var product = await helper.getRandomProduct(data.id, quantity);
+  const quantity = faker.integer({ min: 1, max: 5 });
+  const product = await helper.getRandomProduct(data.id, quantity);
   return {
     product_name: product.rows[0].name,
     price: product.rows[0].price,

@@ -47,8 +47,7 @@ class OrderController {
         address2,
         status,
         quantity,
-        product_id,
-        type
+        product_id
       } = request.all();
       let total_price = 0;
       const user = await User.findOrCreate({ email }, {
@@ -65,7 +64,9 @@ class OrderController {
         address1,
         address2,
         total_price,
-        status
+        status,
+        stripe_customer_id: 0,
+        receipt_email: 'undefined'
       }, trx);
       for (let i=0; i<product_id.length; i++) {
         const product = await Product.find(product_id[i]);
@@ -78,7 +79,6 @@ class OrderController {
         }, trx);
         total_price = total_price + (orderProduct.quantity * product.price);
       }
-
       var stripe = require("stripe")(Config.get('stripe.secret'));
 
       const charge = await stripe.charges.create({
@@ -88,11 +88,12 @@ class OrderController {
         description: `Charge for ${email}`,
         receipt_email: email
       });
-      order.merge({ total_price, stripe_customer_id: charge.id });
+      order.merge({ total_price, stripe_customer_id: charge.id, receipt_email: charge.receipt_email });
       await order.save(trx);
       trx.commit();
       response.ok('Your order was successfully created.', order);
     } catch(error) {
+      console.log("error", error)
       response.errorHandler({}, error);
       trx.rollback();
     }
