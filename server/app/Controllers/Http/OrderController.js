@@ -101,7 +101,6 @@ class OrderController {
 
   async update({ auth, request, response }) {
     try {
-      const user = await auth.getUser();
       const { id } = request.params;
       const order = await Order.find(id);
       order.merge(request.only(['status']));

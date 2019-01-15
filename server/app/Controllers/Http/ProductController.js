@@ -7,18 +7,13 @@ const Helpers = use('Helpers');
 
 class ProductController {
 
-  async all({ request, response }) {
-    try {
-      const page = request.input('page');
-      const products = await Database.from('products').paginate(page, 20);
-      response.ok('The clicked page has the following list of products.', products);
-    } catch (error) {
-      response.errorHandler({}, error);
-    }
-  }
-
   async index({ auth, request, response }) {
     try {
+      if (auth.user === null) {
+        const page = request.input('page');
+        const products = await Product.query().paginate(page);
+        return response.ok('The clicked page has the following list of products.', products);
+      }
       const user = await auth.getUser();
       const products = await user.products().fetch();
       response.ok('The list of your products.', products);
@@ -30,6 +25,11 @@ class ProductController {
   async show({ auth, request, response }) {
     try {
       const { id } = request.params;
+      if (auth.user === null) {
+        const product = await Product.find(id);
+        return response.ok('The product that you requested.', product);
+      }
+      const user = await auth.getUser();
       const product = await Product.find(id);
       response.ok('The product that you requested.', product);
     } catch (error) {

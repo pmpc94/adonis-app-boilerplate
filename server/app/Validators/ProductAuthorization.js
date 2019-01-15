@@ -5,7 +5,10 @@ const { formatters } = use('Validator')
 class ProductAuthorization {
   get rules () {
     const product_id = this.ctx.params.id;
-    const user_id = this.ctx.auth.user.id;
+    let user_id = null;
+    if (this.ctx.auth.user !== null) {
+       user_id = this.ctx.auth.user.id;
+    }
     return {
       authorization:`hasAuthorization:products,${product_id},${user_id}`
     }

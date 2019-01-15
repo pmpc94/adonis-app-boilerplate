@@ -14,13 +14,12 @@ class StripeController {
       const order = await Order.findBy('stripe_customer_id', ch_id);
 
       if (type === 'charge.succeeded') {
-        order.merge({ status: 'paid' })
+        order.save({ status: 'paid' })
       } else if (type === 'charge.expired' || type === 'charge.failed') {
-        order.merge({ status: 'canceled'})
+        order.save({ status: 'canceled'})
       } else {
-        order.merge({ status: 'created'})
+        order.save({ status: 'created'})
       }
-      order.save();
 
       const orderProducts = await order.orderProducts().fetch()
 
@@ -42,7 +41,6 @@ class StripeController {
         user_id = query.rows[i].user_id;
         if (!vendors.includes(user_id)) {
           let filteredProducts = query.toJSON().filter(x => x.user_id === user_id);
-          let total = 0;
           await Mail.send('emails.orders', {
             products: filteredProducts,
             first_name: filteredProducts[0].firstName,
@@ -51,7 +49,7 @@ class StripeController {
             customer_last_name: filteredProducts[0].last_name,
             customer_email: order.receipt_email,
             order_id: filteredProducts[0].order_id,
-            total: filteredProducts.reduce((accumulator, currentValue) => accumulator + (currentValue.price * currentValue.quantity), total)
+            total: filteredProducts.reduce((accumulator, currentValue) => accumulator + (currentValue.price * currentValue.quantity), 0)
           }, (message) => {
             message.from(Config.get('mail.from'))
             message.to(filteredProducts[0].email)

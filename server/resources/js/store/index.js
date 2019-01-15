@@ -3,7 +3,7 @@ import Vuex from 'vuex';
 
 import orders from './modules/orders';
 import products from './modules/products';
-import users from './modules/users';
+import authentication from './modules/authentication';
 
 Vue.use(Vuex);
 
@@ -15,6 +15,6 @@ export default new Vuex.Store({
   modules: {
     orders,
     products,
-    users
+    authentication
   }
 });

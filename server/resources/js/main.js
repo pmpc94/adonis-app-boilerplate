@@ -8,6 +8,7 @@ import VeeValidate from 'vee-validate'
 import App from '@/components/layout/App'
 import router from '@/router'
 import components from '@/components'
+import store from '@/store'
 
 Vue.use(VueCookie)
 Vue.use(components)
@@ -38,6 +39,7 @@ new Vue({
     count: 0
   }),
   router,
+  store,
   components: { App },
   template: '<App/>',
   methods: {

@@ -1,18 +1,24 @@
-import router from '../router';
-import HTTP from '../http';
+import HTTP from '@/http';
 
 export default {
   namespaced: true,
   state: {
-
-  },
-  actions: {
-
+    products: []
   },
   getters: {
 
   },
   mutations: {
-
+    setProducts(state, products) {
+      state.products = products;
+    }
+  },
+  actions: {
+    fetchProducts({ commit }) {
+      return HTTP().get('/products')
+      .then(({ data }) => {
+        commit('setProducts', data);
+      });
+    }
   }
 };

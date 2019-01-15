@@ -72,7 +72,11 @@ const hasAuthorizationFn = async (data, field, message, args, get) => {
   let row = null;
 
   if (table == 'products') {
-    row = await Database.table(table).where('id', resource_id).where('user_id', user_id).first()
+    if (user_id === 'null') {
+      row = await Database.table(table).where('id', resource_id).toSQL()
+    } else {
+      row = await Database.table(table).where('id', resource_id).where('user_id', user_id).first()
+    }
   }
   else if (table == 'orders') {
     const Order = use('App/Models/Order');
@@ -134,7 +138,7 @@ const validateQuantityFn = async (data, field, message, args, get) => {
   const Database = use('Database')
 
   const hasNegative = data.quantity.some(value => value.amount < 0);
-  
+
   if (hasNegative)
-    throw message
+  throw message
 }

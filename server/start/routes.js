@@ -17,13 +17,6 @@
 const Route = use('Route')
 
 Route.group(() => {
-  //CUSTOMERS
-  Route.post('orders', 'OrderController.store').middleware('guest').validator('OrderStore');
-  Route.get('products', 'ProductController.all').middleware('guest');
-  //TODO - GET PRODUCT SELECTED BY CUSTOMER
-}).prefix('customer');
-
-Route.group(() => {
   //VENDORS
   Route.post('login', 'UserController.login').validator('UserLogin');
   Route.post('resetPassword', 'UserController.resetPassword').validator('UserResetPassword');
@@ -33,16 +26,20 @@ Route.group(() => {
   Route.get('orders', 'OrderController.index').middleware('auth');
   Route.get('orders/:id', 'OrderController.show').middleware('auth').validator('OrderAuthorization');
   Route.patch('orders/:id', 'OrderController.update').middleware('auth').validator('OrderAuthorization').validator('OrderUpdate');
+  Route.post('orders', 'OrderController.store').middleware('guest').validator('OrderStore');
+
   //PRODUCTS
-  Route.get('products', 'ProductController.index').middleware('auth');
-  Route.get('products/:id', 'ProductController.show').middleware('auth').validator('ProductAuthorization');
-  Route.post('storeProduct', 'ProductController.store').middleware('auth').validator('ProductStore');
+  Route.get('products', 'ProductController.index');
+  Route.get('products/:id', 'ProductController.show').validator('ProductAuthorization');
+  Route.post('products', 'ProductController.store').middleware('auth').validator('ProductStore');
   Route.delete('products/:id', 'ProductController.destroy').middleware('auth').validator('ProductAuthorization');
   Route.patch('products/:id', 'ProductController.update').middleware('auth').validator('ProductAuthorization').validator('ProductUpdate');
-}).prefix('vendor');
+}).prefix('api');
 
+//STRIPE
 Route.post('webhooks', 'StripeController.store');
 
+//FRONT-END RENDERING
 Route.on('/').render('landing')
 Route.on('/about').render('landing')
 Route.on('/shop').render('landing')
