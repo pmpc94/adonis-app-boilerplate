@@ -5,7 +5,8 @@ export default {
   namespaced: true,
   state: {
     products: [],
-    currentProduct: ''
+    currentProduct: null,
+    activeIndex: 1
   },
   getters: {
 
@@ -16,7 +17,6 @@ export default {
     },
     setProduct(state, product) {
       state.currentProduct = product.data;
-      console.log("currentProduct", currentProduct)
     }
   },
   actions: {
@@ -26,7 +26,7 @@ export default {
         commit('setProducts', data);
       })
       .catch(() => {
-        console.log("Error fetching the products.")
+        console.log('fetchProducts failed.')
       });
     },
     fetchProduct({ commit, state }, id) {
@@ -34,8 +34,18 @@ export default {
       .then(({ data }) => {
         commit('setProduct', data);
       })
-      .catch((e) => {
-        console.log("Error fetching the products.", e)
+      .catch(() => {
+        console.log('fetchProduct failed.')
+      });
+    },
+    fetchPage({ commit, state }, id) {
+      return HTTP().get(`/products?page=${id}`)
+      .then(({ data }) => {
+        state.activeIndex = id;
+        commit('setProducts', data);
+      })
+      .catch(() => {
+        console.log('fetchPage failed.')
       });
     }
   }

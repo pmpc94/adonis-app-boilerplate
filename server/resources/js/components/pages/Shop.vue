@@ -1,13 +1,5 @@
 <template>
   <div>
-    <div class="bg-light py-3">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-12 mb-0"><a href="index.html">Home</a> <span class="mx-2 mb-0">/</span> <strong class="text-black">Shop</strong></div>
-        </div>
-      </div>
-    </div>
-
     <div class="site-section">
       <div class="container">
 
@@ -56,7 +48,7 @@
                   <ul>
                     <li><a href="#">&lt;</a></li>
                     <template v-for="index in products.lastPage">
-                      <li class="active"><span>{{ index }}</span></li>
+                      <li :class="{ 'active': activeIndex === index }" @click="fetchPage(index)"><span>{{ index }}</span></li>
                     </template>
                     <li><a href="#">&gt;</a></li>
                   </ul>
@@ -78,13 +70,12 @@
             <div class="border p-4 rounded mb-4">
               <div class="mb-4">
                 <h3 class="mb-3 h6 text-uppercase text-black d-block">Filter by Price</h3>
-                <div id="slider-range" class="border-primary"></div>
-                <input type="text" name="text" id="amount" class="form-control border-0 pl-0 bg-white" disabled="" />
+                <!-- <vue-slider ref="slider" v-model="value"></vue-slider> -->
               </div>
             </div>
           </div>
         </div>
-        <app-collections></app-collections>
+        <!-- <app-collections></app-collections> -->
       </div>
     </div>
   </div>
@@ -103,12 +94,14 @@ export default {
   },
   computed: {
     ...mapState('products', [
-      'products'
+      'products',
+      'activeIndex'
     ])
   },
   methods: {
     ...mapActions('products', [
-      'fetchProducts'
+      'fetchProducts',
+      'fetchPage'
     ])
   }
 }

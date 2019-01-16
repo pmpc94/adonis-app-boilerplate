@@ -9,6 +9,7 @@ import App from '@/components/layout/App'
 import router from '@/router'
 import components from '@/components'
 import store from '@/store'
+import vueSlider from 'vue-slider-component'
 
 Vue.use(VueCookie)
 Vue.use(components)

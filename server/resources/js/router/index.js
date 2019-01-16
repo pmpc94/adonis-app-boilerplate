@@ -1,14 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from '@/components/pages/Home'
-import About from '@/components/pages/About'
-import Arrivals from '@/components/pages/Arrivals'
-import Cart from '@/components/pages/Cart'
-import Catalogue from '@/components/pages/Catalogue'
-import Checkout from '@/components/pages/Checkout'
-import Contact from '@/components/pages/Contact'
 import Shop from '@/components/pages/Shop'
 import Product from '@/components/pages/Product'
+import Cart from '@/components/pages/Cart'
+import Checkout from '@/components/pages/Checkout'
 import ThankYou from '@/components/pages/ThankYou'
 
 Vue.use(Router)
@@ -18,16 +13,6 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'Home',
-      component: Home
-    },
-    {
-      path: '/about',
-      name: 'About',
-      component: About
-    },
-    {
-      path: '/shop',
       name: 'Shop',
       component: Shop
     },
@@ -35,26 +20,6 @@ export default new Router({
       path: '/product/:id',
       name: 'Product',
       component: Product
-    },
-    {
-      path: '/catalogue',
-      name: 'Catalogue',
-      component: Catalogue
-    },
-    {
-      path: '/arrivals',
-      name: 'Arrivals',
-      component: Arrivals
-    },
-    {
-      path: '/contact',
-      name: 'Contact',
-      component: Contact
-    },
-    {
-      path: '/thank-you',
-      name: 'ThankYou',
-      component: ThankYou
     },
     {
       path: '/cart',
@@ -65,6 +30,11 @@ export default new Router({
       path: '/checkout',
       name: 'Checkout',
       component: Checkout
+    },
+    {
+      path: '/thank-you',
+      name: 'ThankYou',
+      component: ThankYou
     },
     {
       path: '*',

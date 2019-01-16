@@ -85,7 +85,7 @@ class ProductController {
       }
       for (let i=0; i<images._files.length; i++) {
         let productImage = await ProductImage.create({
-          image_path: `public/images/uploads/${images._files[i].clientName}`,
+          image_path: `images/uploads/${images._files[i].clientName}`,
           product_id: product.id,
           thumbnail: i == 0 ? 1 : 0
         }, trx);
