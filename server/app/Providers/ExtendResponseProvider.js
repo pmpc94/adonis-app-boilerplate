@@ -44,7 +44,6 @@ class ExtendResponseProvider extends ServiceProvider {
           errors: errorMessages
         })
     })
-
     Response.macro('unauthorized', function (message, data, errorMessages) {
         this.status(401).json({
           message: message,
@@ -59,6 +58,15 @@ class ExtendResponseProvider extends ServiceProvider {
           message: 'An error occured.',
           status: error.status,
           code: error.code,
+          data: data,
+          errors: error
+        })
+    })
+    Response.macro('notFound', function (data=null, error=null) {
+        this.status(404).json({
+          message: 'Not found.',
+          status: 404,
+          code: 'NOT_FOUND',
           data: data,
           errors: error
         })

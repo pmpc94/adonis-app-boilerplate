@@ -25,14 +25,13 @@ const existsFn = async (data, field, message, args, get) => {
   }
 
   const [table, column] = args
-
+  console.log("VALUE", value)
   const query = Database.query()
   .from(table)
   .where(column, value)
   if (args.length==4) {
     query.where(args[2], args[3])
   }
-
   const row = await query.first();
 
   if (!row) {

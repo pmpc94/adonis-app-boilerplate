@@ -29,7 +29,7 @@ class OrderController {
   async show({ auth, request, response }) {
     try {
       const { id } = request.params;
-      const order = await Order.find(id);
+      const order = await Order.findOrFail(id);
       response.ok('The order that you requested.', order);
     } catch (error) {
       response.errorHandler({}, error);
@@ -69,7 +69,7 @@ class OrderController {
         receipt_email: 'undefined'
       }, trx);
       for (let i=0; i<product_id.length; i++) {
-        const product = await Product.find(product_id[i]);
+        const product = await Product.findOrFail(product_id[i]);
         const orderProduct = await order.orderProducts().create({
           product_name: product.name,
           price: product.price,
@@ -102,7 +102,7 @@ class OrderController {
   async update({ auth, request, response }) {
     try {
       const { id } = request.params;
-      const order = await Order.find(id);
+      const order = await Order.findOrFail(id);
       order.merge(request.only(['status']));
       await order.save();
       response.ok('Your order was updated.', order);

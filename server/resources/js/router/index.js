@@ -8,6 +8,7 @@ import Catalogue from '@/components/pages/Catalogue'
 import Checkout from '@/components/pages/Checkout'
 import Contact from '@/components/pages/Contact'
 import Shop from '@/components/pages/Shop'
+import Product from '@/components/pages/Product'
 import ThankYou from '@/components/pages/ThankYou'
 
 Vue.use(Router)
@@ -29,6 +30,11 @@ export default new Router({
       path: '/shop',
       name: 'Shop',
       component: Shop
+    },
+    {
+      path: '/product/:id',
+      name: 'Product',
+      component: Product
     },
     {
       path: '/catalogue',

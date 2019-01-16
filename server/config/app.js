@@ -17,7 +17,7 @@ module.exports = {
   */
 
   name: Env.get('APP_NAME', 'AdonisJs'),
-
+  url: Env.get('APP_URL', 'url'),
   /*
   |--------------------------------------------------------------------------
   | App Key

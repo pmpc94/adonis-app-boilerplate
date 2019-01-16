@@ -4,8 +4,8 @@ const { formatters } = use('Validator')
 
 class ProductStore {
   get rules () {
+    const user_id = this.ctx.auth.user.id;
     return {
-      user_id: 'required|exists:users,id,role,vendor',
       name: 'required|string|min:3|max:255',
       description: 'required|string|min:3|max:255',
       category: 'required|string|min:3|max:255|in:terrestrial,giant,dwarf',
@@ -15,11 +15,10 @@ class ProductStore {
 
   get messages () {
     return {
-      'user_id.required': 'You must provide a user id.',
       'name.required': 'You must provide a name.',
       'description.required': 'You must provide a description.',
       'category.required': 'You must provide a category.',
-      'category.in': 'You must provide a valid category', 
+      'category.in': 'You must provide a valid category',
       'price.number': 'You must insert a valid number',
       'price.range': 'You must insert a positive number'
     }
