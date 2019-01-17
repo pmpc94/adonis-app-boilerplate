@@ -8,7 +8,7 @@
 
             <div class="row">
               <div class="col-md-12 mb-5">
-                <div class="float-md-left mb-4"><h2 class="text-black h5">Shop All</h2></div>
+                <div class="float-md-left mb-4"><h2 class="text-black h5"><a @click="resetVariables">Shop All</a><span v-if="currentCategory"> / {{ currentCategory }}</span></h2></div>
                 <div class="d-flex">
                   <div class="mr-1 ml-md-auto btn-group">
                     <button type="button" class="btn btn-secondary btn-sm dropdown-toggle" id="dropdownMenuReference" data-toggle="dropdown">Reference</button>
@@ -46,11 +46,9 @@
               <div class="col-md-12 text-center">
                 <div class="site-block-27">
                   <ul>
-                    <li><a href="#">&lt;</a></li>
-                    <template v-for="index in products.lastPage">
-                      <li :class="{ 'active': activeIndex === index }" @click="fetchPage(index)"><span>{{ index }}</span></li>
+                    <template v-for="id in products.lastPage">
+                      <li :class="{ 'active': activePage === id }" @click="handleActivePage(id)"><span>{{ id }}</span></li>
                     </template>
-                    <li><a href="#">&gt;</a></li>
                   </ul>
                 </div>
               </div>
@@ -62,7 +60,7 @@
               <h3 class="mb-3 h6 text-uppercase text-black d-block">Categories</h3>
               <ul class="list-unstyled mb-0">
                 <template v-for="category in categories">
-                  <li @click="fetchProductsByCategory(category)" class="mb-1 d-flex"><span>{{ category.name }}</span> <span class="text-black ml-auto">{{ category.total }}</span></li>
+                  <li style="cursor: pointer" @click="handleCategory(category)" class="mb-1 d-flex"><span>{{ category.name }}</span> <span class="text-black ml-auto">{{ category.total }}</span></li>
                 </template>
               </ul>
             </div>
@@ -96,23 +94,39 @@ export default {
   computed: {
     ...mapState('products', [
       'products',
-      'activeIndex',
-      'categories'
+      'activePage',
+      'categories',
+      'currentCategory'
     ])
   },
   methods: {
     ...mapActions('products', [
       'fetchProducts',
-      'fetchPage',
-      'fetchCategoriesCount',
-      'fetchProductsByCategory'
-    ])
+      'fetchCategoriesCount'
+    ]),
+    ...mapMutations('products', [
+      'setCategory',
+      'setActivePage',
+      'showAll'
+    ]),
+    handleCategory: function(category) {
+      this.setCategory(category);
+      this.fetchProducts();
+    },
+    handleActivePage: function(id) {
+      this.setActivePage(id);
+      this.fetchProducts();
+    },
+    resetVariables: function() {
+      this.showAll();
+      this.fetchProducts();
+    }
   }
 }
 </script>
 
 <style scoped>
-  span {
-    color: #7971ea;
-  }
+span {
+  color: #7971ea;
+}
 </style>

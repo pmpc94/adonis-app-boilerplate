@@ -10,12 +10,13 @@ class ProductController {
   async index({ auth, request, response }) {
     try {
       if (auth.user === null) {
+        const MAX_PRODUCTS = 21;
         const page = request.input('page');
         const category = request.input('category');
-        const products = category === undefined || category === 'all' ? await Product
+        const products = category === undefined ? await Product
         .query()
         .with('thumbnail')
-        .paginate(page) : await Product.query().with('thumbnail').where('category', category).paginate(page)
+        .paginate(page, MAX_PRODUCTS) : await Product.query().with('thumbnail').where('category', category).paginate(page, MAX_PRODUCTS)
         return response.ok('The clicked page has the following list of products.', products);
       }
       const user = await auth.getUser();
@@ -25,20 +26,6 @@ class ProductController {
       .where('products.user_id', user.id)
       .fetch()
       response.ok('The list of your products.', products);
-    } catch (error) {
-      response.errorHandler({}, error);
-    }
-  }
-
-  async categoriesFilter({ request, response }) {
-    try {
-      const category = request.input('name');
-      const categories = await Product
-      .query()
-      .with('thumbnail')
-      .where('category', category)
-      .paginate()
-      response.ok('The requested category.', categories)
     } catch (error) {
       response.errorHandler({}, error);
     }

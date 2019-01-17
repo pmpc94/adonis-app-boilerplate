@@ -19,10 +19,10 @@
               <div class="site-top-icons">
                 <ul>
                   <li>
-                    <a href="cart.html" class="site-cart">
-                      <span class="icon icon-shopping_cart"></span>
+                    <router-link class="site-cart" to="/cart">
+                      <font-awesome-icon far icon="shopping-cart"/>
                       <span class="count">2</span>
-                    </a>
+                    </router-link>
                   </li>
                   <li class="d-inline-block d-md-none ml-md-0"><a href="#" class="site-menu-toggle js-menu-toggle"><span class="icon-menu"></span></a></li>
                 </ul>

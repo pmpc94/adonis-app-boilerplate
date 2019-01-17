@@ -6,9 +6,12 @@ export default {
   state: {
     products: [],
     currentProduct: '',
-    activeIndex: 1,
+    activePage: 1,
     categories: [],
-    currentCategory: 'all'
+    currentCategory: '',
+    pricerange: { min: 0, max: 0},
+    nameOrder: undefined,
+    priceOrder: undefined
   },
   getters: {
 
@@ -22,11 +25,30 @@ export default {
     },
     setCategoriesCount(state, categories) {
       state.categories = categories.data;
+    },
+    setCategory(state, category) {
+      state.activePage = 1;
+      state.currentCategory = category.name;
+    },
+    setActivePage(state, id) {
+      state.activePage = id;
+    },
+    showAll(state) {
+      state.activePage = 1;
+      state.currentCategory = '';
     }
   },
   actions: {
-    fetchProducts({ commit }) {
-      return HTTP().get('/products')
+    fetchProducts({ commit, state }) {
+      let query = '';
+      if (state.currentCategory.length > 0)
+        query += `&category=${state.currentCategory}`;
+      if (state.nameOrder)
+        query += `&order=${state.nameOrder}`;
+      if (state.priceOrder) {
+        query += `&price=${state.priceOrder}`;
+      }
+      return HTTP().get(`/products?page=${state.activePage}${query}`)
       .then(({ data }) => {
         commit('setProducts', data);
       })
@@ -43,16 +65,6 @@ export default {
         console.log('fetchProduct failed.')
       });
     },
-    fetchPage({ commit, state }, id) {
-      return HTTP().get(`/products?page=${id}&category=${state.currentCategory}`)
-      .then(({ data }) => {
-        state.activeIndex = id;
-        commit('setProducts', data);
-      })
-      .catch(() => {
-        console.log('fetchPage failed.')
-      });
-    },
     fetchCategoriesCount({ commit }) {
       return HTTP().get('/categoriesCount')
       .then(({ data }) => {
@@ -60,16 +72,6 @@ export default {
       })
       .catch(() => {
         console.log('fetchCategoriesCount failed.')
-      });
-    },
-    fetchProductsByCategory({ commit, state }, category) {
-      return HTTP().get(`/categoriesFilter?name=${category.name}`)
-      .then(({ data }) => {
-        state.currentCategory = category.name;
-        commit('setProducts', data);
-      })
-      .catch(() => {
-        console.log('fetchProductsByCategory failed.')
       });
     }
   }
