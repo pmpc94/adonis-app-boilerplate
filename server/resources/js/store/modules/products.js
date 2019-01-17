@@ -5,18 +5,23 @@ export default {
   namespaced: true,
   state: {
     products: [],
-    currentProduct: null,
-    activeIndex: 1
+    currentProduct: '',
+    activeIndex: 1,
+    categories: [],
+    currentCategory: 'all'
   },
   getters: {
 
   },
   mutations: {
     setProducts(state, products) {
-      state.products = products.data;
+      state.products = products.data.data === undefined ? products : products.data; //ugly line of code :-(
     },
     setProduct(state, product) {
       state.currentProduct = product.data;
+    },
+    setCategoriesCount(state, categories) {
+      state.categories = categories.data;
     }
   },
   actions: {
@@ -39,13 +44,32 @@ export default {
       });
     },
     fetchPage({ commit, state }, id) {
-      return HTTP().get(`/products?page=${id}`)
+      return HTTP().get(`/products?page=${id}&category=${state.currentCategory}`)
       .then(({ data }) => {
         state.activeIndex = id;
         commit('setProducts', data);
       })
       .catch(() => {
         console.log('fetchPage failed.')
+      });
+    },
+    fetchCategoriesCount({ commit }) {
+      return HTTP().get('/categoriesCount')
+      .then(({ data }) => {
+        commit('setCategoriesCount', data);
+      })
+      .catch(() => {
+        console.log('fetchCategoriesCount failed.')
+      });
+    },
+    fetchProductsByCategory({ commit, state }, category) {
+      return HTTP().get(`/categoriesFilter?name=${category.name}`)
+      .then(({ data }) => {
+        state.currentCategory = category.name;
+        commit('setProducts', data);
+      })
+      .catch(() => {
+        console.log('fetchProductsByCategory failed.')
       });
     }
   }

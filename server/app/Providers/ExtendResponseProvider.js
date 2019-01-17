@@ -53,7 +53,7 @@ class ExtendResponseProvider extends ServiceProvider {
           errors: errorMessages
         })
     })
-    Response.macro('errorHandler', function (data, error) {
+    Response.macro('errorHandler', function (data=null, error) {
         this.status(error.status).json({
           message: 'An error occured.',
           status: error.status,

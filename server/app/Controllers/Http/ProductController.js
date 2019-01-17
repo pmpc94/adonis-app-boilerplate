@@ -11,10 +11,11 @@ class ProductController {
     try {
       if (auth.user === null) {
         const page = request.input('page');
-        const products = await Product
+        const category = request.input('category');
+        const products = category === undefined || category === 'all' ? await Product
         .query()
         .with('thumbnail')
-        .paginate(page)
+        .paginate(page) : await Product.query().with('thumbnail').where('category', category).paginate(page)
         return response.ok('The clicked page has the following list of products.', products);
       }
       const user = await auth.getUser();
@@ -24,6 +25,33 @@ class ProductController {
       .where('products.user_id', user.id)
       .fetch()
       response.ok('The list of your products.', products);
+    } catch (error) {
+      response.errorHandler({}, error);
+    }
+  }
+
+  async categoriesFilter({ request, response }) {
+    try {
+      const category = request.input('name');
+      const categories = await Product
+      .query()
+      .with('thumbnail')
+      .where('category', category)
+      .paginate()
+      response.ok('The requested category.', categories)
+    } catch (error) {
+      response.errorHandler({}, error);
+    }
+  }
+
+  async categoriesCount({ request, response }) {
+    try {
+      const categories = await Product
+      .query()
+      .select('category as name')
+      .count('category as total')
+      .groupBy('category')
+      response.ok('The count of the categories.', categories)
     } catch (error) {
       response.errorHandler({}, error);
     }
@@ -85,7 +113,7 @@ class ProductController {
       }
       for (let i=0; i<images._files.length; i++) {
         let productImage = await ProductImage.create({
-          image_path: `images/uploads/${images._files[i].clientName}`,
+          image_path: `${images._files[i].clientName}`,
           product_id: product.id,
           thumbnail: i == 0 ? 1 : 0
         }, trx);
