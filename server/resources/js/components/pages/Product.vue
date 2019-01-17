@@ -12,7 +12,9 @@
       <div class="container">
         <div class="row">
           <div class="col-md-6">
-            <img v-bind:src="currentProduct.thumbnail.image_path" alt="Image" class="img-fluid">
+          <template v-for="product in currentProduct.images">
+            <img v-bind:src="product.url" alt="Image" class="img-fluid">
+          </template>
           </div>
           <div class="col-md-6">
             <h2 class="text-black">{{ currentProduct.name }}</h2>
