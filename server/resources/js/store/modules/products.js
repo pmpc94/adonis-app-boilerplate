@@ -4,74 +4,52 @@ import router from '@/router'
 export default {
   namespaced: true,
   state: {
-    products: [],
     currentProduct: '',
-    activePage: 1,
-    categories: [],
-    currentCategory: '',
-    pricerange: { min: 0, max: 0},
-    filterOrder: undefined
-  },
-  getters: {
-
-  },
-  mutations: {
-    setProducts(state, products) {
-      state.products = products.data.data === undefined ? products : products.data; //ugly line of code :-(
-    },
+    priceRange: [0, 30],
+    priceRangeMin: 0,
+    priceRangeMax: 100,
+    sliderOptions: {
+      processStyle: {
+        backgroundColor: '#7971ea'
+      },
+      sliderStyle: [{
+        backgroundColor: '#7971ea'
+      },
+      {
+        backgroundColor: '#7971ea'
+      }
+    ],
+    tooltipStyle: [
+      {
+        backgroundColor: '#7971ea',
+        borderColor: '#7971ea'
+      },
+      {
+        backgroundColor: '#7971ea',
+        borderColor: '#7971ea'
+      }
+    ]
+  }
+},
+getters: {
+},
+mutations: {
     setProduct(state, product) {
       state.currentProduct = product.data;
     },
-    setCategoriesCount(state, categories) {
-      state.categories = categories.data;
-    },
-    setCategory(state, category) {
-      state.activePage = 1;
-      state.currentCategory = category.name;
-    },
-    setActivePage(state, id) {
-      state.activePage = id;
-    },
-    showAll(state) {
-      state.activePage = 1;
-      state.currentCategory = '';
-    },
-    setFilterOrder(state, order) {
-      state.filterOrder = order;
+    setPriceRanges(state, product) {
+      state.priceRangeMin = product.min_price;
+      state.priceRangeMax = product.max_price;
     }
   },
   actions: {
-    fetchProducts({ commit, state }) {
-      let query = '';
-      if (state.currentCategory.length > 0)
-        query += `&category=${state.currentCategory}`;
-      if (state.filterOrder)
-        query += `&${state.filterOrder.column}=${state.filterOrder.order}`;
-
-      return HTTP().get(`/products?page=${state.activePage}${query}`)
+    fetchPriceRange({ commit }) {
+      return HTTP().get('/priceRange')
       .then(({ data }) => {
-        commit('setProducts', data);
+        commit('setPriceRanges', data);
       })
       .catch(() => {
-        console.log('fetchProducts failed.')
-      });
-    },
-    fetchProduct({ commit, state }, id) {
-      return HTTP().get(`/products/${id}`)
-      .then(({ data }) => {
-        commit('setProduct', data);
-      })
-      .catch(() => {
-        console.log('fetchProduct failed.')
-      });
-    },
-    fetchCategoriesCount({ commit }) {
-      return HTTP().get('/categoriesCount')
-      .then(({ data }) => {
-        commit('setCategoriesCount', data);
-      })
-      .catch(() => {
-        console.log('fetchCategoriesCount failed.')
+        console.log('fetchPriceRange failed.')
       });
     }
   }

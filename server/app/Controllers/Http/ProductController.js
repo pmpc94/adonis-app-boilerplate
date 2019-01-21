@@ -49,6 +49,19 @@ class ProductController {
     }
   }
 
+  async priceRange({ request, response }) {
+    try {
+      const priceRange = await Product
+      .query()
+      .min('price as min_price')
+      .max('price as max_price')
+      console.log("PRICE", priceRange)
+      response.ok('The price range.', priceRange)
+    } catch (error) {
+      response.errorHandler({}, error);
+    }
+  }
+
   async show({ auth, request, response }) {
     try {
       const { id } = request.params;

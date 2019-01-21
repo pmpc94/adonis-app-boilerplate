@@ -24,11 +24,11 @@
             <div class="mb-5">
               <div class="input-group mb-3" style="max-width: 120px;">
                 <div class="input-group-prepend">
-                  <button class="btn btn-outline-primary js-btn-minus" type="button">&minus;</button>
+                  <button @click="decrementCount" class="btn btn-outline-primary js-btn-minus" type="button">&minus;</button>
                 </div>
-                <input type="text" class="form-control text-center" value="1" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
+                <input type="text" class="form-control text-center" v-model="count" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
                 <div class="input-group-append">
-                  <button class="btn btn-outline-primary js-btn-plus" type="button">&plus;</button>
+                  <button @click="incrementCount" class="btn btn-outline-primary js-btn-plus" type="button">&plus;</button>
                 </div>
               </div>
 
@@ -39,31 +39,35 @@
         </div>
       </div>
     </div>
-    <!-- <app-featured-products></app-featured-products> -->
   </div>
 </div>
 </template>
 
 <script>
+import HTTP from '@/http';
 import { mapActions, mapState } from 'vuex';
-import FeaturedProducts from '@/components/elements/FeaturedProducts.vue';
 
 export default {
+  data () {
+    return {
+      count: 1,
+      currentProduct: ''
+    }
+  },
   mounted() {
     this.fetchProduct(this.$route.params.id)
   },
-  components: {
-    appFeaturedProducts: FeaturedProducts,
-  },
-  computed: {
-    ...mapState('products', [
-      'currentProduct'
-    ])
-  },
   methods: {
-    ...mapActions('products', [
-      'fetchProduct'
-    ])
+    async fetchProduct(id) {
+      const { data } = await HTTP().get(`/products/${id}`);
+      this.currentProduct = data.data;
+    },
+    incrementCount() {
+      this.count++;
+    },
+    decrementCount() {
+      this.count--;
+    }
   }
 }
 </script>
