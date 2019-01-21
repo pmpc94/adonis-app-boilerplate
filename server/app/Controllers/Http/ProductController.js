@@ -13,10 +13,15 @@ class ProductController {
         const MAX_PRODUCTS = 21;
         const page = request.input('page');
         const category = request.input('category');
+        let column = request.input('name') !== undefined ? 'name' : request.input('price') !== undefined ? 'price' : undefined;
+        let order = request.input('name') || request.input('price');
+        column = column === undefined ? 'id' : column;
+        order = order === undefined ? 'ASC' : order;
         const products = category === undefined ? await Product
         .query()
+        .orderBy(column, order)
         .with('thumbnail')
-        .paginate(page, MAX_PRODUCTS) : await Product.query().with('thumbnail').where('category', category).paginate(page, MAX_PRODUCTS)
+        .paginate(page, MAX_PRODUCTS) : await Product.query().orderBy(column, order).with('thumbnail').where('category', category).paginate(page, MAX_PRODUCTS)
         return response.ok('The clicked page has the following list of products.', products);
       }
       const user = await auth.getUser();

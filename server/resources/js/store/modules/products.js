@@ -10,8 +10,7 @@ export default {
     categories: [],
     currentCategory: '',
     pricerange: { min: 0, max: 0},
-    nameOrder: undefined,
-    priceOrder: undefined
+    filterOrder: undefined
   },
   getters: {
 
@@ -36,6 +35,9 @@ export default {
     showAll(state) {
       state.activePage = 1;
       state.currentCategory = '';
+    },
+    setFilterOrder(state, order) {
+      state.filterOrder = order;
     }
   },
   actions: {
@@ -43,11 +45,9 @@ export default {
       let query = '';
       if (state.currentCategory.length > 0)
         query += `&category=${state.currentCategory}`;
-      if (state.nameOrder)
-        query += `&order=${state.nameOrder}`;
-      if (state.priceOrder) {
-        query += `&price=${state.priceOrder}`;
-      }
+      if (state.filterOrder)
+        query += `&${state.filterOrder.column}=${state.filterOrder.order}`;
+
       return HTTP().get(`/products?page=${state.activePage}${query}`)
       .then(({ data }) => {
         commit('setProducts', data);

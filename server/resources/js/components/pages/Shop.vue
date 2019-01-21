@@ -10,14 +10,14 @@
               <div class="col-md-12 mb-5">
                 <div class="float-md-left mb-4"><h2 class="text-black h5"><a @click="resetVariables">Shop All</a><span v-if="currentCategory"> / {{ currentCategory }}</span></h2></div>
                 <div class="d-flex">
-                  <div class="mr-1 ml-md-auto btn-group">
-                    <button type="button" class="btn btn-secondary btn-sm dropdown-toggle" id="dropdownMenuReference" data-toggle="dropdown">Reference</button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuReference">
-                      <a class="dropdown-item" href="#">Name, A to Z</a>
-                      <a class="dropdown-item" href="#">Name, Z to A</a>
+                  <div class="mr-1 ml-md-auto btn-group" :class="{ 'show': showFlag }">
+                    <button @click="toggleDropdown" :aria-expanded="showFlag" type="button" class="btn btn-secondary btn-sm dropdown-toggle"  id="dropdownMenuReference" data-toggle="dropdown">Reference</button>
+                    <div class="dropdown-menu" :class="{ 'show': showFlag }" aria-labelledby="dropdownMenuReference">
+                      <a class="dropdown-item" @click="handleDropdown({ column: 'name', order: 'ASC' })">Name, A to Z</a>
+                      <a class="dropdown-item" @click="handleDropdown({ column: 'name', order: 'DESC' })">Name, Z to A</a>
                       <div class="dropdown-divider"></div>
-                      <a class="dropdown-item" href="#">Price, low to high</a>
-                      <a class="dropdown-item" href="#">Price, high to low</a>
+                      <a class="dropdown-item" @click="handleDropdown({ column: 'price', order: 'ASC' })">Price, low to high</a>
+                      <a class="dropdown-item" @click="handleDropdown({ column: 'price', order: 'DESC' })">Price, high to low</a>
                     </div>
                   </div>
                 </div>
@@ -84,6 +84,11 @@ import { mapActions, mapMutations, mapState } from 'vuex';
 import Collections from '@/components/elements/Collections.vue';
 
 export default {
+  data () {
+    return {
+      showFlag: false
+    }
+  },
   mounted() {
     this.fetchProducts()
     this.fetchCategoriesCount()
@@ -107,7 +112,8 @@ export default {
     ...mapMutations('products', [
       'setCategory',
       'setActivePage',
-      'showAll'
+      'showAll',
+      'setFilterOrder'
     ]),
     handleCategory: function(category) {
       this.setCategory(category);
@@ -120,6 +126,13 @@ export default {
     resetVariables: function() {
       this.showAll();
       this.fetchProducts();
+    },
+    toggleDropdown: function() {
+      this.showFlag = !this.showFlag;
+    },
+    handleDropdown: function(filterOrder) {
+      this.setFilterOrder(filterOrder);
+      this.fetchProducts();
     }
   }
 }
@@ -128,5 +141,8 @@ export default {
 <style scoped>
 span {
   color: #7971ea;
+}
+a {
+  cursor: pointer;
 }
 </style>
