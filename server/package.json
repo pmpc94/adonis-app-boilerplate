@@ -31,11 +31,8 @@
     "@adonisjs/shield": "^1.0.8",
     "@adonisjs/validator": "^5.0.6",
     "@fortawesome/vue-fontawesome": "^0.1.5",
-    "bootstrap": "^4.2.1",
     "mysql": "^2.16.0",
-    "stripe": "^6.20.0",
-    "vuetify": "^1.4.2",
-    "vuex": "^3.0.1"
+    "stripe": "^6.20.0"
   },
   "devDependencies": {
     "@babel/core": "^7.2.2",
@@ -62,7 +59,10 @@
     "vue-loader": "^15.5.1",
     "vue-router": "^3.0.2",
     "vue-slider-component": "^2.8.5",
-    "vue-template-compiler": "^2.5.21"
+    "vue-template-compiler": "^2.5.21",
+    "vuetify": "^1.4.2",
+    "vuex": "^3.0.1",
+    "bootstrap": "^4.2.1"
   },
   "autoload": {
     "App": "./app"

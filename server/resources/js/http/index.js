@@ -4,10 +4,10 @@ import store from '@/store';
 export default () => {
   return axios.create({
     baseURL: store.state.baseUrl,
-    timeout: 5000,
+    timeout: 10000,
     headers: {
       accept: 'application/json',
-      Authorization: `Bearer ${store.state.authentication.token}`
+      // Authorization: `Bearer ${store.state.authentication.token}`
     }
   })
 };

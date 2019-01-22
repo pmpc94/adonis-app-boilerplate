@@ -17,11 +17,14 @@ class ProductController {
         let order = request.input('name') || request.input('price');
         column = column === undefined ? 'id' : column;
         order = order === undefined ? 'ASC' : order;
+        const min = request.input('min');
+        const max = request.input('max');
         const products = category === undefined ? await Product
         .query()
         .orderBy(column, order)
         .with('thumbnail')
-        .paginate(page, MAX_PRODUCTS) : await Product.query().orderBy(column, order).with('thumbnail').where('category', category).paginate(page, MAX_PRODUCTS)
+        .where('price', '>', min).where('price', '<', max)
+        .paginate(page, MAX_PRODUCTS) : await Product.query().orderBy(column, order).with('thumbnail').where('category', category).where('price', '>', min).where('price', '<', max).paginate(page, MAX_PRODUCTS)
         return response.ok('The clicked page has the following list of products.', products);
       }
       const user = await auth.getUser();
@@ -51,11 +54,11 @@ class ProductController {
 
   async priceRange({ request, response }) {
     try {
-      const priceRange = await Product
+      const category = request.input('category');
+      const priceRange = category === undefined ? await Product
       .query()
       .min('price as min_price')
-      .max('price as max_price')
-      console.log("PRICE", priceRange)
+      .max('price as max_price').first() : await Product.query().min('price as min_price').max('price as max_price').where('category', category).first()
       response.ok('The price range.', priceRange)
     } catch (error) {
       response.errorHandler({}, error);

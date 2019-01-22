@@ -45,7 +45,6 @@
 
 <script>
 import HTTP from '@/http';
-import { mapActions, mapState } from 'vuex';
 
 export default {
   data () {

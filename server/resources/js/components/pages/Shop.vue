@@ -8,7 +8,7 @@
 
             <div class="row">
               <div class="col-md-12 mb-5">
-                <div class="float-md-left mb-4"><h2 class="text-black h5"><a @click="resetVariables" style="color: #7971ea;">Shop All</a><span v-if="currentCategory"> / {{ currentCategory.name }} </span></h2></div>
+                <div class="float-md-left mb-4"><h2 class="text-black h5"><a @click="resetVariables" style="color: #7971ea;">Shop All</a><span v-if="currentCategory"> / {{ currentCategory.name }} </span><span v-if="column && order"> - ({{ orderText }})</span></h2></div>
                 <div class="d-flex">
                   <div class="mr-1 ml-md-auto btn-group" :class="{ 'show': showFlag }">
                     <button @click="toggleDropdown" :aria-expanded="showFlag" type="button" class="btn btn-secondary btn-sm dropdown-toggle"  id="dropdownMenuReference" data-toggle="dropdown">Reference</button>
@@ -23,7 +23,6 @@
                 </div>
               </div>
             </div>
-            <div><h2 class="text-black h5"><span v-if="column && order">({{ orderText }})</span></h2></div>
             <div class="row mb-5">
               <template v-for="product in products.data">
                 <div class="col-sm-6 col-lg-4 mb-4" data-aos="fade-up">
@@ -60,7 +59,7 @@
               <h3 class="mb-3 h6 text-uppercase text-black d-block">Categories</h3>
               <ul class="list-unstyled mb-0">
                 <template v-for="category in categories">
-                  <li style="cursor: pointer" @click="fetchProducts({ category }), currentCategory = category" class="mb-1 d-flex"><span>{{ category.name }}</span> <span class="text-black ml-auto">{{ category.total }}</span></li>
+                  <li style="cursor: pointer; color: #7971ea;" @click="fetchPriceRange({ category }), currentCategory = category" class="mb-1 d-flex"><span>{{ category.name }}</span> <span class="text-black ml-auto">{{ category.total }}</span></li>
                 </template>
               </ul>
             </div>
@@ -68,7 +67,7 @@
             <div class="border p-4 rounded mb-4">
               <div class="mb-2">
                 <h3 class="mb-5 h6 text-uppercase text-black d-block">Filter by Price (€)</h3>
-                <vue-slider v-bind="sliderOptions" ref="slider" v-model="priceRange" :min="priceRangeMin" :max="priceRangeMax"></vue-slider>
+                <vue-slider ref="slider" v-model="priceRange" :min="0" :max="max"></vue-slider>
               </div>
             </div>
           </div>
@@ -80,14 +79,16 @@
 
 <script>
 import HTTP from '@/http';
-import { mapActions, mapMutations, mapState } from 'vuex';
 
 export default {
   data () {
     return {
       showFlag: false,
       activePage: 1,
-      priceRange: [0, 10],
+      max: 100,
+      priceRangeMin: 0,
+      priceRangeMax: 100,
+      priceRange: [],
       currentCategory: undefined,
       products: [],
       column: undefined,
@@ -97,12 +98,13 @@ export default {
     }
   },
   mounted() {
-    this.fetchProducts({ activePage: 1})
     this.fetchCategoriesCount()
+    this.fetchPriceRange({ activePage: 1})
   },
 
   methods: {
-    async fetchProducts({ category, column, order, activePage } = {}) {
+    async fetchProducts({ category, column, order, activePage, range } = {}) {
+      console.log("fetchProducts")
       let query = '';
       this.activePage = activePage !== undefined ? activePage : 1;
       if (category !== undefined) {
@@ -121,6 +123,14 @@ export default {
       if (column === undefined && order === undefined && this.column !== undefined && this.order !== undefined) {
         query += `&${this.column}=${this.order}`;
       }
+      if (range !== undefined) {
+          query += `&min=${range[0]}&max=${range[1]}`;
+          this.priceRangeMin = range[0];
+          this.priceRangeMax = range[1];
+      }
+      if (range === undefined && this.priceRangeMin !== undefined && this.priceRangeMax !== undefined) {
+          query += `&min=${this.priceRangeMin}&max=${this.priceRangeMax}`
+      }
       const { data } = await HTTP().get(`/products?page=${this.activePage}${query}`)
       this.products = data.data;
     },
@@ -128,27 +138,30 @@ export default {
       const { data } = await HTTP().get('/categoriesCount');
       this.categories = data.data;
     },
+    async fetchPriceRange({ activePage, category } = {}) {
+      console.log("fetchPriceRange")
+      let query = '';
+      if (category!== undefined) {
+        query += `?category=${category.name}`
+      }
+      const { data } = await HTTP().get(`/priceRange${query}`);
+      this.max = data.data.max_price;
+      this.priceRange = [0, this.max];
+    },
     resetVariables() {
       this.currentCategory = undefined;
       this.column = undefined;
       this.order = undefined;
-      this.fetchProducts();
+      this.fetchPriceRange();
     },
     toggleDropdown() {
       this.showFlag = !this.showFlag;
     }
   },
-
-  computed: {
-    ...mapState('products', [
-      'sliderOptions',
-      'priceRangeMin',
-      'priceRangeMax'
-    ])
-  },
   watch: {
     priceRange(val) {
-      console.log("PRICE RANGE")
+      console.log("watch")
+      val[0] !== undefined ? this.fetchProducts({ range: val}) : '';
     }
   }
 }
