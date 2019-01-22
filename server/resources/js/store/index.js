@@ -1,9 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 
-import orders from './modules/orders';
-import products from './modules/products';
-import authentication from './modules/authentication';
+import cart from './modules/cart';
 
 Vue.use(Vuex);
 
@@ -13,8 +11,6 @@ export default new Vuex.Store({
     baseUrl: '/api'
   },
   modules: {
-    orders,
-    products,
-    authentication
+    cart
   }
 });

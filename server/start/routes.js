@@ -30,6 +30,8 @@ Route.group(() => {
 
   //PRODUCTS
   Route.get('products', 'ProductController.index');
+  Route.get('categoriesCount', 'ProductController.categoriesCount');
+  Route.get('priceRange', 'ProductController.priceRange');
   Route.get('products/:id', 'ProductController.show').validator('ProductAuthorization');
   Route.post('product', 'ProductController.store').middleware('auth').validator('ProductStore');
   Route.delete('products/:id', 'ProductController.destroy').middleware('auth').validator('ProductAuthorization');

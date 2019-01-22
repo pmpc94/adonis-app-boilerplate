@@ -9,8 +9,13 @@ import App from '@/components/layout/App'
 import router from '@/router'
 import components from '@/components'
 import store from '@/store'
-import vueSlider from 'vue-slider-component'
+import Vuetify from 'vuetify'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faShoppingCart } from '@fortawesome/pro-solid-svg-icons'
 
+library.add(faShoppingCart)
+Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.use(VueCookie)
 Vue.use(components)
 Vue.use(VeeValidate)
