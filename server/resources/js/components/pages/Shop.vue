@@ -59,13 +59,13 @@
               <h3 class="mb-3 h6 text-uppercase text-black d-block">Categories</h3>
               <ul class="list-unstyled mb-0">
                 <template v-for="category in categories">
-                  <li style="cursor: pointer; color: #7971ea;" @click="fetchPriceRange({ category }), currentCategory = category" class="mb-1 d-flex"><span>{{ category.name }}</span> <span class="text-black ml-auto">{{ category.total }}</span></li>
+                  <li style="cursor: pointer; color: #7971ea;" @click="fetchPriceRange({ category })" class="mb-1 d-flex"><span>{{ category.name }}</span> <span class="text-black ml-auto">{{ category.total }}</span></li>
                 </template>
               </ul>
             </div>
 
             <div class="border p-4 rounded mb-4">
-              <div class="mb-2">
+              <div class="mb-2 priority-slider">
                 <h3 class="mb-5 h6 text-uppercase text-black d-block">Filter by Price (€)</h3>
                 <vue-slider ref="slider" v-model="priceRange" :min="0" :max="max"></vue-slider>
               </div>
@@ -99,20 +99,14 @@ export default {
   },
   mounted() {
     this.fetchCategoriesCount()
-    this.fetchPriceRange({ activePage: 1})
+    this.fetchPriceRange()
   },
 
   methods: {
-    async fetchProducts({ category, column, order, activePage, range } = {}) {
-      console.log("fetchProducts")
+    async fetchProducts({ column, order, activePage, range } = {}) {
       let query = '';
       this.activePage = activePage !== undefined ? activePage : 1;
-      if (category !== undefined) {
-        query += `&category=${category.name}`;
-        this.activePage = 1;
-        this.currentCategory = category;
-      }
-      if (category === undefined && this.currentCategory !== undefined){
+      if (this.currentCategory !== undefined){
         query += `&category=${this.currentCategory.name}`;
       }
       if (column !== undefined && order !== undefined){
@@ -138,11 +132,11 @@ export default {
       const { data } = await HTTP().get('/categoriesCount');
       this.categories = data.data;
     },
-    async fetchPriceRange({ activePage, category } = {}) {
-      console.log("fetchPriceRange")
+    async fetchPriceRange({ category } = {}) {
       let query = '';
       if (category!== undefined) {
         query += `?category=${category.name}`
+        this.currentCategory = category;
       }
       const { data } = await HTTP().get(`/priceRange${query}`);
       this.max = data.data.max_price;
@@ -160,7 +154,6 @@ export default {
   },
   watch: {
     priceRange(val) {
-      console.log("watch")
       val[0] !== undefined ? this.fetchProducts({ range: val}) : '';
     }
   }

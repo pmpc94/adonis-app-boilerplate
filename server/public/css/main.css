@@ -12521,3 +12521,17 @@ a:hover {
           font-feature-settings: 'liga';
 }
 
+.priority-slider .vue-slider-component .vue-slider-tooltip {
+  border: 1px solid #7971ea;
+  background-color: #7971ea;
+}
+
+.priority-slider .vue-slider-component .vue-slider-process {
+  background-color: #7971ea;
+}
+
+.priority-slider .vue-slider-component .vue-slider-dot.vue-slider-dot-focus .vue-slider-dot-handle {
+  -webkit-box-shadow: 0 0 2px 1px #7971ea;
+          box-shadow: 0 0 2px 1px #7971ea;
+}
+
