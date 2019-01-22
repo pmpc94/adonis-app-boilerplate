@@ -11,7 +11,7 @@
 
             <div class="col-12 mb-3 mb-md-0 col-md-4 order-1 order-md-2 text-center">
               <div class="site-logo">
-                <a href="/" class="js-logo-clone">Planet & Comet Shop</a>
+                <router-link class="js-logo-clone" tag="a" to="/">Planet & Comet Shop</router-link>
               </div>
             </div>
 
@@ -21,7 +21,7 @@
                   <li>
                     <router-link class="site-cart" to="/cart">
                       <font-awesome-icon far icon="shopping-cart"/>
-                      <span class="count">2</span>
+                      <span class="count">{{ getCartLength }}</span>
                     </router-link>
                   </li>
                   <li class="d-inline-block d-md-none ml-md-0"><a href="#" class="site-menu-toggle js-menu-toggle"><span class="icon-menu"></span></a></li>
@@ -37,8 +37,15 @@
 </template>
 
 <script>
-  export default {
+import { mapGetters } from 'vuex';
+
+export default {
+  computed: {
+    ...mapGetters('cart', [
+      'getCartLength'
+    ])
   }
+}
 </script>
 
 <style lang="css">

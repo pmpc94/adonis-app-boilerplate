@@ -28,12 +28,12 @@
                 <div class="col-sm-6 col-lg-4 mb-4" data-aos="fade-up">
                   <div class="block-4 text-center border">
                     <figure class="block-4-image">
-                      <a :href="`/product/${product.id}`"><img v-bind:src="product.thumbnail.url" alt="Image placeholder" class="img-fluid"></a>
+                      <router-link tag="a" :to="`/product/${product.id}`"><img v-bind:src="product.thumbnail.url" alt="Image placeholder" class="img-fluid"></router-link>
                     </figure>
                     <div class="block-4-text p-4">
-                      <h3><a :href="`/product/${product.id}`">{{ product.name }}</a></h3>
+                      <h3><router-link :to="`/product/${product.id}`">{{ product.name }}</router-link></h3>
                       <p class="mb-0">{{ product.category }}</p>
-                      <p class="text-primary font-weight-bold">{{ product.price }}€</p>
+                      <p class="text-primary font-weight-bold">€{{ product.price }}</p>
                     </div>
                   </div>
                 </div>

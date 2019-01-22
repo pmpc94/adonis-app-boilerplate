@@ -49,7 +49,7 @@ class StripeController {
             customer_last_name: filteredProducts[0].last_name,
             customer_email: order.receipt_email,
             order_id: filteredProducts[0].order_id,
-            total: filteredProducts.reduce((accumulator, currentValue) => accumulator + (currentValue.price * currentValue.quantity), 0)
+            total: filteredProducts.reduce((accumulator, currentValue) => accumulator + (currentValue.price * currentValue.quantity), 0).toFixed(2)
           }, (message) => {
             message.from(Config.get('mail.from'))
             message.to(filteredProducts[0].email)

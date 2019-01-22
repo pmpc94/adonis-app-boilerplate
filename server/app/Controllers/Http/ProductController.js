@@ -111,9 +111,10 @@ class ProductController {
         maxSize: '20mb',
         allowedExtensions: ['jpg', 'png', 'jpeg']
       })
+      const currentDateTime = new Date().getTime();
       await images.moveAll(Helpers.publicPath(`/images/uploads`), (file) => {
         return {
-          name: `${new Date().getTime()}.${file.clientName}`
+          name: `${currentDateTime}.${file.clientName}`
         }
       })
       if (!images.movedAll()) {
@@ -121,7 +122,7 @@ class ProductController {
       }
       for (let i=0; i<images._files.length; i++) {
         let productImage = await ProductImage.create({
-          image_path: `${images._files[i].clientName}`,
+          image_path: `${currentDateTime}.${images._files[i].clientName}`,
           product_id: product.id,
           thumbnail: i == 0 ? 1 : 0
         }, trx);
