@@ -67,12 +67,13 @@ class ProductController {
 
   async show({ auth, request, response }) {
     try {
-      const { id } = request.params;
+      let { name } = request.params;
+      name = decodeURI(name);
       if (auth.user === null) {
         const product = await Product
         .query()
         .with('images').with('thumbnail')
-        .where('id', id)
+        .where('name', name)
         .firstOrFail()
         return response.ok('The product that you requested.', product);
       }
@@ -80,7 +81,7 @@ class ProductController {
       const product = await Product
       .query()
       .with('images').with('thumbnail')
-      .where('id', id)
+      .where('name', name)
       .firstOrFail()
       response.ok('The product that you requested.', product);
     } catch (error) {

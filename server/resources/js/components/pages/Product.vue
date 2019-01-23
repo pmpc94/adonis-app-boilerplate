@@ -12,21 +12,24 @@
       <div class="container">
         <div class="row">
           <div class="col-md-6">
-          <template v-for="(product, index) in currentProduct.images">
-            <img @click="switchSelectedImage(product, index)" v-bind:src="product.url" alt="Image" :class="{ 'img-fluid mb-2': product.thumbnail, 'img-secondary mr-2': !product.thumbnail }">
-          </template>
+            <img :src="currentImage" alt="" class="img-fluid mb-2">
+            <div class="row">
+              <div class="col-md-3" v-for="(product, index) in currentProduct.images" :key="index">
+                <img :class="{ 'selectedImage': currentImage === product.url}" @click="currentImage = product.url" v-bind:src="product.url" alt="Image" class="img-secondary mr-2">
+              </div>
+            </div>
           </div>
           <div class="col-md-6">
             <h2 class="text-black">{{ currentProduct.name }}</h2>
             <p>{{ currentProduct.category }}</p>
             <p class="mb-4">{{ currentProduct.description }}</p>
-            <p><strong class="text-primary h4">€{{ currentProduct.price * count }}</strong></p>
+            <p><strong class="text-primary h4">€{{ (currentProduct.price * count).toFixed(2) }}</strong></p>
             <div class="mb-5">
               <div class="input-group mb-3" style="max-width: 120px;">
                 <div class="input-group-prepend">
                   <button @click="decrementCount(), currentProduct.quantity = count" class="btn btn-outline-primary js-btn-minus" type="button">&minus;</button>
                 </div>
-                <input type="text" class="form-control text-center" v-model="count" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
+                <input disabled type="number" min="1" step="1" class="form-control text-center" v-model="count" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
                 <div class="input-group-append">
                   <button @click="incrementCount(), currentProduct.quantity = count" class="btn btn-outline-primary js-btn-plus" type="button">&plus;</button>
                 </div>
@@ -45,32 +48,31 @@
 <script>
 import HTTP from '@/http';
 import { mapMutations } from 'vuex';
+const dashify = require('dashify');
 
 export default {
   data () {
     return {
       count: 1,
       currentProduct: '',
-      selectedImage: { pos: 0, val: true}
+      currentImage: ''
     }
   },
   mounted() {
-    this.fetchProduct(this.$route.params.id)
+    this.fetchProduct(this.$route.params.name);
   },
   methods: {
-    async fetchProduct(id) {
-      const { data } = await HTTP().get(`/products/${id}`);
+    async fetchProduct(name) {
+      const { data } = await HTTP().get(`/product/${name}`);
       this.currentProduct = data.data;
-      this.currentProduct["quantity"] = 1
+      this.currentProduct["quantity"] = 1;
+      this.currentImage = this.currentProduct.thumbnail.url;
     },
     incrementCount() {
       this.count++;
     },
     decrementCount() {
-      this.count--;
-    },
-    switchSelectedImage(product, index) {
-      console.log("INDEX CLICKED", index, product)
+      this.count > 1 ? this.count-- : '';
     },
     ...mapMutations('cart', [
       'addToCart',
@@ -80,10 +82,18 @@ export default {
 </script>
 
 <style scoped>
-  .img-secondary {
-    max-width: 20%;
-    width: 15%;
-    height: 15%;
-    cursor: pointer;
-  }
+.img-secondary {
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.img-fluid {
+  width: 100%;
+  height: 350px;
+}
+
+.selectedImage {
+  border: 2px solid purple;
+}
 </style>

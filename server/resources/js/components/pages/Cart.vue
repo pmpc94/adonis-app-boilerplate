@@ -8,7 +8,7 @@
       </div>
     </div>
 
-    <div class="site-section">
+    <div v-if="getProducts.length > 0" class="site-section">
       <div class="container">
         <div class="row mb-5">
           <form class="col-md-12" method="post">
@@ -28,26 +28,26 @@
                   <template v-for="product in getProducts">
                     <tr>
                       <td class="product-thumbnail">
-                        <img v-bind:src="product.thumbnail.image_path" alt="Image" class="img-fluid">
+                        <img v-bind:src="product.thumbnail.url" alt="Image" class="img-fluid">
                       </td>
                       <td class="product-name">
-                        <h2 class="h5 text-black">{{ product.name }}</h2>
+                        <router-link tag="a" :to="`/product/${product.id}`"><h2 class="h5">{{ product.name }}</h2></router-link>
                       </td>
                       <td>€{{ product.price }}</td>
                       <td>
                         <div class="input-group mb-3" style="max-width: 120px;">
                           <div class="input-group-prepend">
-                            <button class="btn btn-outline-primary js-btn-minus" type="button">&minus;</button>
+                            <button @click="updateCart(product), product.quantity--" class="btn btn-outline-primary js-btn-minus" type="button">&minus;</button>
                           </div>
-                          <input type="text" class="form-control text-center" :value="product.quantity" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
+                          <input type="number" class="form-control text-center" v-model="product.quantity" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
                           <div class="input-group-append">
-                            <button class="btn btn-outline-primary js-btn-plus" type="button">&plus;</button>
+                            <button @click="updateCart(product), product.quantity++" class="btn btn-outline-primary js-btn-plus" type="button">&plus;</button>
                           </div>
                         </div>
 
                       </td>
                       <td>{{ product.price * product.quantity}}</td>
-                      <td><a href="#" class="btn btn-primary btn-sm">X</a></td>
+                      <td @click="removeFromCart(product)"><span class="btn btn-primary btn-sm">X</span></td>
                     </tr>
                   </template>
                 </tbody>
@@ -100,16 +100,34 @@
         </div>
       </div>
     </div>
+    <div v-else class="site-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12 text-center">
+            <span class="icon-check_circle display-3 text-success"></span>
+            <h2 class="display-3 text-black">Your cart is empty!</h2>
+            <p class="lead mb-5">Don't lose our big deals.</p>
+            <router-link class="btn btn-sm btn-primary" tag="li" to="/">Back to shop</router-link>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
 
 export default {
   computed: {
     ...mapGetters('cart', [
       'getProducts'
+    ])
+  },
+  methods: {
+    ...mapMutations('cart', [
+      'updateCart',
+      'removeFromCart'
     ])
   }
 }
