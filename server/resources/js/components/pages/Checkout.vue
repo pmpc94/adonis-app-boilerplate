@@ -10,7 +10,7 @@
       </div>
     </div>
 
-    <div v-if="getProducts.length > 0" class="site-section">
+    <div v-if="products.length > 0 && !loading" class="site-section">
       <div class="container">
         <div class="row">
           <div class="col-md-6 mb-5 mb-md-0">
@@ -19,11 +19,11 @@
               <div class="form-group row">
                 <div class="col-md-6">
                   <label for="c_fname" class="text-black">First Name <span class="text-danger">*</span></label>
-                  <input v-validate="'required'" v-model="first_name" type="text" class="form-control" id="c_fname" name="first name">
+                  <input v-validate="'required'" v-model="first_name" type="text" class="form-control" id="c_fname" name="first name" placeholder="Pedro">
                 </div>
                 <div class="col-md-6">
                   <label for="c_lname" class="text-black">Last Name <span class="text-danger">*</span></label>
-                  <input v-validate="'required'" v-model="last_name" type="text" class="form-control" id="c_lname" name="last name">
+                  <input v-validate="'required'" v-model="last_name" type="text" class="form-control" id="c_lname" name="last name" placeholder="Carolina">
                 </div>
               </div>
 
@@ -41,9 +41,28 @@
               <div class="form-group row mb-5">
                 <div class="col-md-6">
                   <label for="c_email_address" class="text-black">Email Address <span class="text-danger">*</span></label>
-                  <input v-validate="'required|email'" v-model="email" type="text" class="form-control" id="c_email_address" name="email">
+                  <input v-validate="'required|email'" v-model="email" type="text" class="form-control" id="c_email_address" name="email" placeholder="pedro.carolina@polygon.pt">
                 </div>
               </div>
+
+              <div class="form-group row">
+                <div class="col-md-12">
+                  <label for="c_credit_card" class="text-black">Credit Card Number<span class="text-danger">*</span></label>
+                  <input v-validate="'required|credit_card'" v-model="credit_card" type="text" class="form-control" id="c_credit_card" name="credit card" placeholder="4242 4242 4242 4242">
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <div class="col-md-6">
+                  <label for="c_expiry_date" class="text-black">Expiry Date<span class="text-danger">*</span></label>
+                  <input v-validate="'required|date_format:MM/YYYY'" v-model="expiry_date" type="text" class="form-control" id="c_expiry_date" name="expiry date" placeholder="01/2020">
+                </div>
+                <div class="col-md-6">
+                  <label for="c_cvc" class="text-black">CVC<span class="text-danger">*</span></label>
+                  <input v-validate="'required'" v-model="cvc" type="text" class="form-control" id="c_cvc" name="cvc" placeholder="123">
+                </div>
+              </div>
+
               <ul>
                 <li v-for="error in errors.all()"><span style="color: #7971ea">{{ error }}</span></li>
               </ul>
@@ -60,24 +79,25 @@
                       <th>Total</th>
                     </thead>
                     <tbody>
-                      <template v-for="product in getProducts">
+                      <template v-for="product in products">
                         <tr>
                           <td>{{ product.name }} <strong class="mx-2">x</strong> {{ product.quantity }}</td>
-                          <td>€{{ product.price * product.quantity }}</td>
+                          <td>€{{ (product.price * product.quantity).toFixed(2) }}</td>
                         </tr>
                       </template>
                       <tr>
                         <td class="text-black font-weight-bold"><strong>Cart Subtotal</strong></td>
-                        <td class="text-black">€{{ getProducts.reduce((accumulator, currentValue) => accumulator + (currentValue.price * currentValue.quantity), 0).toFixed(2) }}</td>
+                        <td class="text-black">€{{ products.reduce((accumulator, currentValue) => accumulator + (currentValue.price * currentValue.quantity), 0).toFixed(2) }}</td>
                       </tr>
                       <tr>
                         <td class="text-black font-weight-bold"><strong>Order Total</strong></td>
-                        <td class="text-black font-weight-bold"><strong>€{{ getProducts.reduce((accumulator, currentValue) => accumulator + (currentValue.price * currentValue.quantity), 0).toFixed(2) }}</strong></td>
+                        <td class="text-black font-weight-bold"><strong>€{{ products.reduce((accumulator, currentValue) => accumulator + (currentValue.price * currentValue.quantity), 0).toFixed(2) }}</strong></td>
                       </tr>
                     </tbody>
                   </table>
                   <div class="form-group">
-                    <router-link v-on:click.native="purchase()" :disabled="!isComplete || errors.any()" class="btn btn-primary btn-lg py-3 btn-block" tag="button" to="/thank-you">Place Order</router-link>
+                    <router-link v-on:click.native="purchase(products)" class="btn btn-primary btn-lg py-3 btn-block" tag="button" to="/thank-you">Place Order</router-link>
+                    <!-- <router-link v-on:click.native="purchase(products)" :disabled="!isComplete || errors.any()" class="btn btn-primary btn-lg py-3 btn-block" tag="button" to="/thank-you">Place Order</router-link> -->
                   </div>
 
                 </div>
@@ -88,6 +108,11 @@
         </div>
         <!-- </form> -->
       </div>
+    </div>
+
+    <div v-else>
+      <h2 style="text-align:center; color: #7971ea">Loading...</h2>
+      <div class="loader"></div>
     </div>
 
     <div v-else class="site-section">
@@ -115,44 +140,76 @@ export default {
       first_name: undefined,
       last_name: undefined,
       address1: undefined,
-      address2: '',
+      address2: undefined,
       email: undefined,
       total_price: 0,
       status: 'created',
       quantity: [],
-      product_id: []
+      product_id: [],
+      credit_card: undefined,
+      expiry_date: undefined,
+      cvc: undefined,
+      loading: false
     }
   },
   computed: {
     ...mapGetters('cart', [
-      'getProducts'
+      'products'
     ]),
     isComplete () {
-      return this.first_name && this.last_name && this.address1 && this.email;
+      return this.first_name && this.last_name && this.address1 && this.email && this.credit_card && this.expiry_date && this.cvc;
     }
   },
   methods: {
     purchase(products) {
+      this.loading = true;
       for(let i=0; i<products.length; i++) {
         this.quantity.push({ id: products[i].id, amount: products[i].quantity });
         this.product_id.push(products[i].id);
       }
-        const { data } = HTTP().post('/order', {
-          first_name: this.first_name,
-          last_name: this.last_name,
-          address1: this.address1,
-          address2: this.address2,
-          email: this.email,
-          total_price: this.total_price,
-          status: this.status,
-          quantity: this.quantity,
-          product_id: this.product_id
-        });
-        data === undefined ? this.$router.push('/') : '';
+      const { data } = HTTP().post('/order', {
+        first_name: this.first_name,
+        last_name: this.last_name,
+        address1: this.address1,
+        address2: this.address2,
+        email: this.email,
+        total_price: this.total_price,
+        status: this.status,
+        quantity: this.quantity,
+        product_id: this.product_id
+      })
+      .then(response => {
+        this.loading = false;
+      })
+      .catch(error => {
+        this.loading = false;
+        this.$router.push('/')
+      });
     }
   }
 }
 </script>
 
-<style lang="css">
+<style scoped>
+.loader {
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #7971ea;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+  margin: 0 auto;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
 </style>

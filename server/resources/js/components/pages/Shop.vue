@@ -2,7 +2,8 @@
   <div>
     <div class="site-section">
       <div class="container">
-
+        {{ this.$root.showModal }}
+        <!-- Button trigger modal -->
         <div class="row mb-5">
           <div class="col-md-9 order-2">
 
@@ -28,12 +29,13 @@
                 <div class="col-sm-6 col-lg-4 mb-4" data-aos="fade-up">
                   <div class="block-4 text-center border">
                     <figure class="block-4-image">
-                      <router-link tag="a" :to="`/product/${product.name}`"><img v-bind:src="product.thumbnail.url" alt="Image placeholder" class="img-fluid fixed-height"></router-link>
+                      <router-link tag="a" :to="`/product/${product.slug}`"><img v-bind:src="product.thumbnail.url" alt="Image placeholder" class="img-fluid fixed-height"></router-link>
                     </figure>
                     <div class="block-4-text p-4">
-                      <h3><router-link :to="`/product/${product.name}`" >{{ product.name }}</router-link></h3>
+                      <h3><router-link :to="`/product/${product.slug}`" >{{ product.name }}</router-link></h3>
                       <p class="mb-0">{{ product.category }}</p>
                       <p class="text-primary font-weight-bold">€{{ product.price }}</p>
+                      <button class="btn btn-primary" @click="this.$root.showModal = true">Add To Cart</button>
                     </div>
                   </div>
                 </div>
@@ -66,19 +68,22 @@
 
             <div class="border p-4 rounded mb-4">
               <div class="mb-2 priority-slider">
-                <h3 class="mb-5 h6 text-uppercase text-black d-block">Filter by Price (€)</h3>
+                <h3 class="h6 text-uppercase text-black d-block">Filter by Price</h3>
                 <vue-slider ref="slider" v-model="priceRange" :min="0" :max="max"></vue-slider>
+                <p>{{ priceRangeMin }}€ - {{ priceRangeMax }}€</p>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+    <Modal/>
   </div>
 </template>
 
 <script>
 import HTTP from '@/http';
+import Modal from '@/components/elements/Modal.vue'
 
 export default {
   data () {
@@ -102,7 +107,9 @@ export default {
     this.fetchCategoriesCount()
     this.fetchPriceRange()
   },
-
+  components: {
+    Modal
+  },
   methods: {
     async fetchProducts({ column, order, activePage, range } = {}) {
       let query = '';
@@ -119,12 +126,12 @@ export default {
         query += `&${this.column}=${this.order}`;
       }
       if (range !== undefined) {
-          query += `&min=${range[0]}&max=${range[1]}`;
-          this.priceRangeMin = range[0];
-          this.priceRangeMax = range[1];
+        query += `&min=${range[0]}&max=${range[1]}`;
+        this.priceRangeMin = range[0];
+        this.priceRangeMax = range[1];
       }
       if (range === undefined && this.priceRangeMin !== undefined && this.priceRangeMax !== undefined) {
-          query += `&min=${this.priceRangeMin}&max=${this.priceRangeMax}`
+        query += `&min=${this.priceRangeMin}&max=${this.priceRangeMax}`
       }
       const { data } = await HTTP().get(`/products?page=${this.activePage}${query}`)
       this.products = data.data;
@@ -157,7 +164,7 @@ export default {
   watch: {
     priceRange(val, old) {
       if (this.loaded)
-        val[0] !== old[0] || val[1] !== old[1] ? this.fetchProducts({ range: val}) : '';
+      val[0] !== old[0] || val[1] !== old[1] ? this.fetchProducts({ range: val}) : '';
     }
   }
 }

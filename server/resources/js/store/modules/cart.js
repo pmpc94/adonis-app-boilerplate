@@ -6,28 +6,36 @@ export default {
   state: {
     products: []
   },
-  actions: {
-  },
   getters: {
-    getProducts(state) {
+    products(state) {
       return state.products;
     },
-    getCartLength(state) {
+    cartLength(state) {
       return state.products.reduce((accumulator, currentValue) => accumulator + (currentValue.quantity), 0)
     }
   },
   mutations: {
-    addToCart(state, product, vm) {
-      state.products.push(product);
+    add(state, product) {
+      const product_index = state.products.findIndex(obj => obj.id === product.id);
+      product_index === -1 ? state.products.push(product) : state.products[product_index].quantity += product.quantity;
     },
-    updateCart(state, product) {
-      if (product.quantity >= 1) {
+    update(state, product) {
         const product_index = state.products.findIndex(obj => obj.id === product.id);
         state.products[product_index].quantity = product.quantity;
-      }
     },
-    removeFromCart(state, product) {
+    remove(state, product) {
       state.products.splice(state.products.indexOf(product), 1);
     }
-  }
+  },
+  actions: {
+    addToCart({ commit }, product) {
+      commit('add', product);
+    },
+    updateCart({ commit }, product) {
+      commit('update', product);
+    },
+    removeFromCart({ commit }, product) {
+      commit('remove', product);
+    }
+  },
 };

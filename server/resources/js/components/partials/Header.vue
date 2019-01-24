@@ -21,7 +21,7 @@
                   <li>
                     <router-link class="site-cart" to="/cart">
                       <font-awesome-icon far icon="shopping-cart"/>
-                      <span class="count">{{ getCartLength }}</span>
+                      <span class="count">{{ cartLength }}</span>
                     </router-link>
                   </li>
                   <li class="d-inline-block d-md-none ml-md-0"><a href="#" class="site-menu-toggle js-menu-toggle"><span class="icon-menu"></span></a></li>
@@ -42,7 +42,7 @@ import { mapGetters } from 'vuex';
 export default {
   computed: {
     ...mapGetters('cart', [
-      'getCartLength'
+      'cartLength'
     ])
   }
 }

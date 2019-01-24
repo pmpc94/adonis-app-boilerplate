@@ -29,13 +29,14 @@
                 <div class="input-group-prepend">
                   <button @click="decrementCount(), currentProduct.quantity = count" class="btn btn-outline-primary js-btn-minus" type="button">&minus;</button>
                 </div>
-                <input disabled type="number" min="1" step="1" class="form-control text-center" v-model="count" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
+                <input @keydown="preventUndesiredChars" type="text" min="1" step="1" class="form-control text-center" v-model="count" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
                 <div class="input-group-append">
                   <button @click="incrementCount(), currentProduct.quantity = count" class="btn btn-outline-primary js-btn-plus" type="button">&plus;</button>
                 </div>
               </div>
 
             </div>
+            <!-- <button class="btn btn-primary" @click="this.$root.showModal = true">Add To Cart</button> -->
             <router-link v-on:click.native="addToCart(currentProduct)" class="buy-now btn btn-sm btn-primary" tag="li" to="/cart">Add To Cart</router-link>
           </div>
         </div>
@@ -47,8 +48,7 @@
 
 <script>
 import HTTP from '@/http';
-import { mapMutations } from 'vuex';
-const dashify = require('dashify');
+import { mapActions } from 'vuex';
 
 export default {
   data () {
@@ -59,11 +59,11 @@ export default {
     }
   },
   mounted() {
-    this.fetchProduct(this.$route.params.name);
+    this.fetchProduct(this.$route.params.slug);
   },
   methods: {
-    async fetchProduct(name) {
-      const { data } = await HTTP().get(`/product/${name}`);
+    async fetchProduct(slug) {
+      const { data } = await HTTP().get(`/product/${slug}`);
       this.currentProduct = data.data;
       this.currentProduct["quantity"] = 1;
       this.currentImage = this.currentProduct.thumbnail.url;
@@ -74,7 +74,10 @@ export default {
     decrementCount() {
       this.count > 1 ? this.count-- : '';
     },
-    ...mapMutations('cart', [
+    preventUndesiredChars(event) {
+      (event.keyCode >= 65 && event.keyCode <= 90) || (event.keyCode >= 186 && event.keyCode <= 192) ? event.preventDefault() : ''
+    },
+    ...mapActions('cart', [
       'addToCart',
     ])
   }
@@ -96,4 +99,5 @@ export default {
 .selectedImage {
   border: 2px solid purple;
 }
+
 </style>
