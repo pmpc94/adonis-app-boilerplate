@@ -24,13 +24,13 @@
           <tr>
             <td>{{ product.product_name }}</td>
             <td>{{ product.quantity }}</td>
-            <td>{{ product.price }}</td>
+            <td>€{{ product.price }}</td>
           </tr>
           @endeach
           <tfoot>
             <tr>
               <th colspan="2">Total :</th>
-              <td>{{ total }}</td>
+              <td>€{{ total }}</td>
             </tr>
           </tfoot>
         </table>

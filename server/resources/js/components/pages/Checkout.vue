@@ -19,18 +19,18 @@
               <div class="form-group row">
                 <div class="col-md-6">
                   <label for="c_fname" class="text-black">First Name <span class="text-danger">*</span></label>
-                  <input type="text" class="form-control" id="c_fname" name="c_fname">
+                  <input v-validate="'required'" v-model="first_name" type="text" class="form-control" id="c_fname" name="first name">
                 </div>
                 <div class="col-md-6">
                   <label for="c_lname" class="text-black">Last Name <span class="text-danger">*</span></label>
-                  <input type="text" class="form-control" id="c_lname" name="c_lname">
+                  <input v-validate="'required'" v-model="last_name" type="text" class="form-control" id="c_lname" name="last name">
                 </div>
               </div>
 
               <div class="form-group row">
                 <div class="col-md-12">
                   <label for="c_address" class="text-black">Address <span class="text-danger">*</span></label>
-                  <input type="text" class="form-control" id="c_address" name="c_address" placeholder="Street address">
+                  <input v-validate="'required'" v-model="address1" type="text" class="form-control" id="c_address" name="address" placeholder="Street address">
                 </div>
               </div>
 
@@ -41,10 +41,12 @@
               <div class="form-group row mb-5">
                 <div class="col-md-6">
                   <label for="c_email_address" class="text-black">Email Address <span class="text-danger">*</span></label>
-                  <input v-validate="'required|email'" v-model="email" type="text" class="form-control" id="c_email_address" name="c_email_address">
-                  <span>{{ errors.first('c_email_address') }}</span>
+                  <input v-validate="'required|email'" v-model="email" type="text" class="form-control" id="c_email_address" name="email">
                 </div>
               </div>
+              <ul>
+                <li v-for="error in errors.all()"><span style="color: #7971ea">{{ error }}</span></li>
+              </ul>
             </div>
           </div>
           <div class="col-md-6">
@@ -75,7 +77,7 @@
                     </tbody>
                   </table>
                   <div class="form-group">
-                    <router-link class="btn btn-primary btn-lg py-3 btn-block" tag="li" to="/thank-you">Place Order</router-link>
+                    <router-link v-on:click.native="purchase()" :disabled="!isComplete || errors.any()" class="btn btn-primary btn-lg py-3 btn-block" tag="button" to="/thank-you">Place Order</router-link>
                   </div>
 
                 </div>
@@ -110,11 +112,11 @@ import HTTP from '@/http';
 export default {
   data() {
     return {
-      first_name: '',
-      last_name: '',
-      address1: '',
+      first_name: undefined,
+      last_name: undefined,
+      address1: undefined,
       address2: '',
-      email: '',
+      email: undefined,
       total_price: 0,
       status: 'created',
       quantity: [],
@@ -124,23 +126,29 @@ export default {
   computed: {
     ...mapGetters('cart', [
       'getProducts'
-    ])
+    ]),
+    isComplete () {
+      return this.first_name && this.last_name && this.address1 && this.email;
+    }
   },
   methods: {
-    purchase() {
-      const { data } = HTTP().post('/order', {
-        first_name,
-        last_name,
-        address1,
-        address2,
-        email,
-        total_price,
-        status,
-        quantity,
-        product_id
-      });
-    const order = data.data;
-    console.log("ORDER", order);
+    purchase(products) {
+      for(let i=0; i<products.length; i++) {
+        this.quantity.push({ id: products[i].id, amount: products[i].quantity });
+        this.product_id.push(products[i].id);
+      }
+        const { data } = HTTP().post('/order', {
+          first_name: this.first_name,
+          last_name: this.last_name,
+          address1: this.address1,
+          address2: this.address2,
+          email: this.email,
+          total_price: this.total_price,
+          status: this.status,
+          quantity: this.quantity,
+          product_id: this.product_id
+        });
+        data === undefined ? this.$router.push('/') : '';
     }
   }
 }

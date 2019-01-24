@@ -76,7 +76,7 @@ export default {
     },
     ...mapMutations('cart', [
       'addToCart',
-    ]),
+    ])
   }
 }
 </script>

@@ -31,22 +31,22 @@
                         <img v-bind:src="product.thumbnail.url" alt="Image" class="img-fluid">
                       </td>
                       <td class="product-name">
-                        <router-link tag="a" :to="`/product/${product.id}`"><h2 class="h5">{{ product.name }}</h2></router-link>
+                        <router-link tag="a" :to="`/product/${product.name}`"><h2 class="h5">{{ product.name }}</h2></router-link>
                       </td>
                       <td>€{{ product.price }}</td>
                       <td>
                         <div class="input-group mb-3" style="max-width: 120px;">
                           <div class="input-group-prepend">
-                            <button @click="updateCart(product), product.quantity--" class="btn btn-outline-primary js-btn-minus" type="button">&minus;</button>
+                            <button @click="updateCart(product), product.quantity > 1 ? product.quantity-- : ''" class="btn btn-outline-primary js-btn-minus" type="button">&minus;</button>
                           </div>
-                          <input type="number" class="form-control text-center" v-model="product.quantity" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
+                          <input disabled type="number" class="form-control text-center" v-model="product.quantity" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
                           <div class="input-group-append">
                             <button @click="updateCart(product), product.quantity++" class="btn btn-outline-primary js-btn-plus" type="button">&plus;</button>
                           </div>
                         </div>
 
                       </td>
-                      <td>{{ product.price * product.quantity}}</td>
+                      <td>{{ (product.price * product.quantity).toFixed(2) }}</td>
                       <td @click="removeFromCart(product)"><span class="btn btn-primary btn-sm">X</span></td>
                     </tr>
                   </template>
