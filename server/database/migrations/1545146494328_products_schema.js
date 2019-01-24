@@ -7,7 +7,7 @@ class ProductsSchema extends Schema {
   up () {
     this.create('products', (table) => {
       table.increments()
-      table.string('name', 100).notNullable()
+      table.string('name', 100).notNullable().unique()
       table.string('description', 255)
       table.enum('category', ['terrestrial', 'giant', 'dwarf'])
       table.float('price').notNullable()

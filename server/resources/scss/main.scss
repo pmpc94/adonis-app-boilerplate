@@ -26,10 +26,10 @@
   font-weight: 400;
   src: url(http://127.0.0.1:3333/MaterialIcons-Regular.eot); /* For IE6-8 */
   src: local('Material Icons'),
-    local('MaterialIcons-Regular'),
-    url(http://127.0.0.1:3333/MaterialIcons-Regular.woff2) format('woff2'),
-    url(http://127.0.0.1:3333/MaterialIcons-Regular.woff) format('woff'),
-    url(http://127.0.0.1:3333/MaterialIcons-Regular.ttf) format('truetype');
+  local('MaterialIcons-Regular'),
+  url(http://127.0.0.1:3333/MaterialIcons-Regular.woff2) format('woff2'),
+  url(http://127.0.0.1:3333/MaterialIcons-Regular.woff) format('woff'),
+  url(http://127.0.0.1:3333/MaterialIcons-Regular.ttf) format('truetype');
 }
 
 .material-icons {
@@ -55,4 +55,17 @@
 
   /* Support for IE. */
   font-feature-settings: 'liga';
+}
+
+.priority-slider .vue-slider-component .vue-slider-tooltip {
+  border: 1px solid #7971ea;
+  background-color: #7971ea;
+}
+
+.priority-slider .vue-slider-component .vue-slider-process {
+  background-color: #7971ea;
+}
+
+.priority-slider .vue-slider-component .vue-slider-dot.vue-slider-dot-focus .vue-slider-dot-handle {
+  box-shadow: 0 0 2px 1px #7971ea;
 }

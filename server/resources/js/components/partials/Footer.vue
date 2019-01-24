@@ -6,7 +6,7 @@
           <div class="col-md-12">
             <p>
             <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-            Copyright &copy; All rights reserved | Pedro Carolina</a>
+            Copyright &copy; All rights reserved | <a href="http://pedrocarolina.com">Pedro Carolina</a>
             <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
             </p>
           </div>
