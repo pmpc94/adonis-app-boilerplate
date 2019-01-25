@@ -8,17 +8,17 @@
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title">Modal title</h5>
+                  <h5 class="modal-title">Thanks for choosing us!</h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true" @click="this.$root.showModal = false">&times;</span>
+                    <span aria-hidden="true" @click="$root.showModal = false">&times;</span>
                   </button>
                 </div>
                 <div class="modal-body">
-                  <p>Modal body text goes here.</p>
+                  <p>Your product was added to the cart.</p>
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" @click="this.$root.showModal = false">Close</button>
-                  <button type="button" class="btn btn-primary">Save changes</button>
+                  <router-link v-on:click.native="$root.showModal = false" class="btn btn-secondary" tag="li" to="/">Continue Shopping</router-link>
+                  <router-link v-on:click.native="$root.showModal = false" class="buy-now btn btn-sm btn-primary" tag="li" to="/cart">See Cart</router-link>
                 </div>
               </div>
             </div>

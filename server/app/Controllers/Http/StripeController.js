@@ -14,11 +14,14 @@ class StripeController {
       const order = await Order.findBy('stripe_customer_id', ch_id);
 
       if (type === 'charge.succeeded') {
-        order.save({ status: 'paid' })
+        order.merge({ status: 'paid' });
+        order.save();
       } else if (type === 'charge.expired' || type === 'charge.failed') {
-        order.save({ status: 'canceled'})
+        order.merge({ status: 'canceled' });
+        order.save();
       } else {
-        order.save({ status: 'created'})
+        order.merge({ status: 'created' });
+        order.save();
       }
 
       const orderProducts = await order.orderProducts().fetch()

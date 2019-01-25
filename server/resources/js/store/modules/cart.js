@@ -16,6 +16,7 @@ export default {
   },
   mutations: {
     add(state, product) {
+      product.hasOwnProperty('quantity') === true ? '' : product['quantity'] = 1;
       const product_index = state.products.findIndex(obj => obj.id === product.id);
       product_index === -1 ? state.products.push(product) : state.products[product_index].quantity += product.quantity;
     },
@@ -25,6 +26,9 @@ export default {
     },
     remove(state, product) {
       state.products.splice(state.products.indexOf(product), 1);
+    },
+    empty(state) {
+      state.products = [];
     }
   },
   actions: {
@@ -36,6 +40,9 @@ export default {
     },
     removeFromCart({ commit }, product) {
       commit('remove', product);
+    },
+    emptyCart({ commit }) {
+      commit('empty');
     }
   },
 };

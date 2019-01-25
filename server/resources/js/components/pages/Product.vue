@@ -36,12 +36,12 @@
               </div>
 
             </div>
-            <!-- <button class="btn btn-primary" @click="this.$root.showModal = true">Add To Cart</button> -->
-            <router-link v-on:click.native="addToCart(currentProduct)" class="buy-now btn btn-sm btn-primary" tag="li" to="/cart">Add To Cart</router-link>
+            <button class="buy-now btn btn-sm btn-primary" @click="$root.showModal = true, addToCart(currentProduct)">Add To Cart</button>
           </div>
         </div>
       </div>
     </div>
+    <Modal/>
   </div>
 </div>
 </template>
@@ -49,6 +49,7 @@
 <script>
 import HTTP from '@/http';
 import { mapActions } from 'vuex';
+import Modal from '@/components/elements/Modal.vue'
 
 export default {
   data () {
@@ -61,11 +62,14 @@ export default {
   mounted() {
     this.fetchProduct(this.$route.params.slug);
   },
+  components: {
+    Modal
+  },
   methods: {
     async fetchProduct(slug) {
       const { data } = await HTTP().get(`/product/${slug}`);
       this.currentProduct = data.data;
-      this.currentProduct["quantity"] = 1;
+      this.currentProduct['quantity'] = 1;
       this.currentImage = this.currentProduct.thumbnail.url;
     },
     incrementCount() {

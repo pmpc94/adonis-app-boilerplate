@@ -2,8 +2,6 @@
   <div>
     <div class="site-section">
       <div class="container">
-        {{ this.$root.showModal }}
-        <!-- Button trigger modal -->
         <div class="row mb-5">
           <div class="col-md-9 order-2">
 
@@ -25,22 +23,19 @@
               </div>
             </div>
             <div class="row mb-5">
-              <template v-for="product in products.data">
-                <div class="col-sm-6 col-lg-4 mb-4" data-aos="fade-up">
-                  <div class="block-4 text-center border">
-                    <figure class="block-4-image">
-                      <router-link tag="a" :to="`/product/${product.slug}`"><img v-bind:src="product.thumbnail.url" alt="Image placeholder" class="img-fluid fixed-height"></router-link>
-                    </figure>
-                    <div class="block-4-text p-4">
-                      <h3><router-link :to="`/product/${product.slug}`" >{{ product.name }}</router-link></h3>
-                      <p class="mb-0">{{ product.category }}</p>
-                      <p class="text-primary font-weight-bold">€{{ product.price }}</p>
-                      <button class="btn btn-primary" @click="this.$root.showModal = true">Add To Cart</button>
-                    </div>
+              <div v-for="(product, index) in products.data" :key="index" class="col-sm-6 col-lg-4 mb-4" data-aos="fade-up">
+                <div class="block-4 text-center border">
+                  <figure class="block-4-image">
+                    <router-link tag="a" :to="`/product/${product.slug}`"><img v-bind:src="product.thumbnail.url" alt="Image placeholder" class="img-fluid fixed-height"></router-link>
+                  </figure>
+                  <div class="block-4-text p-4">
+                    <h3><router-link :to="`/product/${product.slug}`" >{{ product.name }}</router-link></h3>
+                    <p class="mb-0">{{ product.category }}</p>
+                    <p class="text-primary font-weight-bold">€{{ product.price }}</p>
+                    <button class="btn btn-primary" @click="$root.showModal = true, addToCart(product)">Add To Cart</button>
                   </div>
                 </div>
-              </template>
-
+              </div>
 
             </div>
             <div class="row" data-aos="fade-up">
@@ -61,7 +56,7 @@
               <h3 class="mb-3 h6 text-uppercase text-black d-block">Categories</h3>
               <ul class="list-unstyled mb-0">
                 <template v-for="category in categories">
-                  <li style="cursor: pointer; color: #7971ea;" @click="fetchPriceRange({ category })" class="mb-1 d-flex"><span>{{ category.name }}</span> <span class="text-black ml-auto">{{ category.total }}</span></li>
+                  <li style="cursor: pointer; color: #7971ea;" @click="fetchPriceRange({ category }), categoryClicked = true" class="mb-1 d-flex"><span>{{ category.name }}</span> <span class="text-black ml-auto">{{ category.total }}</span></li>
                 </template>
               </ul>
             </div>
@@ -84,6 +79,7 @@
 <script>
 import HTTP from '@/http';
 import Modal from '@/components/elements/Modal.vue'
+import { mapActions } from 'vuex';
 
 export default {
   data () {
@@ -100,7 +96,8 @@ export default {
       order: undefined,
       categories: [],
       orderText: '',
-      loaded: false
+      loaded: false,
+      categoryClicked: false
     }
   },
   mounted() {
@@ -159,12 +156,21 @@ export default {
     },
     toggleDropdown() {
       this.showFlag = !this.showFlag;
-    }
+    },
+    ...mapActions('cart', [
+      'addToCart',
+    ])
   },
   watch: {
     priceRange(val, old) {
-      if (this.loaded)
-      val[0] !== old[0] || val[1] !== old[1] ? this.fetchProducts({ range: val}) : '';
+      console.log("Price range", val[0], old[0], val[1], old[1])
+      if (this.loaded && !this.categoryClicked) {
+        val[0] !== old[0] || val[1] !== old[1] ? this.fetchProducts({ range: val}) : '';
+      }
+      else if (this.categoryClicked) {
+        this.fetchProducts({ range: val});
+        this.categoryClicked = false;
+      }
     }
   }
 }

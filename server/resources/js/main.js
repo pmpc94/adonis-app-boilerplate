@@ -37,10 +37,8 @@ if (token) {
 
 new Vue({
   el: '#app',
-  data() {
-    return {
-      showModal: false
-    }
+  data: {
+    showModal: false
   },
   router,
   store,

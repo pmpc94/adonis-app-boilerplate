@@ -36,11 +36,11 @@
                       <td>
                         <div class="input-group mb-3" style="max-width: 120px; margin: 0 auto;">
                           <div class="input-group-prepend">
-                            <button @click="updateCart(product), product.quantity > 1 ? product.quantity-- : ''" class="btn btn-outline-primary js-btn-minus" type="button">&minus;</button>
+                            <button @click="updateCart(product), product.quantity > 1 ? $set(product, product.quantity, product.quantity--) : ''" class="btn btn-outline-primary js-btn-minus" type="button">&minus;</button>
                           </div>
-                          <input @keydown="preventUndesiredChars" type="text" class="form-control text-center" v-model="product.quantity" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
+                          <input @keydown="preventUndesiredChars" type="text" class="form-control text-center" v-model="product.quantity" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
                           <div class="input-group-append">
-                            <button @click="updateCart(product), product.quantity++" class="btn btn-outline-primary js-btn-plus" type="button">&plus;</button>
+                            <button @click="updateCart(product), $set(product, product.quantity, product.quantity++);" class="btn btn-outline-primary js-btn-plus" type="button">&plus;</button>
                           </div>
                         </div>
 
