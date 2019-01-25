@@ -17,8 +17,8 @@
                   <p>Your product was added to the cart.</p>
                 </div>
                 <div class="modal-footer">
-                  <router-link v-on:click.native="$root.showModal = false" class="btn btn-secondary" tag="li" to="/">Continue Shopping</router-link>
-                  <router-link v-on:click.native="$root.showModal = false" class="buy-now btn btn-sm btn-primary" tag="li" to="/cart">See Cart</router-link>
+                  <router-link @click.native="$root.showModal = false" class="btn btn-secondary" tag="li" to="/">Continue Shopping</router-link>
+                  <router-link @click.native="$root.showModal = false" class="buy-now btn btn-sm btn-primary" tag="li" to="/cart">See Cart</router-link>
                 </div>
               </div>
             </div>

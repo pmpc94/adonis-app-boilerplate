@@ -27,7 +27,7 @@
                 <tbody>
                     <tr v-for="(product, index) in products" :key="index">
                       <td class="product-thumbnail">
-                        <img v-bind:src="product.thumbnail.url" alt="Image" class="img-fluid">
+                        <img :src="product.thumbnail.url" alt="Image" class="img-fluid">
                       </td>
                       <td class="product-name">
                         <router-link tag="a" :to="`/product/${product.slug}`"><h2 class="h5">{{ product.name }}</h2></router-link>
@@ -36,11 +36,11 @@
                       <td>
                         <div class="input-group mb-3" style="max-width: 120px; margin: 0 auto;">
                           <div class="input-group-prepend">
-                            <button @click="updateCart(product), product.quantity > 1 ? $set(product, product.quantity, product.quantity--) : ''" class="btn btn-outline-primary js-btn-minus" type="button">&minus;</button>
+                            <button @click="updateCart(product), product.quantity > 1 ? $set(products[index], product.quantity, product.quantity--) : ''" class="btn btn-outline-primary js-btn-minus" type="button">&minus;</button>
                           </div>
                           <input @keydown="preventUndesiredChars" type="text" class="form-control text-center" v-model="product.quantity" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
                           <div class="input-group-append">
-                            <button @click="updateCart(product), $set(product, product.quantity, product.quantity++);" class="btn btn-outline-primary js-btn-plus" type="button">&plus;</button>
+                            <button @click="updateCart(product), $set(products[index], product.quantity, product.quantity++)" class="btn btn-outline-primary js-btn-plus" type="button">&plus;</button>
                           </div>
                         </div>
 

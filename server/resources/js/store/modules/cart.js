@@ -16,13 +16,10 @@ export default {
   },
   mutations: {
     add(state, product) {
-      product.hasOwnProperty('quantity') === true ? '' : product['quantity'] = 1;
-      const product_index = state.products.findIndex(obj => obj.id === product.id);
-      product_index === -1 ? state.products.push(product) : state.products[product_index].quantity += product.quantity;
+      product.index === -1 ? state.products.push(product.obj) : state.products[product.index].quantity += product.obj.quantity;
     },
     update(state, product) {
-        const product_index = state.products.findIndex(obj => obj.id === product.id);
-        state.products[product_index].quantity = product.quantity;
+      state.products[product.index].quantity = product.quantity;
     },
     remove(state, product) {
       state.products.splice(state.products.indexOf(product), 1);
@@ -32,11 +29,14 @@ export default {
     }
   },
   actions: {
-    addToCart({ commit }, product) {
-      commit('add', product);
+    addToCart({ commit, state }, product) {
+      product.hasOwnProperty('quantity') === true ? '' : product['quantity'] = 1;
+      const product_index = state.products.findIndex(obj => obj.id === product.id);
+      commit('add', { obj: product, index: product_index });
     },
-    updateCart({ commit }, product) {
-      commit('update', product);
+    updateCart({ commit, state }, product) {
+      const product_index = state.products.findIndex(obj => obj.id === product.id);
+      commit('update', { index: product_index, quantity: product.quantity });
     },
     removeFromCart({ commit }, product) {
       commit('remove', product);

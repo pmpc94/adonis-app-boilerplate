@@ -26,7 +26,7 @@
               <div v-for="(product, index) in products.data" :key="index" class="col-sm-6 col-lg-4 mb-4" data-aos="fade-up">
                 <div class="block-4 text-center border">
                   <figure class="block-4-image">
-                    <router-link tag="a" :to="`/product/${product.slug}`"><img v-bind:src="product.thumbnail.url" alt="Image placeholder" class="img-fluid fixed-height"></router-link>
+                    <router-link tag="a" :to="`/product/${product.slug}`"><img :src="product.thumbnail.url" alt="Image placeholder" class="img-fluid fixed-height"></router-link>
                   </figure>
                   <div class="block-4-text p-4">
                     <h3><router-link :to="`/product/${product.slug}`" >{{ product.name }}</router-link></h3>
@@ -42,9 +42,7 @@
               <div class="col-md-12 text-center">
                 <div class="site-block-27">
                   <ul>
-                    <template v-for="id in products.lastPage">
-                      <li :class="{ 'active': activePage === id }" @click="fetchProducts({ activePage: id }), activePage = id"><span>{{ id }}</span></li>
-                    </template>
+                      <li v-for="id in products.lastPage" :key="id" :class="{ 'active': activePage === id }" @click="fetchProducts({ activePage: id }), activePage = id"><span>{{ id }}</span></li>
                   </ul>
                 </div>
               </div>
@@ -55,9 +53,7 @@
             <div class="border p-4 rounded mb-4">
               <h3 class="mb-3 h6 text-uppercase text-black d-block">Categories</h3>
               <ul class="list-unstyled mb-0">
-                <template v-for="category in categories">
-                  <li style="cursor: pointer; color: #7971ea;" @click="fetchPriceRange({ category }), categoryClicked = true" class="mb-1 d-flex"><span>{{ category.name }}</span> <span class="text-black ml-auto">{{ category.total }}</span></li>
-                </template>
+                  <li v-for="(category, index) in categories" :key="index" style="cursor: pointer; color: #7971ea;" @click="fetchPriceRange({ category }), categoryClicked = true" class="mb-1 d-flex"><span>{{ category.name }}</span> <span class="text-black ml-auto">{{ category.total }}</span></li>
               </ul>
             </div>
 
@@ -163,7 +159,6 @@ export default {
   },
   watch: {
     priceRange(val, old) {
-      console.log("Price range", val[0], old[0], val[1], old[1])
       if (this.loaded && !this.categoryClicked) {
         val[0] !== old[0] || val[1] !== old[1] ? this.fetchProducts({ range: val}) : '';
       }

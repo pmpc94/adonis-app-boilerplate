@@ -187,16 +187,6 @@ export default {
         product_id: this.product_id
       })
       .then(response => {
-        console.log("response", response)
-        const order_id = response.data.data.id;
-        return HTTP().get(`/orders/${order_id}`);
-      })
-      .then(response => {
-        console.log("response", response)
-        // const status = response.data.data.status;
-        // if (status !== 'paid') {
-        //   throw new Error("Stripe couldn't process your payment.");
-        // }
         this.loading = false;
         this.emptyCart();
         this.$router.push('/thank-you');

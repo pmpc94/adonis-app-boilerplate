@@ -15,7 +15,7 @@
             <img :src="currentImage" alt="" class="img-fluid mb-2">
             <div class="row">
               <div class="col-md-3" v-for="(product, index) in currentProduct.images" :key="index">
-                <img :class="{ 'selectedImage': currentImage === product.url}" @click="currentImage = product.url" v-bind:src="product.url" alt="Image" class="img-secondary mr-2">
+                <img :class="{ 'selectedImage': currentImage === product.url}" @click="currentImage = product.url" :src="product.url" alt="Image" class="img-secondary mr-2">
               </div>
             </div>
           </div>
