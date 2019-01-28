@@ -52,6 +52,7 @@ import { mapActions } from 'vuex';
 import Modal from '@/components/elements/Modal.vue'
 
 export default {
+  name: 'Product',
   data () {
     return {
       count: 1,

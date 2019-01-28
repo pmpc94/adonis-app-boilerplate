@@ -78,6 +78,7 @@ import Modal from '@/components/elements/Modal.vue'
 import { mapActions } from 'vuex';
 
 export default {
+  name: 'Shop',
   data () {
     return {
       showFlag: false,
@@ -148,6 +149,7 @@ export default {
       this.currentCategory = undefined;
       this.column = undefined;
       this.order = undefined;
+      this.categoryClicked = true;
       this.fetchPriceRange();
     },
     toggleDropdown() {

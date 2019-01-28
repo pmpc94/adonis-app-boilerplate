@@ -45,9 +45,9 @@ class OrderController {
         email,
         address1,
         address2,
-        status,
         quantity,
-        product_id
+        product_id,
+        token
       } = request.all();
       let total_price = 0;
       const user = await User.findOrCreate({ email }, {
@@ -64,7 +64,6 @@ class OrderController {
         address1,
         address2,
         total_price,
-        status,
         stripe_customer_id: 0,
         receipt_email: 'undefined'
       }, trx);
@@ -84,7 +83,7 @@ class OrderController {
       const charge = await stripe.charges.create({
         amount: Math.floor(total_price),
         currency: "eur",
-        source: "tok_visa", // obtained with Stripe.js
+        source: token, // obtained with Stripe.js
         description: `Charge for ${email}`,
         receipt_email: email
       });
