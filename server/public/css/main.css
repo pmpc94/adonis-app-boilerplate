@@ -12521,9 +12521,18 @@ a:hover {
           font-feature-settings: 'liga';
 }
 
-.priority-slider .vue-slider-component .vue-slider-tooltip {
+.vue-merged-tooltip.vue-slider-tooltip-top.vue-slider-tooltip-wrap {
   border: 1px solid #7971ea;
   background-color: #7971ea;
+  visibility: hidden !important;
+}
+
+.priority-slider .vue-slider-tooltip-top.vue-slider-tooltip-wrap {
+  visibility: hidden !important;
+}
+
+.priority-slider .vue-slider-component .vue-slider-dot .vue-slider-dot-handle {
+  background-color: #7971ea !important;
 }
 
 .priority-slider .vue-slider-component .vue-slider-process {

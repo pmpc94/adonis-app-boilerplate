@@ -24,7 +24,7 @@ Route.group(() => {
 
   //ORDERS
   Route.get('orders', 'OrderController.index').middleware('auth');
-  Route.get('orders/:id', 'OrderController.show').middleware('auth').validator('OrderAuthorization');
+  Route.get('orders/:id', 'OrderController.show'); //TODO - ASK IF REQUIRES AUTHORIZATION?!
   Route.patch('orders/:id', 'OrderController.update').middleware('auth').validator('OrderAuthorization').validator('OrderUpdate');
   Route.post('order', 'OrderController.store').middleware('guest').validator('OrderStore');
 
@@ -32,7 +32,7 @@ Route.group(() => {
   Route.get('products', 'ProductController.index');
   Route.get('categoriesCount', 'ProductController.categoriesCount');
   Route.get('priceRange', 'ProductController.priceRange');
-  Route.get('product/:name', 'ProductController.show').validator('ProductAuthorization');
+  Route.get('product/:slug', 'ProductController.show').validator('ProductAuthorization');//TODO - ASK IF REQUIRES AUTHORIZATION?!
   Route.post('product', 'ProductController.store').middleware('auth').validator('ProductStore');
   Route.delete('products/:id', 'ProductController.destroy').middleware('auth').validator('ProductAuthorization');
   Route.patch('products/:id', 'ProductController.update').middleware('auth').validator('ProductAuthorization').validator('ProductUpdate');

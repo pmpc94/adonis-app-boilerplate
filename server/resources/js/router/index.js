@@ -5,6 +5,8 @@ import Product from '@/components/pages/Product'
 import Cart from '@/components/pages/Cart'
 import Checkout from '@/components/pages/Checkout'
 import ThankYou from '@/components/pages/ThankYou'
+import Error from '@/components/pages/Error'
+import SecretPage from '@/components/pages/SecretPage'
 
 Vue.use(Router)
 //
@@ -17,7 +19,7 @@ export default new Router({
       component: Shop
     },
     {
-      path: '/product/:name',
+      path: '/product/:slug',
       name: 'Product',
       component: Product
     },
@@ -37,8 +39,18 @@ export default new Router({
       component: ThankYou
     },
     {
+      path: '/error',
+      name: 'Error',
+      component: Error
+    },
+    {
+      path: '/404',
+      name: 'SecretPage',
+      component: SecretPage
+    },
+    {
       path: '*',
-      redirect: '/'
+      redirect: '/404'
     }
   ]
 })

@@ -8,7 +8,7 @@
       </div>
     </div>
 
-    <div v-if="getProducts.length > 0" class="site-section">
+    <div v-if="products.length > 0" class="site-section">
       <div class="container">
         <div class="row mb-5">
           <form class="col-md-12" method="post">
@@ -25,23 +25,22 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <template v-for="product in getProducts">
-                    <tr>
+                    <tr v-for="(product, index) in products" :key="index">
                       <td class="product-thumbnail">
-                        <img v-bind:src="product.thumbnail.url" alt="Image" class="img-fluid">
+                        <img :src="product.thumbnail.url" alt="Image" class="img-fluid">
                       </td>
                       <td class="product-name">
-                        <router-link tag="a" :to="`/product/${product.name}`"><h2 class="h5">{{ product.name }}</h2></router-link>
+                        <router-link tag="a" :to="`/product/${product.slug}`"><h2 class="h5">{{ product.name }}</h2></router-link>
                       </td>
                       <td>€{{ product.price }}</td>
                       <td>
-                        <div class="input-group mb-3" style="max-width: 120px;">
+                        <div class="input-group mb-3" style="max-width: 120px; margin: 0 auto;">
                           <div class="input-group-prepend">
-                            <button @click="updateCart(product), product.quantity > 1 ? product.quantity-- : ''" class="btn btn-outline-primary js-btn-minus" type="button">&minus;</button>
+                            <button @click="updateCart(product), product.quantity > 1 ? products[index].quantity-- : '', $set(products, index, products[index])" class="btn btn-outline-primary js-btn-minus" type="button">&minus;</button>
                           </div>
-                          <input disabled type="number" class="form-control text-center" v-model="product.quantity" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
+                          <input @keydown="preventUndesiredChars" type="text" class="form-control text-center" v-model="product.quantity" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
                           <div class="input-group-append">
-                            <button @click="updateCart(product), product.quantity++" class="btn btn-outline-primary js-btn-plus" type="button">&plus;</button>
+                            <button @click="updateCart(product), products[index].quantity++, $set(products, index, products[index])" class="btn btn-outline-primary js-btn-plus" type="button">&plus;</button>
                           </div>
                         </div>
 
@@ -49,7 +48,6 @@
                       <td>{{ (product.price * product.quantity).toFixed(2) }}</td>
                       <td @click="removeFromCart(product)"><span class="btn btn-primary btn-sm">X</span></td>
                     </tr>
-                  </template>
                 </tbody>
               </table>
             </div>
@@ -77,7 +75,7 @@
                     <span class="text-black">Subtotal</span>
                   </div>
                   <div class="col-md-6 text-right">
-                    <strong class="text-black">€{{ getProducts.reduce((accumulator, currentValue) => accumulator + (currentValue.price * currentValue.quantity), 0).toFixed(2) }}</strong>
+                    <strong class="text-black">€{{ products.reduce((accumulator, currentValue) => accumulator + (currentValue.price * currentValue.quantity), 0).toFixed(2) }}</strong>
                   </div>
                 </div>
                 <div class="row mb-5">
@@ -85,7 +83,7 @@
                     <span class="text-black">Total</span>
                   </div>
                   <div class="col-md-6 text-right">
-                    <strong class="text-black">€{{ getProducts.reduce((accumulator, currentValue) => accumulator + (currentValue.price * currentValue.quantity), 0).toFixed(2) }}</strong>
+                    <strong class="text-black">€{{ products.reduce((accumulator, currentValue) => accumulator + (currentValue.price * currentValue.quantity), 0).toFixed(2) }}</strong>
                   </div>
                 </div>
 
@@ -116,19 +114,23 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
+  name: 'Cart',
   computed: {
     ...mapGetters('cart', [
-      'getProducts'
+      'products'
     ])
   },
   methods: {
-    ...mapMutations('cart', [
+    ...mapActions('cart', [
       'updateCart',
       'removeFromCart'
-    ])
+    ]),
+    preventUndesiredChars() {
+      (event.keyCode >= 65 && event.keyCode <= 90) || (event.keyCode >= 186 && event.keyCode <= 192) ? event.preventDefault() : ''
+    }
   }
 }
 </script>

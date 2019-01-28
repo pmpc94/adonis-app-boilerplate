@@ -4,6 +4,11 @@
 const Model = use('Model')
 
 class Product extends Model {
+  static boot () {
+    super.boot()
+
+    this.addHook('beforeSave', 'ProductHook.createSlugs')
+  }
   user () {
     return this.belongsTo('App/Models/User')
   }

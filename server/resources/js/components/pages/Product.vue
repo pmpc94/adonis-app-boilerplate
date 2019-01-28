@@ -15,7 +15,7 @@
             <img :src="currentImage" alt="" class="img-fluid mb-2">
             <div class="row">
               <div class="col-md-3" v-for="(product, index) in currentProduct.images" :key="index">
-                <img :class="{ 'selectedImage': currentImage === product.url}" @click="currentImage = product.url" v-bind:src="product.url" alt="Image" class="img-secondary mr-2">
+                <img :class="{ 'selectedImage': currentImage === product.url}" @click="currentImage = product.url" :src="product.url" alt="Image" class="img-secondary mr-2">
               </div>
             </div>
           </div>
@@ -29,28 +29,30 @@
                 <div class="input-group-prepend">
                   <button @click="decrementCount(), currentProduct.quantity = count" class="btn btn-outline-primary js-btn-minus" type="button">&minus;</button>
                 </div>
-                <input disabled type="number" min="1" step="1" class="form-control text-center" v-model="count" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
+                <input @keydown="preventUndesiredChars" type="text" min="1" step="1" class="form-control text-center" v-model="count" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
                 <div class="input-group-append">
                   <button @click="incrementCount(), currentProduct.quantity = count" class="btn btn-outline-primary js-btn-plus" type="button">&plus;</button>
                 </div>
               </div>
 
             </div>
-            <router-link v-on:click.native="addToCart(currentProduct)" class="buy-now btn btn-sm btn-primary" tag="li" to="/cart">Add To Cart</router-link>
+            <button class="buy-now btn btn-sm btn-primary" @click="$root.showModal = true, addToCart(currentProduct)">Add To Cart</button>
           </div>
         </div>
       </div>
     </div>
+    <Modal/>
   </div>
 </div>
 </template>
 
 <script>
 import HTTP from '@/http';
-import { mapMutations } from 'vuex';
-const dashify = require('dashify');
+import { mapActions } from 'vuex';
+import Modal from '@/components/elements/Modal.vue'
 
 export default {
+  name: 'Product',
   data () {
     return {
       count: 1,
@@ -59,13 +61,16 @@ export default {
     }
   },
   mounted() {
-    this.fetchProduct(this.$route.params.name);
+    this.fetchProduct(this.$route.params.slug);
+  },
+  components: {
+    Modal
   },
   methods: {
-    async fetchProduct(name) {
-      const { data } = await HTTP().get(`/product/${name}`);
+    async fetchProduct(slug) {
+      const { data } = await HTTP().get(`/product/${slug}`);
       this.currentProduct = data.data;
-      this.currentProduct["quantity"] = 1;
+      this.currentProduct['quantity'] = 1;
       this.currentImage = this.currentProduct.thumbnail.url;
     },
     incrementCount() {
@@ -74,7 +79,10 @@ export default {
     decrementCount() {
       this.count > 1 ? this.count-- : '';
     },
-    ...mapMutations('cart', [
+    preventUndesiredChars(event) {
+      (event.keyCode >= 65 && event.keyCode <= 90) || (event.keyCode >= 186 && event.keyCode <= 192) ? event.preventDefault() : ''
+    },
+    ...mapActions('cart', [
       'addToCart',
     ])
   }
@@ -96,4 +104,5 @@ export default {
 .selectedImage {
   border: 2px solid purple;
 }
+
 </style>

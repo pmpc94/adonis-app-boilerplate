@@ -10,7 +10,7 @@
       </div>
     </div>
 
-    <div v-if="getProducts.length > 0" class="site-section">
+    <div v-if="products.length > 0 && !loading" class="site-section">
       <div class="container">
         <div class="row">
           <div class="col-md-6 mb-5 mb-md-0">
@@ -19,140 +19,348 @@
               <div class="form-group row">
                 <div class="col-md-6">
                   <label for="c_fname" class="text-black">First Name <span class="text-danger">*</span></label>
-                  <input v-validate="'required'" v-model="first_name" type="text" class="form-control" id="c_fname" name="first name">
+                  <input v-validate="'required'" v-model="first_name" type="text" class="form-control" id="c_fname" name="first name" placeholder="ex: Pedro">
+                  <span>{{ errors.first('first name') }}</span>
                 </div>
                 <div class="col-md-6">
                   <label for="c_lname" class="text-black">Last Name <span class="text-danger">*</span></label>
-                  <input v-validate="'required'" v-model="last_name" type="text" class="form-control" id="c_lname" name="last name">
+                  <input v-validate="'required'" v-model="last_name" type="text" class="form-control" id="c_lname" name="last name" placeholder="ex: Carolina">
+                  <span>{{ errors.first('last name') }}</span>
                 </div>
               </div>
 
               <div class="form-group row">
                 <div class="col-md-12">
                   <label for="c_address" class="text-black">Address <span class="text-danger">*</span></label>
-                  <input v-validate="'required'" v-model="address1" type="text" class="form-control" id="c_address" name="address" placeholder="Street address">
+                  <input v-validate="'required'" v-model="address1" type="text" class="form-control" id="c_address" name="address" placeholder="ex: Street address">
+                  <span>{{ errors.first('address') }}</span>
                 </div>
               </div>
 
               <div class="form-group">
-                <input type="text" class="form-control" placeholder="Apartment, suite, unit etc. (optional)">
+                <input type="text" class="form-control" placeholder="ex: Apartment, suite, unit etc. (optional)">
               </div>
 
-              <div class="form-group row mb-5">
+              <div class="form-group row">
                 <div class="col-md-6">
                   <label for="c_email_address" class="text-black">Email Address <span class="text-danger">*</span></label>
-                  <input v-validate="'required|email'" v-model="email" type="text" class="form-control" id="c_email_address" name="email">
+                  <input v-validate="'required|email'" v-model="email" type="text" class="form-control" id="c_email_address" name="email" placeholder="ex: pedro.carolina@example.pt">
+                  <span>{{ errors.first('email') }}</span>
                 </div>
               </div>
-              <ul>
-                <li v-for="error in errors.all()"><span style="color: #7971ea">{{ error }}</span></li>
-              </ul>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="row mb-5">
-              <div class="col-md-12">
-                <h2 class="h3 mb-3 text-black">Your Order</h2>
-                <div class="p-3 p-lg-5 border">
-                  <table class="table site-block-order-table mb-5">
-                    <thead>
-                      <th>Product</th>
-                      <th>Total</th>
-                    </thead>
-                    <tbody>
-                      <template v-for="product in getProducts">
-                        <tr>
-                          <td>{{ product.name }} <strong class="mx-2">x</strong> {{ product.quantity }}</td>
-                          <td>€{{ product.price * product.quantity }}</td>
-                        </tr>
-                      </template>
-                      <tr>
-                        <td class="text-black font-weight-bold"><strong>Cart Subtotal</strong></td>
-                        <td class="text-black">€{{ getProducts.reduce((accumulator, currentValue) => accumulator + (currentValue.price * currentValue.quantity), 0).toFixed(2) }}</td>
-                      </tr>
-                      <tr>
-                        <td class="text-black font-weight-bold"><strong>Order Total</strong></td>
-                        <td class="text-black font-weight-bold"><strong>€{{ getProducts.reduce((accumulator, currentValue) => accumulator + (currentValue.price * currentValue.quantity), 0).toFixed(2) }}</strong></td>
-                      </tr>
-                    </tbody>
-                  </table>
-                  <div class="form-group">
-                    <router-link v-on:click.native="purchase()" :disabled="!isComplete || errors.any()" class="btn btn-primary btn-lg py-3 btn-block" tag="button" to="/thank-you">Place Order</router-link>
+
+              <!-- STRIPE -->
+                <div class="form-group row">
+                  <div class="col-md-12">
+                    <label for="card-number" class="text-black">
+                      Card Number
+                      <span class="text-danger">*</span>
+                    </label>
+                    <div ref="card-number" id="card-number" class="form-control">
+                      <!-- Stripe Card Element -->
+                    </div>
+                    <span class="invalid-feedback mt-3">{{
+                      stripeErrors.cardNumber
+                    }}</span>
                   </div>
-
                 </div>
-              </div>
-            </div>
-
+                <div class="form-group row">
+                  <div class="col-md-6">
+                    <label for="card-exp" class="text-black">
+                      Expiry Date
+                      <span class="text-danger">*</span>
+                    </label>
+                    <div ref="card-exp" id="card-exp" class="form-control">
+                      <!-- Stripe Card Expiry Element -->
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="card-cvc" class="text-black">
+                      CVC
+                      <span class="text-danger">*</span>
+                    </label>
+                    <div ref="card-cvc" id="card-cvc" class="form-control">
+                      <!-- Stripe CVC Element -->
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="invalid-feedback mt-3">
+                      {{ stripeErrors.cardExpiry }}
+                    </div>
+                    <div class="invalid-feedback mt-3">
+                      {{ stripeErrors.cardCvc }}
+                    </div>
+                  </div>
+                </div>
+            <!-- STRIPE -->
           </div>
         </div>
-        <!-- </form> -->
-      </div>
-    </div>
+        <div class="col-md-6">
+          <div class="row mb-5">
+            <div class="col-md-12">
+              <h2 class="h3 mb-3 text-black">Your Order</h2>
+              <div class="p-3 p-lg-5 border">
+                <table class="table site-block-order-table mb-5">
+                  <thead>
+                    <th>Product</th>
+                    <th>Total</th>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(product, index) in products" :key="index">
+                      <td>{{ product.name }} <strong class="mx-2">x</strong> {{ product.quantity }}</td>
+                      <td>€{{ (product.price * product.quantity).toFixed(2) }}</td>
+                    </tr>
+                    <tr>
+                      <td class="text-black font-weight-bold"><strong>Cart Subtotal</strong></td>
+                      <td class="text-black">€{{ products.reduce((accumulator, currentValue) => accumulator + (currentValue.price * currentValue.quantity), 0).toFixed(2) }}</td>
+                    </tr>
+                    <tr>
+                      <td class="text-black font-weight-bold"><strong>Order Total</strong></td>
+                      <td class="text-black font-weight-bold"><strong>€{{ products.reduce((accumulator, currentValue) => accumulator + (currentValue.price * currentValue.quantity), 0).toFixed(2) }}</strong></td>
+                    </tr>
+                  </tbody>
+                </table>
 
-    <div v-else class="site-section">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-12 text-center">
-            <span class="icon-check_circle display-3 text-success"></span>
-            <h2 class="display-3 text-black">Your cart is empty!</h2>
-            <p class="lead mb-5">Don't lose our big deals.</p>
-            <router-link class="btn btn-sm btn-primary" tag="li" to="/">Back to shop</router-link>
+                <div class="form-group mt-5">
+                  <button
+                  class="btn btn-primary btn-lg py-3 btn-block"
+                  @click="submitPurchase"
+                  >
+                  Place Order
+                </button>
+              </div>
+              </div>
+            </div>
           </div>
+
+        </div>
+      </div>
+      <!-- </form> -->
+    </div>
+  </div>
+
+  <div v-else>
+    <h2 style="text-align:center; color: #7971ea">Loading...</h2>
+    <div class="loader"></div>
+  </div>
+
+  <div v-else class="site-section">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12 text-center">
+          <span class="icon-check_circle display-3 text-success"></span>
+          <h2 class="display-3 text-black">Your cart is empty!</h2>
+          <p class="lead mb-5">Don't lose our big deals.</p>
+          <router-link class="btn btn-sm btn-primary" tag="li" to="/">Back to shop</router-link>
         </div>
       </div>
     </div>
   </div>
+</div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import HTTP from '@/http';
 
 export default {
+  name: 'Checkout',
   data() {
     return {
       first_name: undefined,
       last_name: undefined,
       address1: undefined,
-      address2: '',
+      address2: undefined,
       email: undefined,
-      total_price: 0,
-      status: 'created',
       quantity: [],
-      product_id: []
+      product_id: [],
+      loading: false,
+      stripe: null,
+      stripeErrors: { cardNumber: '', cardCvc: '', cardExpiry: ''},
+      number: '',
+      expiry: '',
+      cvc: '',
+      style: {
+        base: {
+          color: '#32325d',
+          lineHeight: '18px',
+          fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+          fontSmoothing: 'antialiased',
+          fontSize: '16px',
+          '::placeholder': {
+            color: '#aab7c4'
+          }
+        },
+        invalid: {
+          color: '#fa755a',
+          iconColor: '#fa755a'
+        }
+      }
     }
+  },
+  mounted() {
+    this.setupStripe();
   },
   computed: {
     ...mapGetters('cart', [
-      'getProducts'
-    ]),
-    isComplete () {
-      return this.first_name && this.last_name && this.address1 && this.email;
-    }
+      'products'
+    ])
   },
   methods: {
-    purchase(products) {
-      for(let i=0; i<products.length; i++) {
-        this.quantity.push({ id: products[i].id, amount: products[i].quantity });
-        this.product_id.push(products[i].id);
-      }
-        const { data } = HTTP().post('/order', {
+    setupStripe() {
+      const stripe = Stripe(window.stripeKey)
+      this.stripe = stripe
+      
+      const elements = stripe.elements()
+      this.number = elements.create('cardNumber', {
+        placeholder: 'ex: 4242 4242 4242 4242',
+        style: this.style
+      })
+
+      this.expiry = elements.create('cardExpiry', {
+        placeholder: 'ex: 01/20',
+        style: this.style
+      })
+      this.cvc = elements.create('cardCvc', {
+        placeholder: 'ex: 123',
+        style: this.style
+      })
+
+      this.number.mount(this.$refs['card-number'])
+      this.expiry.mount(this.$refs['card-exp'])
+      this.cvc.mount(this.$refs['card-cvc'])
+
+      this.number.on('change', result => {
+        console.log("number RESULT")
+        this.handleResult(result)
+      })
+
+      this.expiry.on('change', result => {
+        console.log("expiry RESULT")
+        this.handleResult(result)
+      })
+
+      this.cvc.on('change', result => {
+        console.log("cvc RESULT")
+        this.handleResult(result)
+      })
+    },
+    async handleResult(result) {
+      console.log("handleResult", result)
+      if (result.token) {
+        console.log("1st IF", result)
+        // Use the token to create a charge or a customer
+        // https://stripe.com/docs/charges
+        // this.token = result.token.id
+        for(let i=0; i<this.products.length; i++) {
+          this.quantity.push({ id: this.products[i].id, amount: this.products[i].quantity });
+          this.product_id.push(this.products[i].id);
+        }
+        HTTP().post('/order', {
           first_name: this.first_name,
           last_name: this.last_name,
           address1: this.address1,
           address2: this.address2,
           email: this.email,
-          total_price: this.total_price,
-          status: this.status,
           quantity: this.quantity,
-          product_id: this.product_id
+          product_id: this.product_id,
+          token: result.token.id
+        })
+        .then(response => {
+          this.loading = false;
+          this.emptyCart();
+          this.$router.push('/thank-you');
+        })
+        .catch(error => {
+          this.loading = false;
+          this.$router.push('/error');
         });
-        data === undefined ? this.$router.push('/') : '';
-    }
+      } else if (result.error) {
+        console.log("2nd IF")
+        if (this.stripeErrors[result.elementType] !== undefined) {
+          this.stripeErrors[result.elementType] = result.error.code
+        }
+        this.loading = false
+      } else if (result.complete === true) {
+        if (this.stripeErrors[result.elementType] !== undefined) {
+          this.stripeErrors[result.elementType] = ''
+        }
+      }
+    },
+    async submitPurchase() {
+      this.loading = true
+      console.log("SUBMIT PURCHASE")
+      const validation = await this.$validator.validateAll()
+      if (validation) {
+        console.log("VALIDATION", validation)
+        let cardData = {
+          name: `${this.first_name} ${this.last_name}`
+        }
+        console.log("PRE RESULT", cardData, this.number)
+        const result = await this.stripe.createToken(this.number, cardData)
+        console.log("RESULT", result)
+        this.handleResult(result)
+      } else {
+        this.loading = false
+      }
+    },
+    ...mapActions('cart', [
+      'emptyCart',
+    ])
   }
 }
 </script>
+<style scoped>
+.loader {
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #7971ea;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+  margin: 0 auto;
+}
 
-<style lang="css">
+/* Safari */
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+span {
+  color: #7971ea;
+}
+
+/**
+* The CSS shown here will not be introduced in the Quickstart guide, but shows
+* how you can use CSS to style your Element's container.
+*/
+.StripeElement {
+  background-color: white;
+  height: 40px;
+  padding: 10px 12px;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  box-shadow: 0 1px 3px 0 #e6ebf1;
+  -webkit-transition: box-shadow 150ms ease;
+  transition: box-shadow 150ms ease;
+}
+
+.StripeElement--focus {
+  box-shadow: 0 1px 3px 0 #cfd7df;
+}
+
+.StripeElement--invalid {
+  border-color: #fa755a;
+}
+
+.StripeElement--webkit-autofill {
+  background-color: #fefde5 !important;
+}
 </style>

@@ -2,7 +2,6 @@
   <div>
     <div class="site-section">
       <div class="container">
-
         <div class="row mb-5">
           <div class="col-md-9 order-2">
 
@@ -24,30 +23,26 @@
               </div>
             </div>
             <div class="row mb-5">
-              <template v-for="product in products.data">
-                <div class="col-sm-6 col-lg-4 mb-4" data-aos="fade-up">
-                  <div class="block-4 text-center border">
-                    <figure class="block-4-image">
-                      <router-link tag="a" :to="`/product/${product.name}`"><img v-bind:src="product.thumbnail.url" alt="Image placeholder" class="img-fluid fixed-height"></router-link>
-                    </figure>
-                    <div class="block-4-text p-4">
-                      <h3><router-link :to="`/product/${product.name}`" >{{ product.name }}</router-link></h3>
-                      <p class="mb-0">{{ product.category }}</p>
-                      <p class="text-primary font-weight-bold">€{{ product.price }}</p>
-                    </div>
+              <div v-for="(product, index) in products.data" :key="index" class="col-sm-6 col-lg-4 mb-4" data-aos="fade-up">
+                <div class="block-4 text-center border">
+                  <figure class="block-4-image">
+                    <router-link tag="a" :to="`/product/${product.slug}`"><img :src="product.thumbnail.url" alt="Image placeholder" class="img-fluid fixed-height"></router-link>
+                  </figure>
+                  <div class="block-4-text p-4">
+                    <h3><router-link :to="`/product/${product.slug}`" >{{ product.name }}</router-link></h3>
+                    <p class="mb-0">{{ product.category }}</p>
+                    <p class="text-primary font-weight-bold">€{{ product.price }}</p>
+                    <button class="btn btn-primary" @click="$root.showModal = true, addToCart(product)">Add To Cart</button>
                   </div>
                 </div>
-              </template>
-
+              </div>
 
             </div>
             <div class="row" data-aos="fade-up">
               <div class="col-md-12 text-center">
                 <div class="site-block-27">
                   <ul>
-                    <template v-for="id in products.lastPage">
-                      <li :class="{ 'active': activePage === id }" @click="fetchProducts({ activePage: id }), activePage = id"><span>{{ id }}</span></li>
-                    </template>
+                      <li v-for="id in products.lastPage" :key="id" :class="{ 'active': activePage === id }" @click="fetchProducts({ activePage: id }), activePage = id"><span>{{ id }}</span></li>
                   </ul>
                 </div>
               </div>
@@ -58,29 +53,32 @@
             <div class="border p-4 rounded mb-4">
               <h3 class="mb-3 h6 text-uppercase text-black d-block">Categories</h3>
               <ul class="list-unstyled mb-0">
-                <template v-for="category in categories">
-                  <li style="cursor: pointer; color: #7971ea;" @click="fetchPriceRange({ category })" class="mb-1 d-flex"><span>{{ category.name }}</span> <span class="text-black ml-auto">{{ category.total }}</span></li>
-                </template>
+                  <li v-for="(category, index) in categories" :key="index" style="cursor: pointer; color: #7971ea;" @click="fetchPriceRange({ category }), categoryClicked = true" class="mb-1 d-flex"><span>{{ category.name }}</span> <span class="text-black ml-auto">{{ category.total }}</span></li>
               </ul>
             </div>
 
             <div class="border p-4 rounded mb-4">
               <div class="mb-2 priority-slider">
-                <h3 class="mb-5 h6 text-uppercase text-black d-block">Filter by Price (€)</h3>
+                <h3 class="h6 text-uppercase text-black d-block">Filter by Price</h3>
                 <vue-slider ref="slider" v-model="priceRange" :min="0" :max="max"></vue-slider>
+                <p>{{ priceRangeMin }}€ - {{ priceRangeMax }}€</p>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+    <Modal/>
   </div>
 </template>
 
 <script>
 import HTTP from '@/http';
+import Modal from '@/components/elements/Modal.vue'
+import { mapActions } from 'vuex';
 
 export default {
+  name: 'Shop',
   data () {
     return {
       showFlag: false,
@@ -95,14 +93,17 @@ export default {
       order: undefined,
       categories: [],
       orderText: '',
-      loaded: false
+      loaded: false,
+      categoryClicked: false
     }
   },
   mounted() {
     this.fetchCategoriesCount()
     this.fetchPriceRange()
   },
-
+  components: {
+    Modal
+  },
   methods: {
     async fetchProducts({ column, order, activePage, range } = {}) {
       let query = '';
@@ -119,12 +120,12 @@ export default {
         query += `&${this.column}=${this.order}`;
       }
       if (range !== undefined) {
-          query += `&min=${range[0]}&max=${range[1]}`;
-          this.priceRangeMin = range[0];
-          this.priceRangeMax = range[1];
+        query += `&min=${range[0]}&max=${range[1]}`;
+        this.priceRangeMin = range[0];
+        this.priceRangeMax = range[1];
       }
       if (range === undefined && this.priceRangeMin !== undefined && this.priceRangeMax !== undefined) {
-          query += `&min=${this.priceRangeMin}&max=${this.priceRangeMax}`
+        query += `&min=${this.priceRangeMin}&max=${this.priceRangeMax}`
       }
       const { data } = await HTTP().get(`/products?page=${this.activePage}${query}`)
       this.products = data.data;
@@ -148,16 +149,25 @@ export default {
       this.currentCategory = undefined;
       this.column = undefined;
       this.order = undefined;
+      this.categoryClicked = true;
       this.fetchPriceRange();
     },
     toggleDropdown() {
       this.showFlag = !this.showFlag;
-    }
+    },
+    ...mapActions('cart', [
+      'addToCart',
+    ])
   },
   watch: {
     priceRange(val, old) {
-      if (this.loaded)
+      if (this.loaded && !this.categoryClicked) {
         val[0] !== old[0] || val[1] !== old[1] ? this.fetchProducts({ range: val}) : '';
+      }
+      else if (this.categoryClicked) {
+        this.fetchProducts({ range: val});
+        this.categoryClicked = false;
+      }
     }
   }
 }

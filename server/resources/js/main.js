@@ -7,7 +7,6 @@ import App from '@/components/layout/App'
 import router from '@/router'
 import components from '@/components'
 import store from '@/store'
-import Vuetify from 'vuetify'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faShoppingCart } from '@fortawesome/pro-solid-svg-icons'
@@ -22,10 +21,10 @@ window.axios = axios
 window.axios.defaults.headers.common = { 'X-Requested-With': 'XMLHttpRequest' }
 window.axios.defaults.baseURL = `http://127.0.0.1:3333/`
 /**
- * Next we will register the CSRF Token as a common header with Axios so that
- * all outgoing HTTP requests automatically have it attached. This is just
- * a simple convenience so we don't have to attach every token manually.
- */
+* Next we will register the CSRF Token as a common header with Axios so that
+* all outgoing HTTP requests automatically have it attached. This is just
+* a simple convenience so we don't have to attach every token manually.
+*/
 let token = document.querySelector('[name="csrf-token"]')
 if (token) {
   window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content
@@ -37,6 +36,9 @@ if (token) {
 
 new Vue({
   el: '#app',
+  data: {
+    showModal: false
+  },
   router,
   store,
   components: { App },

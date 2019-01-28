@@ -12,6 +12,7 @@ class ProductsSchema extends Schema {
       table.enum('category', ['terrestrial', 'giant', 'dwarf'])
       table.float('price').notNullable()
       table.integer('user_id').unsigned().references('users.id').onDelete('NO ACTION').onUpdate('NO ACTION')
+      table.string('slug', 255).notNullable()
       table.timestamps()
     })
   }
