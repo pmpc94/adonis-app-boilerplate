@@ -42,5 +42,9 @@ Route.group(() => {
 //STRIPE
 Route.post('webhooks', 'StripeController.store');
 
-//FRONT-END RENDERING
+//BACK OFFICE RENDERING
+Route.on('/login').render('backoffice')
+Route.on('/products').render('backoffice')
+
+//SHOP RENDERING
 Route.on('*').render('landing')

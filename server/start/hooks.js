@@ -3,9 +3,8 @@ const { hooks } = require('@adonisjs/ignitor')
 hooks.after.providersBooted(() => {
   const View = use('View')
   const Config = use('Config');
-  console.log("private key", Config.get('stripe.private'))
   View.global('stripeKey', () => {
-    return Config.get('stripe.private')
+    return Config.get('stripe.public')
   })
 
   const Validator = use('Validator')

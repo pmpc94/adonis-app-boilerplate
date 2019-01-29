@@ -1,7 +1,8 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import createPersistedState from 'vuex-persistedstate';
-import cart from './modules/cart';
+import cart from './modules/shop/cart';
+import authentication from './modules/admin/authentication';
 
 Vue.use(Vuex);
 
@@ -11,7 +12,8 @@ export default new Vuex.Store({
     baseUrl: '/api'
   },
   modules: {
-    cart
+    cart,
+    authentication
   },
   plugins: [
     createPersistedState()

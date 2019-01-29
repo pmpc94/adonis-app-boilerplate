@@ -1,18 +1,21 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Shop from '@/components/pages/Shop'
-import Product from '@/components/pages/Product'
-import Cart from '@/components/pages/Cart'
-import Checkout from '@/components/pages/Checkout'
-import ThankYou from '@/components/pages/ThankYou'
-import Error from '@/components/pages/Error'
-import SecretPage from '@/components/pages/SecretPage'
+import Shop from '@/components/pages/shop/Shop'
+import Product from '@/components/pages/shop/Product'
+import Cart from '@/components/pages/shop/Cart'
+import Checkout from '@/components/pages/shop/Checkout'
+import ThankYou from '@/components/pages/shop/ThankYou'
+import Error from '@/components/pages/shop/Error'
+import SecretPage from '@/components/pages/shop/SecretPage'
+import Login from '@/components/pages/admin/Login'
+import VendorProducts from '@/components/pages/admin/VendorProducts'
 
 Vue.use(Router)
 //
 export default new Router({
   mode: 'history', // use HTML5 history instead of hashes
   routes: [
+    // SHOP
     {
       path: '/',
       name: 'Shop',
@@ -51,6 +54,17 @@ export default new Router({
     {
       path: '*',
       redirect: '/404'
-    }
+    },
+    // BACK OFFICE
+    {
+      path: '/login',
+      name: 'Login',
+      component: Login
+    },
+    {
+      path: '/products',
+      name: 'VendorProducts',
+      component: VendorProducts
+    },
   ]
 })

@@ -17,11 +17,11 @@ const { VueLoaderPlugin } = require('vue-loader')
 mix
   .setPublicPath('public')
   // transpiling, babelling, minifying and creating the public/js/main.js out of our assets
-  .js('resources/js/main.js', 'public/js')
-  // .js('resources/js/admin.js', 'public/js')
+  .js('resources/js/shop.js', 'public/js')
+  .js('resources/js/admin.js', 'public/js')
   .extract(['vue', 'vue-router', 'axios'])
-  .sass('resources/scss/main.scss', 'public/css')
-  // .sass('resources/scss/admin.scss', 'public/css')
+  .sass('resources/scss/shop.scss', 'public/css')
+  .sass('resources/scss/admin.scss', 'public/css')
   .sourceMaps()
 
 mix.webpackConfig({
@@ -29,8 +29,6 @@ mix.webpackConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'resources/js'),
-      // '@shop': path.resolve(__dirname, 'resources/js/shop'),
-      // '@admin': path.resolve(__dirname, 'resources/js/admin'),
       '@scss': path.resolve(__dirname, 'resources/scss')
     }
   },
