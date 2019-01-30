@@ -20,8 +20,9 @@ hooks.after.providersBooted(() => {
 const existsFn = async (data, field, message, args, get) => {
   const Database = use('Database')
 
-  const value = get(data, field)
-  if (!value) {
+  let value = get(data, field)
+
+  if (!value && args.length !== 4) {
     /**
     * skip validation if value is not defined. `required` rule
     * should take care of it.
@@ -29,8 +30,13 @@ const existsFn = async (data, field, message, args, get) => {
     return
   }
 
-  const [table, column] = args
-  console.log("VALUE", value)
+  let [table, column] = args
+
+  if (args.length === 4) {
+    column = 'id';
+    value = args[1];
+  }
+
   const query = Database.query()
   .from(table)
   .where(column, value)

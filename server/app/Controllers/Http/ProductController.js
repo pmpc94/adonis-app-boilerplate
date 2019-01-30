@@ -67,7 +67,7 @@ class ProductController {
 
   async show({ auth, request, response }) {
     try {
-      let { slug } = request.params;
+      const { slug } = request.params;
       if (auth.user === null) {
         const product = await Product
         .query()
@@ -80,7 +80,7 @@ class ProductController {
       const product = await Product
       .query()
       .with('images').with('thumbnail')
-      .where('slug', slug)
+      .where('id', slug)
       .firstOrFail()
       response.ok('The product that you requested.', product);
     } catch (error) {

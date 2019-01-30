@@ -4,8 +4,9 @@ const { formatters } = use('Validator')
 
 class ProductUpdate {
   get rules () {
+    const user_id = this.ctx.auth.user.id;
     return {
-      user_id: 'required|exists:users,id,role,vendor',
+      user_id: `exists:users,${user_id},role,vendor`,
       name: 'required|string|min:3|max:255',
       description: 'required|string|min:3|max:255',
       category: 'required|string|min:3|max:255|in:terrestrial,giant,dwarf',

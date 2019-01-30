@@ -20,7 +20,7 @@ class UserController {
     try {
       const { email } = request.all();
       const user = await User.findBy('email', email);
-      await Mail.send('emails.welcome', {}, (message) => {
+      await Mail.send('emails.password', {}, (message) => {
         message.from(Config.get('mail.from'))
         message.to(email)
         message.subject('Please update your password.')

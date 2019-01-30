@@ -1,1 +1,6 @@
-@import '~vuetify/dist/vuetify.min.css'
+@import '~vuetify/dist/vuetify.min.css';
+
+.vuetify-menu .primary--text {
+  color: purple !important;
+  caret-color: purple !important;
+}

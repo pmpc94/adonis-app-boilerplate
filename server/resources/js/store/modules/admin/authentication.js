@@ -1,18 +1,21 @@
-import router from '@/router';
-import HTTP from '@/http';
+import router from '@/router/admin';
+import HTTP from '@/http/admin';
 
 export default {
   namespaced: true,
   state: {
     loginEmail: '',
     loginPassword: '',
-    loginError: '',
+    loginError: null,
     token: null
   },
 
   getters: {
     isLoggedIn(state) {
       return !!state.token;
+    },
+    email(state) {
+      return state.loginEmail;
     }
   },
   mutations: {
@@ -42,11 +45,11 @@ export default {
         password: state.loginPassword,
       })
       .then(({ data }) => {
-        commit('setToken', data.token);
-        router.push('/');
+        commit('setToken', data.data.token);
+        router.push('/products');
       })
       .catch(() => {
-        commit('setLoginError', 'An error has occured trying to login');
+        commit('setLoginError', 'An error has occured trying to login.');
       })
     }
   }

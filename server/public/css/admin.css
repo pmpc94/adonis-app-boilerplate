@@ -13845,5 +13845,8 @@ table.v-table tfoot tr td {
 .v-treeview-node__children {
   -webkit-transition: all .2s cubic-bezier(0,0,.2,1);
   transition: all .2s cubic-bezier(0,0,.2,1);
+}.vuetify-menu .primary--text {
+  color: purple !important;
+  caret-color: purple !important;
 }
 

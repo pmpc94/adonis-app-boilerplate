@@ -83,7 +83,7 @@ class OrderController {
       const charge = await stripe.charges.create({
         amount: Math.floor(total_price),
         currency: "eur",
-        source: token, // obtained with Stripe.js 
+        source: token, // obtained with Stripe.js
         description: `Charge for ${email}`,
         receipt_email: email
       });

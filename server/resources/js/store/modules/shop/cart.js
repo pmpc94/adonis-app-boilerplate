@@ -1,4 +1,4 @@
-import HTTP from '@/http';
+import HTTP from '@/http/shop';
 import Vue from 'vue';
 
 export default {

@@ -160,7 +160,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import HTTP from '@/http';
+import HTTP from '@/http/shop';
 
 export default {
   name: 'Checkout',

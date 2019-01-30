@@ -34,8 +34,8 @@ Route.group(() => {
   Route.get('priceRange', 'ProductController.priceRange');
   Route.get('product/:slug', 'ProductController.show').validator('ProductAuthorization');//TODO - ASK IF REQUIRES AUTHORIZATION?!
   Route.post('product', 'ProductController.store').middleware('auth').validator('ProductStore');
-  Route.delete('products/:id', 'ProductController.destroy').middleware('auth').validator('ProductAuthorization');
-  Route.patch('products/:id', 'ProductController.update').middleware('auth').validator('ProductAuthorization').validator('ProductUpdate');
+  Route.delete('product/:id', 'ProductController.destroy').middleware('auth').validator('ProductAuthorization');
+  Route.patch('product/:id', 'ProductController.update').middleware('auth').validator('ProductAuthorization').validator('ProductUpdate');
   Route.any('*', ({ response }) => response.notFound())
 }).prefix('api');
 
@@ -44,7 +44,12 @@ Route.post('webhooks', 'StripeController.store');
 
 //BACK OFFICE RENDERING
 Route.on('/login').render('backoffice')
+Route.on('/menu').render('backoffice')
+Route.on('/product').render('backoffice')
 Route.on('/products').render('backoffice')
+Route.on('/product/:id').render('backoffice')
+Route.on('/orders').render('backoffice')
+Route.on('/settings').render('backoffice')
 
 //SHOP RENDERING
 Route.on('*').render('landing')

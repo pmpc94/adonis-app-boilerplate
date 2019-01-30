@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import HTTP from '@/http';
+import HTTP from '@/http/shop';
 import { mapActions } from 'vuex';
 import Modal from '@/components/elements/shop/Modal.vue'
 

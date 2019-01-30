@@ -4,7 +4,8 @@ import Vuetify from 'vuetify'
 // Docs: https://github.com/axios/axios
 import axios from 'axios'
 import Admin from '@/components/layout/Admin'
-import router from '@/router'
+import router from '@/router/admin'
+import store from '@/store/admin'
 
 Vue.use(Vuetify, {
   iconfont: 'md'
@@ -31,6 +32,7 @@ if (token) {
 new Vue({
   el: '#admin',
   router,
+  store,
   components: { Admin },
   template: '<Admin/>'
 })
