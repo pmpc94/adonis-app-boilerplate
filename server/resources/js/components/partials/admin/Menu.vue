@@ -77,7 +77,7 @@ fixed
   <span class="hidden-sm-and-down">Backoffice</span>
 </v-toolbar-title>
 <v-spacer></v-spacer>
-<v-btn @click="goToSettings" flat>
+<v-btn flat>
   <v-icon class="mr-2">account_circle</v-icon>{{ email }}
 </v-btn>
 <v-btn flat @click="logout()">
@@ -104,10 +104,9 @@ export default {
     dialog: false,
     drawer: null,
     items: [
-      { icon: 'add', text: 'Add Product', link: '/product' },
+      { icon: 'add', text: 'Product', link: '/product' },
       { icon: 'list', text: 'Products', link: '/products' },
-      { icon: 'history', text: 'Orders' , link: '/orders'},
-      { icon: 'settings', text: 'Settings', link: '/settings'}
+      { icon: 'history', text: 'Orders' , link: '/orders'}
     ],
   }),
   computed: {
@@ -118,10 +117,7 @@ export default {
   methods: {
     ...mapActions('authentication', [
       'logout'
-    ]),
-    goToSettings() {
-      this.$router.push('/settings');
-    }
+    ])
   },
   props: {
     source: String

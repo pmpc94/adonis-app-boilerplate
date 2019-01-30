@@ -11,7 +11,7 @@ class OrderProductsSchema extends Schema {
       table.float('price').notNullable()
       table.integer('quantity').notNullable()
       table.integer('order_id').unsigned().references('orders.id').onDelete('NO ACTION').onUpdate('NO ACTION')
-      table.integer('product_id').unsigned().references('products.id').onDelete('NO ACTION').onUpdate('NO ACTION')
+      table.integer('product_id').unsigned().references('products.id').onDelete('SET NULL').onUpdate('NO ACTION')
       table.timestamps()
     })
   }

@@ -7,11 +7,6 @@ import Checkout from '@/components/pages/shop/Checkout'
 import ThankYou from '@/components/pages/shop/ThankYou'
 import Error from '@/components/pages/shop/Error'
 import SecretPage from '@/components/pages/shop/SecretPage'
-import Login from '@/components/pages/admin/Login'
-import Menu from '@/components/partials/admin/Menu'
-import Products from '@/components/pages/admin/Products'
-import Orders from '@/components/pages/admin/Orders'
-import Settings from '@/components/pages/admin/Settings'
 
 Vue.use(Router)
 //

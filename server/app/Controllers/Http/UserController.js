@@ -18,14 +18,14 @@ class UserController {
 
   async resetPassword({ request, response }) {
     try {
-      const { email } = request.all();
+      const { email, token } = request.all();
       const user = await User.findBy('email', email);
-      await Mail.send('emails.password', {}, (message) => {
+      await Mail.send('emails.password', { email, token }, (message) => {
         message.from(Config.get('mail.from'))
         message.to(email)
         message.subject('Please update your password.')
       });
-      response.ok('A request to change the password was sent to the provided email.', user);
+      response.ok('A request to change the password was sent to the provided email.', { secrets: ''});
     } catch (error) {
       response.errorHandler({}, error);
     }
@@ -35,8 +35,9 @@ class UserController {
     try {
       const { email, password } = request.all();
       const user = await User.findBy('email', email);
+      user.merge({ password })
       await user.save({ password });
-      response.ok('Your password was successfully updated', user);
+      response.ok('Your password was successfully updated.', user);
     } catch (error) {
       response.errorHandler({}, error);
     }

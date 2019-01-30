@@ -6,7 +6,8 @@ import Products from '@/components/pages/admin/Products'
 import Product from '@/components/pages/admin/Product'
 import ProductAdd from '@/components/pages/admin/ProductAdd'
 import Orders from '@/components/pages/admin/Orders'
-import Settings from '@/components/pages/admin/Settings'
+import Order from '@/components/pages/admin/Order'
+import PasswordReset from '@/components/pages/admin/PasswordReset'
 
 Vue.use(Router)
 //
@@ -44,9 +45,14 @@ export default new Router({
       component: Orders
     },
     {
-      path: '/settings',
-      name: 'Settings',
-      component: Settings
+      path: '/order/:id',
+      name: 'Order',
+      component: Order
+    },
+    {
+      path: '/passwordReset/:email/:token',
+      name: 'PasswordReset',
+      component: PasswordReset
     }
   ]
 })

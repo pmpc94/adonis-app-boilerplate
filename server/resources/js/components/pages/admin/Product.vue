@@ -12,7 +12,8 @@
           :description="description" @onInputDescription="description = $event">
         </ProductForm>
         <v-card-actions>
-          <v-btn @click="updateProduct" color="success">Edit</v-btn>
+          <v-spacer></v-spacer>
+          <v-btn @click="updateProduct" color="success">Save</v-btn>
           <v-btn @click="destroyProduct" color="error">Remove</v-btn>
         </v-card-actions>
       </v-container>
@@ -24,6 +25,7 @@
 <script>
 import HTTP from '@/http/admin';
 import ProductForm from '@/components/elements/admin/ProductForm.vue';
+import Modal from '@/components/elements/admin/Modal.vue';
 
 export default {
   name: 'Product',
@@ -35,11 +37,13 @@ export default {
       categories: ['terrestrial', 'giant', 'dwarf'],
       category: '',
       description: '',
-      price: 0
+      price: 0,
+      loading: false
     }
   },
   components: {
-    ProductForm
+    ProductForm,
+    Modal
   },
   mounted() {
     this.param_id = this.$route.params.id;

@@ -13850,3 +13850,8 @@ table.v-table tfoot tr td {
   caret-color: purple !important;
 }
 
+h1,
+h2 {
+  color: purple;
+}
+

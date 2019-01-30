@@ -82,7 +82,7 @@ const hasAuthorizationFn = async (data, field, message, args, get) => {
   let row = null;
 
   if (table == 'products') {
-    if (user_id === 'null') {
+    if (user_id === 'null') { //It's the public part of the platform
       row = await Database.table(table).where('id', resource_id).toSQL()
     } else {
       row = await Database.table(table).where('id', resource_id).where('user_id', user_id).first()

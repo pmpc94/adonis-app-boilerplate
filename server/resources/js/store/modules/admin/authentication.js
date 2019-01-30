@@ -6,7 +6,7 @@ export default {
   state: {
     loginEmail: '',
     loginPassword: '',
-    loginError: null,
+    loginError: '',
     token: null
   },
 

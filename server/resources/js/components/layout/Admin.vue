@@ -4,6 +4,7 @@
         <Menu></Menu>
     </transition>
           <Login v-if="!isLoggedIn"></Login>
+          <!-- <router-view v-if="!isLoggedIn"></router-view> -->
   </div>
 </template>
 

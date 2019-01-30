@@ -9,9 +9,10 @@ class ProductController {
 
   async index({ auth, request, response }) {
     try {
+      const page = request.input('page');
       if (auth.user === null) {
+        console.log("null")
         const MAX_PRODUCTS = 21;
-        const page = request.input('page');
         const category = request.input('category');
         let column = request.input('name') !== undefined ? 'name' : request.input('price') !== undefined ? 'price' : undefined;
         let order = request.input('name') || request.input('price');
@@ -23,8 +24,8 @@ class ProductController {
         .query()
         .orderBy(column, order)
         .with('thumbnail')
-        .where('price', '>', min).where('price', '<', max)
-        .paginate(page, MAX_PRODUCTS) : await Product.query().orderBy(column, order).with('thumbnail').where('category', category).where('price', '>', min).where('price', '<', max).paginate(page, MAX_PRODUCTS)
+        .where('price', '>', min).where('price', '<=', max)
+        .paginate(page, MAX_PRODUCTS) : await Product.query().orderBy(column, order).with('thumbnail').where('category', category).where('price', '>', min).where('price', '<=', max).paginate(page, MAX_PRODUCTS)
         return response.ok('The clicked page has the following list of products.', products);
       }
       const user = await auth.getUser();
@@ -32,7 +33,7 @@ class ProductController {
       .query()
       .with('thumbnail')
       .where('products.user_id', user.id)
-      .fetch()
+      .paginate(page, 10)
       response.ok('The list of your products.', products);
     } catch (error) {
       response.errorHandler({}, error);
