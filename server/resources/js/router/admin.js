@@ -3,51 +3,66 @@ import Router from 'vue-router'
 import Login from '@/components/pages/admin/Login'
 import Menu from '@/components/partials/admin/Menu'
 import Products from '@/components/pages/admin/Products'
-import Product from '@/components/pages/admin/Product'
+import ProductEdit from '@/components/pages/admin/ProductEdit'
 import ProductAdd from '@/components/pages/admin/ProductAdd'
 import Orders from '@/components/pages/admin/Orders'
 import Order from '@/components/pages/admin/Order'
 import PasswordReset from '@/components/pages/admin/PasswordReset'
+import store from '@/store/admin'
 
 Vue.use(Router)
+const ifAuthenticated = (to, from, next) => {
+  if (store.getters['authentication/isLoggedIn']) {
+    next();
+    return;
+  }
+  next({ name: 'Login' })
+}
 //
 export default new Router({
   mode: 'history', // use HTML5 history instead of hashes
   routes: [
     {
+      path: '/menu',
+      name: 'Menu',
+      component: Menu,
+      children: [
+        {
+          path: '/products',
+          name: 'Products',
+          component: Products,
+          beforeEnter: ifAuthenticated
+        },
+        {
+          path: '/product/:id',
+          name: 'ProductEdit',
+          component: ProductEdit,
+          beforeEnter: ifAuthenticated
+        },
+        {
+          path: '/product',
+          name: 'ProductAdd',
+          component: ProductAdd,
+          beforeEnter: ifAuthenticated
+        },
+        {
+          path: '/orders',
+          name: 'Orders',
+          component: Orders,
+          beforeEnter: ifAuthenticated
+        },
+        {
+          path: '/order/:id',
+          name: 'Order',
+          component: Order,
+          beforeEnter: ifAuthenticated
+        },
+      ]
+    },
+    {
       path: '/login',
       name: 'Login',
       component: Login
-    },
-    {
-      path: '/menu',
-      name: 'Menu',
-      component: Menu
-    },
-    {
-      path: '/products',
-      name: 'Products',
-      component: Products
-    },
-    {
-      path: '/product/:id',
-      name: 'Product',
-      component: Product
-    },
-    {
-      path: '/product',
-      name: 'ProductAdd',
-      component: ProductAdd
-    },
-    {
-      path: '/orders',
-      name: 'Orders',
-      component: Orders
-    },
-    {
-      path: '/order/:id',
-      name: 'Order',
-      component: Order
     },
     {
       path: '/passwordReset/:email/:token',

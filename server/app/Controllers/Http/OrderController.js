@@ -92,7 +92,6 @@ class OrderController {
       trx.commit();
       response.ok('Your order was successfully created.', order);
     } catch(error) {
-      console.log("error", error)
       response.errorHandler({}, error);
       trx.rollback();
     }

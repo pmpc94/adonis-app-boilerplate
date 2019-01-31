@@ -7,7 +7,8 @@
         <v-form>
           <v-card-text primary-title>Update your Order status</v-card-text>
           <v-container>
-            <v-select :items="statusOptions" v-model="status" label="ex: canceled" outline></v-select>
+            <v-select name="category" v-validate="'required'" :items="statusOptions" v-model="status" label="ex: canceled" outline></v-select>
+            <span>{{ errors.first('category') }}</span>
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn @click="updateOrder" color="success">Save</v-btn>
@@ -15,14 +16,14 @@
           </v-container>
         </v-form>
       </v-card>
-      <Modal @onInputChange="showDialog = $event" @hide="hideDialog()" :dialog="showDialog" :message="messageDialog" :title="titleDialog"></Modal>
+      <Dialog @onInputChange="showDialog = $event" @hide="hideDialog()" :dialog="showDialog" :message="messageDialog" :title="titleDialog"></Dialog>
     </v-flex>
   </v-layout>
 </template>
 
 <script>
 import HTTP from '@/http/admin';
-import Modal from '@/components/elements/admin/Modal.vue';
+import Dialog from '@/components/elements/admin/Dialog.vue';
 
 export default {
   name: 'Order',
@@ -36,7 +37,7 @@ export default {
     }
   },
   components: {
-    Modal
+    Dialog
   },
   mounted() {
     this.param_id = this.$route.params.id;
@@ -52,17 +53,20 @@ export default {
       }
     },
     async updateOrder() {
-      await HTTP().patch(`order/${this.param_id}`, {
-        status: this.status
-      })
-      .then(({ data }) => {
-        this.titleDialog = 'Success';
-        this.messageDialog = 'Your order was successfully updated.';
-      })
-      .catch(() => {
-        this.titleDialog = 'Error';
-        this.messageDialog = 'Something went wrong. Your order could not be updated.';
-      })
+      const validation = await this.$validator.validateAll();
+      if (validation) {
+        await HTTP().patch(`order/${this.param_id}`, {
+          status: this.status
+        })
+        .then(({ data }) => {
+          this.titleDialog = 'Success';
+          this.messageDialog = 'Your order was successfully updated.';
+        })
+        .catch(() => {
+          this.titleDialog = 'Error';
+          this.messageDialog = 'Something went wrong. Your order could not be updated.';
+        })
+      }
       this.showDialog = true;
     },
     hideDialog() {

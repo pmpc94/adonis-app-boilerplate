@@ -11,7 +11,6 @@ class ProductController {
     try {
       const page = request.input('page');
       if (auth.user === null) {
-        console.log("null")
         const MAX_PRODUCTS = 21;
         const category = request.input('category');
         let column = request.input('name') !== undefined ? 'name' : request.input('price') !== undefined ? 'price' : undefined;

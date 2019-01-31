@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import 'material-design-icons-iconfont/dist/material-design-icons.css' // Ensure you are using css-loader
 import Vuetify from 'vuetify'
+import VeeValidate from 'vee-validate'
 // Docs: https://github.com/axios/axios
 import axios from 'axios'
 import Admin from '@/components/layout/Admin'
@@ -10,6 +11,7 @@ import store from '@/store/admin'
 Vue.use(Vuetify, {
   iconfont: 'md'
 })
+Vue.use(VeeValidate)
 
 Vue.config.productionTip = false
 window.axios = axios

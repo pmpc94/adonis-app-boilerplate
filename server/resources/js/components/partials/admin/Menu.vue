@@ -88,10 +88,12 @@ fixed
 <v-content>
   <v-container fluid>
     <v-layout>
-      <router-view></router-view>
-  </v-layout>
-</v-container>
-</v-content>
+      <transition name="fade" mode="out-in">
+        <router-view></router-view>
+      </transition>
+      </v-layout>
+    </v-container>
+  </v-content>
 </v-app>
 </template>
 
@@ -118,9 +120,6 @@ export default {
     ...mapActions('authentication', [
       'logout'
     ])
-  },
-  props: {
-    source: String
   }
 }
 </script>

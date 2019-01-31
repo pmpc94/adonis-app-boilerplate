@@ -1,5 +1,5 @@
 <template>
-  <v-app id="inspire" v-if="!isLoggedIn">
+  <v-app id="inspire">
     <v-content>
       <v-container fluid fill-height>
         <v-layout align-center justify-center>
@@ -113,8 +113,7 @@ export default {
     ]),
     async sendEmail() {
       await HTTP().post(`resetPassword`, {
-        email: this.email,
-        token: hash(this.email)
+        email: this.email
       })
     }
   }

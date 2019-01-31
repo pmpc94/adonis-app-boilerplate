@@ -8,7 +8,7 @@
             <input type="file" ref="files" multiple v-on:change="handleFileUploads()"/>
           </v-flex>
           <ProductForm :name="name" @onInputName="name = $event"
-          :price="price" @onInputPrice="price = $event"
+          :price="price" @onInputPrice="price = parseFloat($event)|| 0" @preventUndesiredChars="preventUndesiredChars($event)"
           :categories="categories" :category="category" @onInputCategory="category = $event"
           :description="description" @onInputDescription="description = $event">
         </ProductForm>
@@ -18,7 +18,7 @@
         </v-card-actions>
       </v-container>
     </v-card>
-    <Modal @onInputChange="showDialog = $event" @hide="hideDialog()" :dialog="showDialog" :message="messageDialog" :title="titleDialog"></Modal>
+    <Dialog @onInputChange="showDialog = $event" @hide="hideDialog()" :dialog="showDialog" :message="messageDialog" :title="titleDialog"></Dialog>
   </v-flex>
 </v-layout>
 </template>
@@ -27,7 +27,7 @@
 import axios from 'axios';
 import store from '@/store/admin';
 import ProductForm from '@/components/elements/admin/ProductForm.vue';
-import Modal from '@/components/elements/admin/Modal.vue';
+import Dialog from '@/components/elements/admin/Dialog.vue';
 
 export default {
   name: 'ProductAdd',
@@ -46,10 +46,12 @@ export default {
   },
   components: {
     ProductForm,
-    Modal
+    Dialog
   },
   methods: {
     async saveProduct() {
+      const validation = await this.$validator.validateAll();
+      if (validation) {
       let postProductObject = {
         name: this.name,
         description: this.description,
@@ -76,6 +78,7 @@ export default {
       this.titleDialog = 'Error';
       this.messageDialog = 'Something went wrong. Your product could not be created.';
     })
+  }
     this.showDialog = true;
   },
   handleFileUploads(){
@@ -84,6 +87,9 @@ export default {
   },
   hideDialog() {
     this.showDialog = false;
+  },
+  preventUndesiredChars(event) {
+     (event.keyCode >= 189 && event.keyCode <= 192) ? event.preventDefault() : ''
   }
 }
 }

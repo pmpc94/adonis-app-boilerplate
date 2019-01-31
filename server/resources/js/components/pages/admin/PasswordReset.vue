@@ -1,22 +1,30 @@
 <template>
-  <v-container grid-list-md>
-    <v-layout row wrap>
-      <v-flex xs6>
-        <h2>Insert your new Password</h2>
-        <v-text-field v-model="password_one" outline> </v-text-field>
+  <v-app>
+    <v-card>
+      <v-card-title primary-title>
+        <h1>Planet & Comet Shop - Password Reset</h1>
+      </v-card-title>
+    </v-card>
+  <v-card>
+    <v-container grid-list-md>
+      <v-layout row wrap>
+        <v-flex xs6>
+          <h2>Insert your new Password</h2>
+          <v-text-field type="password" v-model="password_one" outline> </v-text-field>
 
-        <h2>Please confirm your new Password</h2>
-        <v-text-field v-model="password_two" outline> </v-text-field>
-        <v-btn @click="updatePassword()" color="info">Update Password</v-btn>
-        <v-alert :type="alertType" :value="message"> {{ message }} </v-alert>
-      </v-flex>
-    </v-layout>
-  </v-container>
+          <h2>Please confirm your new Password</h2>
+          <v-text-field type="password" v-model="password_two" outline> </v-text-field>
+          <v-btn dark @click="updatePassword()" color="success">Update Password</v-btn>
+          <v-alert :type="alertType" :value="message"> {{ message }} </v-alert>
+        </v-flex>
+      </v-layout>
+    </v-container>
+  </v-card>
+</v-app>
 </template>
 
 <script>
 import HTTP from '@/http/admin';
-const hash = require('string-hash');
 
 export default {
   name: 'PasswordReset',
@@ -27,7 +35,7 @@ export default {
       password_one: '',
       password_two: '',
       message: '',
-      alertType: ''
+      alertType: undefined
     }
   },
   mounted() {
@@ -36,31 +44,27 @@ export default {
   },
   methods: {
     async updatePassword() {
-      if (this.equalPasswords() && this.validPasswordLength() && this.validHashedEmail()) {
+      if (this.equalPasswords()) {
         return HTTP().post('updatePassword', {
           email: this.email,
-          password: this.password_one
+          password: this.password_one,
+          token: this.token
         })
         .then(response => {
           this.alertType = 'success';
           this.message = 'Your password was successfully updated.';
+          this.$router.push('/login');
         })
         .catch(error => {
           this.alertType = 'error';
-          this.message = 'Server error. Please try again later.';
+          this.message = 'Server error. Make sure you inserted a valid password.';
         });
       }
       this.alertType = 'error';
-      this.message = 'The passwords do not match or they do not have a minimum of 6 characters!';
+      this.message = 'The passwords do not match!';
     },
     equalPasswords() {
       return this.password_one === this.password_two ? true : false;
-    },
-    validPasswordLength() {
-      return this.password_one.length > 6 ? true : false;
-    },
-    validHashedEmail() {
-      return hash(this.email) === parseInt(this.token) ? true : false;
     }
   }
 }

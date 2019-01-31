@@ -1,29 +1,14 @@
 <template>
   <div>
-    <transition v-if="isLoggedIn" name="fade" mode="out-in">
-        <Menu></Menu>
+    <transition name="fade" mode="out-in">
+      <router-view/>
     </transition>
-          <Login v-if="!isLoggedIn"></Login>
-          <!-- <router-view v-if="!isLoggedIn"></router-view> -->
   </div>
 </template>
 
 <script>
-import Menu from '@/components/partials/admin/Menu.vue';
-import Login from '@/components/pages/admin/Login.vue';
-import { mapGetters } from 'vuex';
-
 export default {
-  name: 'Admin',
-  components: {
-    Menu,
-    Login
-  },
-  computed: {
-    ...mapGetters('authentication', [
-      'isLoggedIn'
-    ])
-  }
+  name: 'Admin'
 }
 </script>
 
