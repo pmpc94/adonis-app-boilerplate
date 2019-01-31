@@ -18,12 +18,14 @@
         </v-card-actions>
       </v-container>
     </v-card>
+    <Modal @onInputChange="showDialog = $event" @hide="hideDialog()" :dialog="showDialog" :message="messageDialog" :title="titleDialog"></Modal>
   </v-flex>
 </v-layout>
 </template>
 
 <script>
-import HTTP from '@/http/admin';
+import axios from 'axios';
+import store from '@/store/admin';
 import ProductForm from '@/components/elements/admin/ProductForm.vue';
 import Modal from '@/components/elements/admin/Modal.vue';
 
@@ -36,8 +38,10 @@ export default {
       category: '',
       description: '',
       price: 0,
-      loading: false,
-      files: ''
+      files: '',
+      showDialog: false,
+      messageDialog: '',
+      titleDialog: ''
     }
   },
   components: {
@@ -46,20 +50,42 @@ export default {
   },
   methods: {
     async saveProduct() {
-      let formData = new FormData();
-
-      await HTTP().post('/product', {
-        name: '',
-        description: '',
-        category: '',
-        price: '',
-        images: []
-      })
-    },
-    handleFilesUpload(){
-      this.files = this.$refs.files.files;
-    }
+      let postProductObject = {
+        name: this.name,
+        description: this.description,
+        category: this.category,
+        price: this.price
+      }
+      for( var i = 0; i < this.files.length; i++ ){
+        postProductObject['image_file[' + i + ']'] = this.files[i];
+      }
+      console.log("asd", postProductObject)
+      await axios.post('/api/product', postProductObject,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${store.state.authentication.token}`
+        }
+      }
+    )
+    .then(({ data }) => {
+      this.titleDialog = 'Success';
+      this.messageDialog = 'Your product was successfully created.';
+    })
+    .catch(() => {
+      this.titleDialog = 'Error';
+      this.messageDialog = 'Something went wrong. Your product could not be created.';
+    })
+    this.showDialog = true;
+  },
+  handleFileUploads(){
+    this.files = this.$refs.files.files;
+    console.log("files", this.files)
+  },
+  hideDialog() {
+    this.showDialog = false;
   }
+}
 }
 </script>
 

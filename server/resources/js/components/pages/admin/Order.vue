@@ -15,7 +15,7 @@
           </v-container>
         </v-form>
       </v-card>
-      <!-- <Modal v-if="showModal"></Modal> -->
+      <Modal @onInputChange="showDialog = $event" @hide="hideDialog()" :dialog="showDialog" :message="messageDialog" :title="titleDialog"></Modal>
     </v-flex>
   </v-layout>
 </template>
@@ -30,9 +30,9 @@ export default {
     return {
       status: '',
       statusOptions: ['canceled', 'paid'],
-      loading: false,
-      showModal: false,
-      modalMessage: ''
+      showDialog: false,
+      messageDialog: '',
+      titleDialog: ''
     }
   },
   components: {
@@ -56,13 +56,17 @@ export default {
         status: this.status
       })
       .then(({ data }) => {
-        this.modalMessage = 'Your order was successfully updated.';
+        this.titleDialog = 'Success';
+        this.messageDialog = 'Your order was successfully updated.';
       })
       .catch(() => {
-        this.modalMessage = 'Something went wrong. Your order could not be updated.';
+        this.titleDialog = 'Error';
+        this.messageDialog = 'Something went wrong. Your order could not be updated.';
       })
-      this.showModal = true;
-      this.loading = false;
+      this.showDialog = true;
+    },
+    hideDialog() {
+      this.showDialog = false;
     }
   }
 }

@@ -1,27 +1,20 @@
 <template>
   <div class="text-xs-center">
     <v-dialog
-      v-model="dialog"
+      :value="dialog"
       width="500"
+      @input="$emit('onInputChange', $event)"
     >
-      <v-btn
-        slot="activator"
-        color="red lighten-2"
-        dark
-      >
-        Click Me
-      </v-btn>
-
       <v-card>
-        <v-card-title
-          class="headline grey lighten-2"
+        <v-card-title style="color: white"
+          class="headline purple"
           primary-title
         >
-          Privacy Policy
+          {{ title }}
         </v-card-title>
 
         <v-card-text>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+          {{ message }}
         </v-card-text>
 
         <v-divider></v-divider>
@@ -29,11 +22,11 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn
-            color="primary"
-            flat
-            @click="dialog = false"
+            color="purple"
+            dark
+            @click="$emit('hide')"
           >
-            I accept
+            Ok
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -43,7 +36,13 @@
 
 <script>
 export default {
-}
+  name: 'Modal',
+  props: {
+      title: String,
+      message: String,
+      dialog: Boolean
+    }
+  }
 </script>
 
 <style lang="css">

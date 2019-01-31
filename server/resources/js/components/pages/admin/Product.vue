@@ -18,6 +18,7 @@
         </v-card-actions>
       </v-container>
     </v-card>
+    <Modal @onInputChange="showDialog = $event" @hide="hideDialog()" :dialog="showDialog" :message="messageDialog" :title="titleDialog"></Modal>
   </v-flex>
 </v-layout>
 </template>
@@ -38,7 +39,9 @@ export default {
       category: '',
       description: '',
       price: 0,
-      loading: false
+      showDialog: false,
+      messageDialog: '',
+      titleDialog: ''
     }
   },
   components: {
@@ -65,10 +68,22 @@ export default {
         description: this.description,
         category: this.category,
         price: this.price
-      });
+      })
+      .then(({ data }) => {
+        this.titleDialog = 'Success';
+        this.messageDialog = 'Your product was successfully updated.';
+      })
+      .catch(() => {
+        this.titleDialog = 'Error';
+        this.messageDialog = 'Something went wrong. Your product could not be updated.';
+      })
+      this.showDialog = true;
     },
     async destroyProduct() {
       await HTTP().delete(`product/${this.param_id}`);
+    },
+    hideDialog() {
+      this.showDialog = false;
     }
   }
 }
