@@ -13,12 +13,12 @@
         >
 
         <v-btn icon>
-            <v-icon>shopping_cart</v-icon>
-          </v-btn>
+          <v-icon>shopping_cart</v-icon>
+        </v-btn>
 
         <v-list-tile-content>
-          <v-list-tile-title v-html="order.status"></v-list-tile-title>
-          <v-list-tile-sub-title v-html="'€' + order.total_price"></v-list-tile-sub-title>
+          <v-list-tile-title v-html="order.status">
+          </v-list-tile-title>
           <v-list-tile-sub-title v-html="order.first_name + ' ' + order.last_name + ' (' + order.receipt_email +')'"></v-list-tile-sub-title>
         </v-list-tile-content>
       </v-list-tile>

@@ -95,13 +95,20 @@ export default {
   },
   methods: {
     async fetchProduct() {
-      const { data } = await HTTP().get(`product/${this.param_id}`);
-      const currentProduct = data.data;
-      this.name = currentProduct.name;
-      this.description = currentProduct.description;
-      this.category = currentProduct.category;
-      this.price = currentProduct.price;
-      this.currentImage = currentProduct.thumbnail.url;
+      await HTTP().get(`product/${this.param_id}`)
+      .then(response => {
+        const currentProduct = response.data.data;
+        this.name = currentProduct.name;
+        this.description = currentProduct.description;
+        this.category = currentProduct.category;
+        this.price = currentProduct.price;
+        this.currentImage = currentProduct.thumbnail.url;
+      })
+      .catch(error => {
+        if (error.response.status === 401) {
+          this.$router.push('/login');
+        }
+      });
     },
     async updateProduct() {
       const validation = await this.$refs.productForm.validateAll();
@@ -112,7 +119,7 @@ export default {
           category: this.category,
           price: this.price
         })
-        .then(({ data }) => {
+        .then(({ response }) => {
           this.titleDialog = 'Success';
           this.messageDialog = 'Your product was successfully updated.';
         })

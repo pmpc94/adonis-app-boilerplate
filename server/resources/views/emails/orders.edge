@@ -12,7 +12,7 @@
     <div class="subtitle">
       <h1>Hi {{ first_name }} {{ last_name }}. </h1>
       <p>{{ customer_first_name }} {{ customer_last_name }} ({{ customer_email }}) just bought some product(s) from you. </p>
-      <p>Order number #{{ order_id }}</p>
+      <p><a href="http://localhost:3333/order/{{ order_id }}">Order number #{{ order_id }}</a></p>
       <ul>
         <table>
           <tr>
@@ -37,6 +37,7 @@
       </ul>
     </div>
     <p>We wish you a happy selling!</p>
+    <p><a href="http://localhost:3333/order/{{ order_id }}">Click this link to see your order.</a></p>
   </section>
 </body>
 </html>

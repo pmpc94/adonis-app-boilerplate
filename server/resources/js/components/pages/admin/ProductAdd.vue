@@ -68,7 +68,7 @@ export default {
           }
         }
       )
-      .then(({ data }) => {
+      .then(({ response }) => {
         this.titleDialog = 'Success';
         this.messageDialog = 'Your product was successfully created.';
       })

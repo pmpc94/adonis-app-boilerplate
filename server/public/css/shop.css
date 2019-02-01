@@ -12544,3 +12544,10 @@ a:hover {
           box-shadow: 0 0 2px 1px #7971ea;
 }
 
+.spinner-grow.centered-page {
+  position: fixed;
+  /* or absolute */
+  top: 50%;
+  left: 50%;
+}
+

@@ -1,11 +1,11 @@
 <template>
   <v-layout>
     <v-flex xs12 sm6 offset-sm3>
-      <h1>Current Order Status: {{ status }}</h1>
+      <h1>Order Information</h1>
       <v-divider></v-divider>
       <v-card>
         <v-form>
-          <v-card-text primary-title>Update your Order status</v-card-text>
+          <v-card-text primary-title>Update your Order status (currently set to <span class="purple-span">{{ status }}</span>)</v-card-text>
           <v-container>
             <v-select name="category" v-validate:category="'required'" :items="statusOptions" v-model="status" label="ex: canceled" outline></v-select>
             <span>{{ errors.first('category') }}</span>
@@ -13,12 +13,34 @@
               <v-spacer></v-spacer>
               <v-btn @click="updateOrder" color="success">Save</v-btn>
             </v-card-actions>
-          </v-container>
-        </v-form>
-      </v-card>
-      <Dialog @onInputChange="showDialog = $event" @hide="hideDialog()" :dialog="showDialog" :message="messageDialog" :title="titleDialog"></Dialog>
-    </v-flex>
-  </v-layout>
+            <v-list two-line>
+              <template v-for="(product, index) in products">
+                <v-divider></v-divider>
+                <v-list-tile
+                :key="index"
+                avatar
+                @click="goToProductPage(product)"
+                >
+
+                <v-btn icon>
+                  <v-icon>shopping_basket</v-icon>
+                </v-btn>
+
+                <v-list-tile-content>
+                  <v-list-tile-title v-html="'Product: ' + product.name">
+                  </v-list-tile-title>
+                  <v-list-tile-sub-title v-html="'Quantity: ' + product.quantity + ' (€' + product.price + ')'"></v-list-tile-sub-title>
+                  <v-list-tile-sub-title v-html="'Total: €' + (product.quantity * product.price).toFixed(2)"></v-list-tile-sub-title>
+                </v-list-tile-content>
+              </v-list-tile>
+            </template>
+          </v-list>
+        </v-container>
+      </v-form>
+    </v-card>
+    <Dialog @onInputChange="showDialog = $event" @hide="hideDialog()" :dialog="showDialog" :message="messageDialog" :title="titleDialog"></Dialog>
+  </v-flex>
+</v-layout>
 </template>
 
 <script>
@@ -30,6 +52,7 @@ export default {
   data() {
     return {
       status: '',
+      products: [],
       statusOptions: ['canceled', 'paid'],
       showDialog: false,
       messageDialog: '',
@@ -45,12 +68,21 @@ export default {
   },
   methods: {
     async fetchOrder() {
-      const { data } = await HTTP().get(`order/${this.param_id}`);
-      const currentOrder = data.data;
-      this.status = currentOrder.status;
-      if (this.status === 'paid') {
-        this.statusOptions.splice(this.statusOptions.indexOf(this.status), 1);
-      }
+      await HTTP().get(`order/${this.param_id}`)
+      .then( response => {
+        const currentOrder = response.data.data;
+        this.status = currentOrder.status;
+        this.products = currentOrder.orderProducts;
+        if (this.status === 'paid') {
+          this.statusOptions.splice(this.statusOptions.indexOf(this.status), 1);
+        }
+      })
+      .catch( error => {
+        if (error.response.status === 401) {
+          this.$router.push('/login');
+        }
+      });
+
     },
     async updateOrder() {
       const validation = await this.$validator.validateAll();
@@ -74,6 +106,9 @@ export default {
     },
     hideDialog() {
       this.showDialog = false;
+    },
+    goToProductPage(product) {
+      this.$router.push(`/product/${product.id}`)
     }
   }
 }
@@ -82,5 +117,8 @@ export default {
 <style scoped>
 span {
   color: red;
+}
+.purple-span {
+  color: purple;
 }
 </style>

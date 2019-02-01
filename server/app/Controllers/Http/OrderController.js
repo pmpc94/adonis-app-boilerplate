@@ -29,7 +29,16 @@ class OrderController {
   async show({ auth, request, response }) {
     try {
       const { id } = request.params;
-      const order = await Order.findOrFail(id);
+      const order = await Order
+      .query()
+      .whereHas('orderProducts', (builder) => {
+        builder.join('products', 'order_products.product_id', '=', 'products.id').where('products.user_id', auth.user.id)
+      }, '>', 0)
+      .with('orderProducts', (builder) => {
+        builder.join('products', 'order_products.product_id', '=', 'products.id').where('products.user_id', auth.user.id)
+      })
+      .where('id', id)
+      .first()
       response.ok('The order that you requested.', order);
     } catch (error) {
       response.errorHandler({}, error);

@@ -8,7 +8,7 @@
       </div>
     </div>
 
-    <div class="site-section">
+    <div v-if="!isLoading" class="site-section">
       <div class="container">
         <div class="row">
           <div class="col-md-6">
@@ -42,6 +42,9 @@
       </div>
     </div>
     <Modal/>
+    <div v-if="isLoading" class="spinner-grow centered-page" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
   </div>
 </div>
 </template>
@@ -57,7 +60,8 @@ export default {
     return {
       count: 1,
       currentProduct: '',
-      currentImage: ''
+      currentImage: '',
+      isLoading: true
     }
   },
   mounted() {
@@ -68,10 +72,17 @@ export default {
   },
   methods: {
     async fetchProduct(slug) {
-      const { data } = await HTTP().get(`/product/${slug}`);
-      this.currentProduct = data.data;
-      this.currentProduct['quantity'] = 1;
-      this.currentImage = this.currentProduct.thumbnail.url;
+      this.isLoading = true;
+      await HTTP().get(`/product/${slug}`)
+      .then(response => {
+        this.currentProduct = response.data.data;
+        this.currentProduct['quantity'] = 1;
+        this.currentImage = this.currentProduct.thumbnail.url;
+        this.isLoading = false;
+      })
+      .catch(error => {
+        this.isLoading = false;
+      });
     },
     incrementCount() {
       this.count++;
@@ -104,5 +115,4 @@ export default {
 .selectedImage {
   border: 2px solid purple;
 }
-
 </style>
