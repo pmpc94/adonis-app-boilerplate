@@ -5,9 +5,9 @@
         <v-container>
           <v-flex xs12>
             <h2>Images: </h2>
-            <input type="file" ref="files" multiple v-on:change="handleFileUploads()"/>
+            <input type="file" name="files" ref="files" multiple v-on:change="handleFileUploads()"/>
           </v-flex>
-          <ProductForm :name="name" @onInputName="name = $event"
+          <ProductForm ref="productForm" :name="name" @onInputName="name = $event"
           :price="price" @onInputPrice="price = parseFloat($event)|| 0" @preventUndesiredChars="preventUndesiredChars($event)"
           :categories="categories" :category="category" @onInputCategory="category = $event"
           :description="description" @onInputDescription="description = $event">
@@ -37,7 +37,7 @@ export default {
       categories: ['terrestrial', 'giant', 'dwarf'],
       category: '',
       description: '',
-      price: 0,
+      price: undefined,
       files: '',
       showDialog: false,
       messageDialog: '',
@@ -50,35 +50,36 @@ export default {
   },
   methods: {
     async saveProduct() {
-      const validation = await this.$validator.validateAll();
-      if (validation) {
-      let postProductObject = {
-        name: this.name,
-        description: this.description,
-        category: this.category,
-        price: this.price
-      }
-      for( var i = 0; i < this.files.length; i++ ){
-        postProductObject['image_file[' + i + ']'] = this.files[i];
-      }
-      console.log("asd", postProductObject)
-      await axios.post('/api/product', postProductObject,
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'Authorization': `Bearer ${store.state.authentication.token}`
+      // const validation = await this.$refs.productForm.validateAll();
+      if (true) {
+        let formData = new FormData();
+        for( var i = 0; i < this.files.length; i++ ){
+          formData.append('image_path[' + i + ']', this.files[i]);
         }
-      }
-    )
-    .then(({ data }) => {
-      this.titleDialog = 'Success';
-      this.messageDialog = 'Your product was successfully created.';
-    })
-    .catch(() => {
-      this.titleDialog = 'Error';
-      this.messageDialog = 'Something went wrong. Your product could not be created.';
-    })
-  }
+        formData.append('name', this.name);
+        formData.append('description', this.description);
+        formData.append('category', this.category);
+        formData.append('price', this.price);
+        await axios.post('/api/product', formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'Authorization': `Bearer ${store.state.authentication.token}`
+          }
+        }
+      )
+      .then(({ data }) => {
+        this.titleDialog = 'Success';
+        this.messageDialog = 'Your product was successfully created.';
+      })
+      .catch(() => {
+        this.titleDialog = 'Server Error';
+        this.messageDialog = 'Something went wrong. Your product could not be created.';
+      })
+    } else {
+      this.titleDialog = 'Validation Error';
+      this.messageDialog = 'Please validate all the fields accordingly.';
+    }
     this.showDialog = true;
   },
   handleFileUploads(){
@@ -89,7 +90,7 @@ export default {
     this.showDialog = false;
   },
   preventUndesiredChars(event) {
-     (event.keyCode >= 189 && event.keyCode <= 192) ? event.preventDefault() : ''
+    (event.keyCode >= 189 && event.keyCode <= 192) ? event.preventDefault() : ''
   }
 }
 }

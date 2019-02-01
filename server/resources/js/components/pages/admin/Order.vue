@@ -7,7 +7,7 @@
         <v-form>
           <v-card-text primary-title>Update your Order status</v-card-text>
           <v-container>
-            <v-select name="category" v-validate="'required'" :items="statusOptions" v-model="status" label="ex: canceled" outline></v-select>
+            <v-select name="category" v-validate:category="'required'" :items="statusOptions" v-model="status" label="ex: canceled" outline></v-select>
             <span>{{ errors.first('category') }}</span>
             <v-card-actions>
               <v-spacer></v-spacer>
@@ -63,9 +63,12 @@ export default {
           this.messageDialog = 'Your order was successfully updated.';
         })
         .catch(() => {
-          this.titleDialog = 'Error';
+          this.titleDialog = 'Server Error';
           this.messageDialog = 'Something went wrong. Your order could not be updated.';
         })
+      } else {
+        this.titleDialog = 'Validation Error';
+        this.messageDialog = 'Please validate all the fields accordingly.';
       }
       this.showDialog = true;
     },
@@ -76,5 +79,8 @@ export default {
 }
 </script>
 
-<style lang="css">
+<style scoped>
+span {
+  color: red;
+}
 </style>

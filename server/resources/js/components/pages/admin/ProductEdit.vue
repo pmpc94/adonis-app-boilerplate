@@ -6,7 +6,7 @@
           <v-img
           :src="currentImage"
           ></v-img>
-          <ProductForm :name="name" @onInputName="name = $event"
+          <ProductForm ref="productForm" :name="name" @onInputName="name = $event"
           :price="price" @onInputPrice="price = parseFloat($event)|| 0"
           :categories="categories" :category="category" @onInputCategory="category = $event"
           :description="description" @onInputDescription="description = $event">
@@ -20,46 +20,46 @@
     </v-card>
     <div class="text-xs-center">
       <v-dialog
-        :value="showDialogDelete"
-        width="500"
-        @input="$emit('onInputChange', $event)"
+      :value="showDialogDelete"
+      width="500"
+      @input="$emit('onInputChange', $event)"
       >
-        <v-card>
-          <v-card-title style="color: white"
-            class="headline purple"
-            primary-title
-          >
-            Remove Product
-          </v-card-title>
+      <v-card>
+        <v-card-title style="color: white"
+        class="headline purple"
+        primary-title
+        >
+        Remove Product
+      </v-card-title>
 
-          <v-card-text>
-            Are you sure do you want to remove your product?
-          </v-card-text>
+      <v-card-text>
+        Are you sure do you want to remove your product?
+      </v-card-text>
 
-          <v-divider></v-divider>
+      <v-divider></v-divider>
 
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn
-              color="success"
-              dark
-              @click="destroyProduct(), showDialogDelete = false"
-            >
-              Yes
-            </v-btn>
-            <v-btn
-              color="error"
-              dark
-              @click="showDialogDelete = false"
-            >
-              No
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </div>
-    <Dialog @onInputChange="showDialog = $event" @hide="hideDialog()" :dialog="showDialog" :message="messageDialog" :title="titleDialog"></Dialog>
-  </v-flex>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn
+        color="success"
+        dark
+        @click="destroyProduct(), showDialogDelete = false"
+        >
+        Yes
+      </v-btn>
+      <v-btn
+      color="error"
+      dark
+      @click="showDialogDelete = false"
+      >
+      No
+    </v-btn>
+  </v-card-actions>
+</v-card>
+</v-dialog>
+</div>
+<Dialog @onInputChange="showDialog = $event" @hide="hideDialog()" :dialog="showDialog" :message="messageDialog" :title="titleDialog"></Dialog>
+</v-flex>
 </v-layout>
 </template>
 
@@ -78,7 +78,7 @@ export default {
       categories: ['terrestrial', 'giant', 'dwarf'],
       category: '',
       description: '',
-      price: 0,
+      price: undefined,
       showDialog: false,
       messageDialog: '',
       titleDialog: '',
@@ -104,7 +104,7 @@ export default {
       this.currentImage = currentProduct.thumbnail.url;
     },
     async updateProduct() {
-      const validation = await this.$validator.validateAll();
+      const validation = await this.$refs.productForm.validateAll();
       if (validation) {
         await HTTP().patch(`product/${this.param_id}`, {
           name: this.name,
@@ -117,9 +117,12 @@ export default {
           this.messageDialog = 'Your product was successfully updated.';
         })
         .catch(() => {
-          this.titleDialog = 'Error';
+          this.titleDialog = 'Server Error';
           this.messageDialog = 'Something went wrong. Your product could not be updated.';
         })
+      } else {
+        this.titleDialog = 'Validation Error';
+        this.messageDialog = 'Please validate all the fields accordingly.';
       }
       this.showDialog = true;
     },
