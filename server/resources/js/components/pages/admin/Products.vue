@@ -53,7 +53,7 @@ export default {
       this.products = data.data.data;
     },
     goToProductPage(product) {
-      this.$router.push(`/product/${product.id}`)
+      this.$router.push(`/product-section/${product.id}`)
     }
   },
   watch: {

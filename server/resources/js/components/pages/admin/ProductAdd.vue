@@ -50,8 +50,8 @@ export default {
   },
   methods: {
     async saveProduct() {
-      // const validation = await this.$refs.productForm.validateAll();
-      if (true) {
+      const validation = await this.$refs.productForm.validateAll();
+      if (validation) {
         let formData = new FormData();
         for( var i = 0; i < this.files.length; i++ ){
           formData.append('image_path[' + i + ']', this.files[i]);
@@ -84,7 +84,6 @@ export default {
   },
   handleFileUploads(){
     this.files = this.$refs.files.files;
-    console.log("files", this.files)
   },
   hideDialog() {
     this.showDialog = false;

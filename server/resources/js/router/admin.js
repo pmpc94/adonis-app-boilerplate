@@ -34,13 +34,13 @@ export default new Router({
           beforeEnter: ifAuthenticated
         },
         {
-          path: '/product/:id',
+          path: '/product-section/:id',
           name: 'ProductEdit',
           component: ProductEdit,
           beforeEnter: ifAuthenticated
         },
         {
-          path: '/product',
+          path: '/product-section',
           name: 'ProductAdd',
           component: ProductAdd,
           beforeEnter: ifAuthenticated

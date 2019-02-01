@@ -39,18 +39,19 @@ Route.group(() => {
   Route.any('*', ({ response }) => response.notFound())
 }).prefix('api');
 
-//STRIPE
-Route.post('webhooks', 'StripeController.store');
+  //STRIPE
+  Route.post('webhooks', 'StripeController.store');
 
-//BACK OFFICE RENDERING
+  //BACK OFFICE RENDERING
   Route.on('/login').render('backoffice')
   Route.on('/menu').render('backoffice')
   Route.on('/product').render('backoffice')
   Route.on('/products').render('backoffice')
-  Route.on('/product/:id').render('backoffice')
+  Route.on('/product-section').render('backoffice')
+  Route.on('/product-section/:id').render('backoffice')
   Route.on('/orders').render('backoffice')
   Route.on('/order/:id').render('backoffice')
   Route.on('/passwordReset/:email/:token').render('backoffice')
 
-//SHOP RENDERING
-Route.on('*').render('landing')
+  //SHOP RENDERING
+  Route.on('*').render('landing')
