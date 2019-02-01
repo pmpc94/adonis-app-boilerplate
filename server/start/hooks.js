@@ -3,9 +3,8 @@ const { hooks } = require('@adonisjs/ignitor')
 hooks.after.providersBooted(() => {
   const View = use('View')
   const Config = use('Config');
-  console.log("private key", Config.get('stripe.private'))
   View.global('stripeKey', () => {
-    return Config.get('stripe.private')
+    return Config.get('stripe.public')
   })
 
   const Validator = use('Validator')
@@ -21,8 +20,9 @@ hooks.after.providersBooted(() => {
 const existsFn = async (data, field, message, args, get) => {
   const Database = use('Database')
 
-  const value = get(data, field)
-  if (!value) {
+  let value = get(data, field)
+
+  if (!value && args.length !== 4) {
     /**
     * skip validation if value is not defined. `required` rule
     * should take care of it.
@@ -30,8 +30,13 @@ const existsFn = async (data, field, message, args, get) => {
     return
   }
 
-  const [table, column] = args
-  console.log("VALUE", value)
+  let [table, column] = args
+
+  if (args.length === 4) {
+    column = 'id';
+    value = args[1];
+  }
+
   const query = Database.query()
   .from(table)
   .where(column, value)
@@ -77,7 +82,7 @@ const hasAuthorizationFn = async (data, field, message, args, get) => {
   let row = null;
 
   if (table == 'products') {
-    if (user_id === 'null') {
+    if (user_id === 'null') { //It's the public part of the platform
       row = await Database.table(table).where('id', resource_id).toSQL()
     } else {
       row = await Database.table(table).where('id', resource_id).where('user_id', user_id).first()

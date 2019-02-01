@@ -9,7 +9,7 @@ class ProductStore {
       name: 'required|string|min:3|max:255',
       description: 'required|string|min:3|max:255',
       category: 'required|string|min:3|max:255|in:terrestrial,giant,dwarf',
-      price: 'number|range:0,999'
+      price: 'number|range:0,99999'
     }
   }
 

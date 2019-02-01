@@ -63,7 +63,6 @@ class StripeController {
       }
       response.ok('Your order was successfully charged.', order);
     } catch (error) {
-      console.log("error", error)
       response.errorHandler({}, error);
     }
 

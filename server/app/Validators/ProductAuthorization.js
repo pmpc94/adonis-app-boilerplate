@@ -4,7 +4,7 @@ const { formatters } = use('Validator')
 
 class ProductAuthorization {
   get rules () {
-    const product_id = this.ctx.params.id;
+    let product_id = this.ctx.params.slug || this.ctx.params.id;
     let user_id = null;
     if (this.ctx.auth.user !== null) {
        user_id = this.ctx.auth.user.id;

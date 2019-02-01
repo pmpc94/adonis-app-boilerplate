@@ -30,7 +30,7 @@ Factory.blueprint('App/Models/Product', async (faker) => {
   const randomUser = await helper.getRandomUser('vendor')
   return {
     name: faker.name(),
-    description: faker.sentence(),
+    description: faker.paragraph({ sentences: 2}),
     category: helper.getRandomElement(helper.categoryArray),
     price: faker.floating({ min:50, max: 200}),
     user_id: randomUser.id

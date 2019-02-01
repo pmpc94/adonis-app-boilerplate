@@ -1,8 +1,11 @@
 'use strict'
 
 const User = use('App/Models/User');
+const Token = use('App/Models/Token');
 const Mail = use('Mail');
 const Config = use('Config');
+const Hash = use('Hash')
+const hash = require('string-hash');
 
 class UserController {
 
@@ -20,12 +23,22 @@ class UserController {
     try {
       const { email } = request.all();
       const user = await User.findBy('email', email);
-      await Mail.send('emails.welcome', {}, (message) => {
+
+      await Token.query()
+      .where('email', user.email)
+      .delete()
+
+      const { token } = await Token.create({
+        email: user.email,
+        token: await hash(user.email)
+      })
+
+      await Mail.send('emails.password', { email, token }, (message) => {
         message.from(Config.get('mail.from'))
         message.to(email)
         message.subject('Please update your password.')
       });
-      response.ok('A request to change the password was sent to the provided email.', user);
+      response.ok('A request to change the password was sent to the provided email.', { secrets: ''});
     } catch (error) {
       response.errorHandler({}, error);
     }
@@ -33,10 +46,19 @@ class UserController {
 
   async updatePassword({ request, response }) {
     try {
-      const { email, password } = request.all();
+      const { email, password, token } = request.all();
       const user = await User.findBy('email', email);
-      await user.save({ password });
-      response.ok('Your password was successfully updated', user);
+      const passwordReset = await Token.query()
+        .where('email', user.email)
+        .where('token', token)
+        .first()
+
+      user.merge({ password })
+      await user.save({ password })
+      await Token.query()
+        .where('email', user.email)
+        .delete()
+      response.ok('Your password was successfully updated.', user);
     } catch (error) {
       response.errorHandler({}, error);
     }
