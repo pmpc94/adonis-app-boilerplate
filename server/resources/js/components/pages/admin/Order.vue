@@ -1,17 +1,24 @@
 <template>
   <v-layout>
     <v-flex xs12 sm6 offset-sm3>
-      <h1>Order Information</h1>
+      <v-card-title style="color: white"
+      class="headline purple"
+      primary-title
+      >
+      Order Information
+    </v-card-title>
       <v-divider></v-divider>
       <v-card>
         <v-form>
-          <v-card-text primary-title>Update your Order status (currently set to <span class="purple-span">{{ status }}</span>)</v-card-text>
+          <v-card-text primary-title>This order was fulfilled by {{ first_name }} {{ last_name }} <span class="purple-span">({{ email }})</span></v-card-text>
+          <v-divider></v-divider>
+          <v-card-text primary-title>Update your Order status (currently set to <span class="purple-span">{{ currentCategory }}</span>)</v-card-text>
           <v-container>
-            <v-select name="category" v-validate:category="'required'" :items="statusOptions" v-model="status" label="ex: canceled" outline></v-select>
+            <v-select name="category" v-validate="'required'" :items="categoryOptions" v-model="category" label="ex: canceled" outline></v-select>
             <span>{{ errors.first('category') }}</span>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn @click="updateOrder" color="success">Save</v-btn>
+              <v-btn :disabled="category === currentCategory" @click="updateOrder" color="success">Save</v-btn>
             </v-card-actions>
             <v-list two-line>
               <template v-for="(product, index) in products">
@@ -51,9 +58,13 @@ export default {
   name: 'Order',
   data() {
     return {
-      status: '',
+      category: '',
+      first_name: '',
+      last_name: '',
+      email: '',
+      currentCategory: '',
       products: [],
-      statusOptions: ['canceled', 'paid'],
+      categoryOptions: ['canceled', 'created', 'paid'],
       showDialog: false,
       messageDialog: '',
       titleDialog: ''
@@ -69,15 +80,23 @@ export default {
   methods: {
     async fetchOrder() {
       await HTTP().get(`order/${this.param_id}`)
-      .then( response => {
+      .then(response => {
         const currentOrder = response.data.data;
-        this.status = currentOrder.status;
+        this.first_name = currentOrder.first_name;
+        this.last_name = currentOrder.last_name;
+        this.email = currentOrder.receipt_email;
+        this.category = currentOrder.status;
+        this.currentCategory = currentOrder.status;
         this.products = currentOrder.orderProducts;
-        if (this.status === 'paid') {
-          this.statusOptions.splice(this.statusOptions.indexOf(this.status), 1);
+        if (this.currentCategory === 'canceled') {
+          this.categoryOptions.splice(this.categoryOptions.indexOf('created'), 1);
+          this.categoryOptions.splice(this.categoryOptions.indexOf('paid'), 1);
+        }
+        else if (this.currentCategory === 'paid') {
+          this.categoryOptions.splice(this.categoryOptions.indexOf('created'), 1);
         }
       })
-      .catch( error => {
+      .catch(error => {
         if (error.response.status === 401) {
           this.$router.push('/login');
         }
@@ -88,15 +107,15 @@ export default {
       const validation = await this.$validator.validateAll();
       if (validation) {
         await HTTP().patch(`order/${this.param_id}`, {
-          status: this.status
+          status: this.category
         })
-        .then(({ data }) => {
+        .then(response => {
           this.titleDialog = 'Success';
           this.messageDialog = 'Your order was successfully updated.';
         })
-        .catch(() => {
-          this.titleDialog = 'Server Error';
-          this.messageDialog = 'Something went wrong. Your order could not be updated.';
+        .catch(error => {
+            this.titleDialog = 'Server Error';
+            this.messageDialog = 'Something went wrong. Your order could not be updated.';
         })
       } else {
         this.titleDialog = 'Validation Error';

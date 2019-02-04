@@ -1,6 +1,11 @@
 <template>
   <v-container grid-list-md text-xs-center>
-    <h1>Your Orders</h1>
+    <v-card-title style="color: white"
+    class="headline purple"
+    primary-title
+    >
+    Orders
+  </v-card-title>
     <v-list two-line>
       <template v-for="(order, index) in orders">
         <v-divider></v-divider>
@@ -9,7 +14,6 @@
         :key="index"
         avatar
         @click="goToOrderPage(order)"
-        :disabled="order.status === 'canceled' ? true : false"
         >
 
         <v-btn icon>

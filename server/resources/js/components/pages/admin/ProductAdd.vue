@@ -1,6 +1,12 @@
 <template>
   <v-layout>
     <v-flex xs12 sm6 offset-sm3>
+        <v-card-title style="color: white"
+        class="headline purple"
+        primary-title
+        >
+          Product Information
+      </v-card-title>
       <v-card>
         <v-container>
           <v-flex xs12>
