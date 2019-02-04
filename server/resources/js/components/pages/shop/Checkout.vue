@@ -59,103 +59,100 @@
                   <div ref="card-number" id="card-number" class="form-control">
                     <!-- Stripe Card Element -->
                   </div>
-                  <span class="invalid-feedback mt-3">{{
-                    stripeErrors.cardNumber
-                  }}</span>
+                  <span class="mt-3">
+                    {{ stripeErrors.cardNumber }}</span>
+                  </div>
                 </div>
+                <div class="form-group row">
+                  <div class="col-md-6">
+                    <label for="card-exp" class="text-black">
+                      Expiry Date
+                      <span class="text-danger">*</span>
+                    </label>
+                    <div ref="card-exp" id="card-exp" class="form-control">
+                      <!-- Stripe Card Expiry Element -->
+                    </div>
+                    <span class="mt-3">
+                      {{ stripeErrors.cardExpiry }}
+                    </span>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="card-cvc" class="text-black">
+                      CVC
+                      <span class="text-danger">*</span>
+                    </label>
+                    <div ref="card-cvc" id="card-cvc" class="form-control">
+                      <!-- Stripe CVC Element -->
+                    </div>
+                    <span class="mt-3">
+                      {{ stripeErrors.cardCvc }}
+                    </span>
+                  </div>
+                </div>
+                <!-- STRIPE -->
               </div>
-              <div class="form-group row">
-                <div class="col-md-6">
-                  <label for="card-exp" class="text-black">
-                    Expiry Date
-                    <span class="text-danger">*</span>
-                  </label>
-                  <div ref="card-exp" id="card-exp" class="form-control">
-                    <!-- Stripe Card Expiry Element -->
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <label for="card-cvc" class="text-black">
-                    CVC
-                    <span class="text-danger">*</span>
-                  </label>
-                  <div ref="card-cvc" id="card-cvc" class="form-control">
-                    <!-- Stripe CVC Element -->
-                  </div>
-                </div>
+            </div>
+            <div class="col-md-6">
+              <div class="row mb-5">
                 <div class="col-md-12">
-                  <div class="invalid-feedback mt-3">
-                    {{ stripeErrors.cardExpiry }}
-                  </div>
-                  <div class="invalid-feedback mt-3">
-                    {{ stripeErrors.cardCvc }}
-                  </div>
-                </div>
-              </div>
-              <!-- STRIPE -->
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="row mb-5">
-              <div class="col-md-12">
-                <h2 class="h3 mb-3 text-black">Your Order</h2>
-                <div class="p-3 p-lg-5 border">
-                  <table class="table site-block-order-table mb-5">
-                    <thead>
-                      <th>Product</th>
-                      <th>Total</th>
-                    </thead>
-                    <tbody>
-                      <tr v-for="(product, index) in products" :key="index">
-                        <td>{{ product.name }} <strong class="mx-2">x</strong> {{ product.quantity }}</td>
-                        <td>€{{ (product.price * product.quantity).toFixed(2) }}</td>
-                      </tr>
-                      <tr>
-                        <td class="text-black font-weight-bold"><strong>Cart Subtotal</strong></td>
-                        <td class="text-black">€{{ products.reduce((accumulator, currentValue) => accumulator + (currentValue.price * currentValue.quantity), 0).toFixed(2) }}</td>
-                      </tr>
-                      <tr>
-                        <td class="text-black font-weight-bold"><strong>Order Total</strong></td>
-                        <td class="text-black font-weight-bold"><strong>€{{ products.reduce((accumulator, currentValue) => accumulator + (currentValue.price * currentValue.quantity), 0).toFixed(2) }}</strong></td>
-                      </tr>
-                    </tbody>
-                  </table>
+                  <h2 class="h3 mb-3 text-black">Your Order</h2>
+                  <div class="p-3 p-lg-5 border">
+                    <table class="table site-block-order-table mb-5">
+                      <thead>
+                        <th>Product</th>
+                        <th>Total</th>
+                      </thead>
+                      <tbody>
+                        <tr v-for="(product, index) in products" :key="index">
+                          <td>{{ product.name }} <strong class="mx-2">x</strong> {{ product.quantity }}</td>
+                          <td>€{{ (product.price * product.quantity).toFixed(2) }}</td>
+                        </tr>
+                        <tr>
+                          <td class="text-black font-weight-bold"><strong>Cart Subtotal</strong></td>
+                          <td class="text-black">€{{ products.reduce((accumulator, currentValue) => accumulator + (currentValue.price * currentValue.quantity), 0).toFixed(2) }}</td>
+                        </tr>
+                        <tr>
+                          <td class="text-black font-weight-bold"><strong>Order Total</strong></td>
+                          <td class="text-black font-weight-bold"><strong>€{{ products.reduce((accumulator, currentValue) => accumulator + (currentValue.price * currentValue.quantity), 0).toFixed(2) }}</strong></td>
+                        </tr>
+                      </tbody>
+                    </table>
 
-                  <div class="form-group mt-5">
-                    <button
-                    class="btn btn-primary btn-lg py-3 btn-block"
-                    @click="submitPurchase"
-                    >
-                    Place Order
-                  </button>
-                  <div v-show="loading">
-                    <div class="loader mt-2"></div>
-                    <h2 style="text-align:center; color: #7971ea">Loading...</h2>
+                    <div class="form-group mt-5">
+                      <button
+                      class="btn btn-primary btn-lg py-3 btn-block"
+                      @click="submitPurchase"
+                      >
+                      Place Order
+                    </button>
+                    <div v-show="loading">
+                      <div class="loader mt-2"></div>
+                      <h2 style="text-align:center; color: #7971ea">Loading...</h2>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
+
           </div>
-
         </div>
-      </div>
-      <!-- </form> -->
-    </div>
-  </div>
-
-  <div v-else class="site-section">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-12 text-center">
-          <span class="icon-check_circle display-3 text-success"></span>
-          <h2 class="display-3 text-black">Your cart is empty!</h2>
-          <p class="lead mb-5">Don't lose our big deals.</p>
-          <router-link class="btn btn-sm btn-primary" tag="li" to="/">Back to shop</router-link>
-        </div>
+        <!-- </form> -->
       </div>
     </div>
+
+    <div v-else class="site-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12 text-center">
+            <span class="icon-check_circle display-3 text-success"></span>
+            <h2 class="display-3 text-black">Your cart is empty!</h2>
+            <p class="lead mb-5">Don't lose our big deals.</p>
+            <router-link class="btn btn-sm btn-primary" tag="li" to="/">Back to shop</router-link>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-</div>
 </template>
 
 <script>
@@ -281,7 +278,8 @@ export default {
       }
     },
     async submitPurchase() {
-      this.loading = true
+      this.loading = true;
+      this.disableFields();
       const validation = await this.$validator.validateAll()
       if (validation) {
         let cardData = {
@@ -291,6 +289,16 @@ export default {
         this.handleResult(result)
       } else {
         this.loading = false
+      }
+    },
+    disableFields() {
+      let inputs = document.getElementsByTagName("input");
+      let buttons = document.getElementsByTagName("button");
+      for (let i = 0; i < inputs.length; i++) {
+        inputs[i].disabled = true;
+      }
+      for (let i = 0;i < buttons.length; i++) {
+        buttons[i].disabled = true;
       }
     },
     ...mapActions('cart', [
