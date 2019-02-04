@@ -23,13 +23,13 @@
             <h2 class="text-black">{{ currentProduct.name }}</h2>
             <p>{{ currentProduct.category }}</p>
             <p class="mb-4">{{ currentProduct.description }}</p>
-            <p><strong class="text-primary h4">€{{ (currentProduct.price * count).toFixed(2) }}</strong></p>
+            <p><strong class="text-primary h4">€{{ currentProduct.price }}</strong></p>
             <div class="mb-5">
               <div class="input-group mb-3" style="max-width: 120px;">
                 <div class="input-group-prepend">
                   <button @click="decrementCount(), currentProduct.quantity = count" class="btn btn-outline-primary js-btn-minus" type="button">&minus;</button>
                 </div>
-                <input @keydown="preventUndesiredChars" type="text" min="1" step="1" class="form-control text-center" v-model="count" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
+                <input @keydown="preventUndesiredChars" @input="count = parseInt($event.target.value), currentProduct.quantity = count" v-model="count" type="text" min="1" step="1" class="form-control text-center" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
                 <div class="input-group-append">
                   <button @click="incrementCount(), currentProduct.quantity = count" class="btn btn-outline-primary js-btn-plus" type="button">&plus;</button>
                 </div>
@@ -95,7 +95,11 @@ export default {
     },
     ...mapActions('cart', [
       'addToCart',
-    ])
+    ]),
+    teste(eventValue) {
+      this.count = parseInt(eventValue);
+      this.currentProduct.quantity = this.count;
+    }
   }
 }
 </script>
