@@ -14,6 +14,7 @@
 /** @type {import('@adonisjs/lucid/src/Factory')} */
 const Factory = use('Factory');
 const Hash = use('Hash');
+const Config = use('Config');
 const helper = require('./helper');
 
 Factory.blueprint('App/Models/User', async (faker) => {
@@ -21,7 +22,7 @@ Factory.blueprint('App/Models/User', async (faker) => {
     firstName: faker.first(),
     lastName: faker.last(),
     email: faker.email(),
-    password: await Hash.make(faker.password()),
+    password: Config.get('database.password'),
     role: helper.getRandomElement(helper.roleArray)
   }
 });

@@ -1,26 +1,31 @@
 <template>
   <v-app>
-    <v-card>
-      <v-card-title primary-title>
-        <h1>Planet & Comet Shop - Password Reset</h1>
-      </v-card-title>
-    </v-card>
-  <v-card>
-    <v-container grid-list-md>
-      <v-layout row wrap>
-        <v-flex xs6>
-          <h2>Insert your new Password</h2>
-          <v-text-field type="password" v-model="password_one" outline> </v-text-field>
-
-          <h2>Please confirm your new Password</h2>
-          <v-text-field type="password" v-model="password_two" outline> </v-text-field>
-          <v-btn dark @click="updatePassword()" color="success">Update Password</v-btn>
-          <v-alert :type="alertType" :value="message"> {{ message }} </v-alert>
-        </v-flex>
-      </v-layout>
-    </v-container>
-  </v-card>
-</v-app>
+    <v-content>
+      <v-container fluid fill-height>
+        <v-layout align-center justify-center>
+          <v-flex xs12 sm8 md4>
+            <v-card class="elevation-12">
+              <v-card-title style="color: white"
+              class="headline purple"
+              primary-title
+              >
+              PC Shop - Password Reset
+            </v-card-title>
+            <v-card-text>
+              <v-form>
+                <v-text-field name="password_one" label="insert password" color="purple" type="password" prepend-icon="lock" v-model="password_one"> </v-text-field>
+                <v-text-field name="password_two" label="confirm password" color="purple" type="password" prepend-icon="lock" v-model="password_two"> </v-text-field>
+                <v-btn dark @click="updatePassword()" color="success">Update Password</v-btn>
+                <v-alert :type="alertType" :value="message"> {{ message }} </v-alert>
+              </v-form>
+            </v-card-text>
+            <v-divider></v-divider>
+          </v-card>
+          </v-flex>
+        </v-layout>
+      </v-container>
+    </v-content>
+  </v-app>
 </template>
 
 <script>

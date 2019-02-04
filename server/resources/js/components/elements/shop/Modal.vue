@@ -17,7 +17,7 @@
                   <p>Your product was added to the cart.</p>
                 </div>
                 <div class="modal-footer">
-                  <router-link @click.native="$root.showModal = false" class="btn btn-secondary" tag="li" to="/">Continue Shopping</router-link>
+                  <router-link @click.native="$root.showModal = false" class="btn btn-secondary" tag="li" :to="path" :value="path">Continue Shopping</router-link>
                   <router-link @click.native="$root.showModal = false" class="buy-now btn btn-sm btn-primary" tag="li" to="/cart">See Cart</router-link>
                 </div>
               </div>
@@ -32,7 +32,10 @@
 
 <script>
 export default {
-  name: 'Modal'
+  name: 'Modal',
+  props: {
+    path: String
+  }
 }
 </script>
 

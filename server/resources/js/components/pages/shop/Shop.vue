@@ -68,7 +68,7 @@
         </div>
       </div>
     </div>
-    <Modal/>
+    <Modal path="/"></Modal>
   </div>
 </template>
 

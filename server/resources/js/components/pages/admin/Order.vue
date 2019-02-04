@@ -108,7 +108,7 @@ export default {
       this.showDialog = false;
     },
     goToProductPage(product) {
-      this.$router.push(`/product/${product.id}`)
+      this.$router.push(`/product-section/${product.id}`)
     }
   }
 }

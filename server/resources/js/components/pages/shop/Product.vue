@@ -27,11 +27,11 @@
             <div class="mb-5">
               <div class="input-group mb-3" style="max-width: 120px;">
                 <div class="input-group-prepend">
-                  <button @click="decrementCount(), currentProduct.quantity = count" class="btn btn-outline-primary js-btn-minus" type="button">&minus;</button>
+                  <button @click="currentProduct.quantity > 1 ? currentProduct.quantity-- : ''" class="btn btn-outline-primary js-btn-minus" type="button">&minus;</button>
                 </div>
-                <input @keydown="preventUndesiredChars" @input="count = parseInt($event.target.value), currentProduct.quantity = count" v-model="count" type="text" min="1" step="1" class="form-control text-center" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
+                <input @keydown="preventUndesiredChars" @input="currentProduct.quantity = parseInt($event.target.value)" v-model="currentProduct.quantity" type="text" min="1" step="1" class="form-control text-center" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
                 <div class="input-group-append">
-                  <button @click="incrementCount(), currentProduct.quantity = count" class="btn btn-outline-primary js-btn-plus" type="button">&plus;</button>
+                  <button @click="currentProduct.quantity++" class="btn btn-outline-primary js-btn-plus" type="button">&plus;</button>
                 </div>
               </div>
 
@@ -41,7 +41,7 @@
         </div>
       </div>
     </div>
-    <Modal/>
+    <Modal :path="`/product/${$route.params.slug}`"></Modal>
     <div v-if="isLoading" class="spinner-grow centered-page" role="status">
       <span class="sr-only">Loading...</span>
     </div>
@@ -58,7 +58,6 @@ export default {
   name: 'Product',
   data () {
     return {
-      count: 1,
       currentProduct: '',
       currentImage: '',
       isLoading: true
@@ -76,7 +75,7 @@ export default {
       await HTTP().get(`/product/${slug}`)
       .then(response => {
         this.currentProduct = response.data.data;
-        this.currentProduct['quantity'] = 1;
+        this.currentProduct.quantity = 1;
         this.currentImage = this.currentProduct.thumbnail.url;
         this.isLoading = false;
       })
@@ -84,22 +83,12 @@ export default {
         this.isLoading = false;
       });
     },
-    incrementCount() {
-      this.count++;
-    },
-    decrementCount() {
-      this.count > 1 ? this.count-- : '';
-    },
     preventUndesiredChars(event) {
       (event.keyCode >= 65 && event.keyCode <= 90) || (event.keyCode >= 186 && event.keyCode <= 192) ? event.preventDefault() : ''
     },
     ...mapActions('cart', [
       'addToCart',
-    ]),
-    teste(eventValue) {
-      this.count = parseInt(eventValue);
-      this.currentProduct.quantity = this.count;
-    }
+    ])
   }
 }
 </script>

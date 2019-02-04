@@ -21,7 +21,7 @@ class UserSeeder {
     const vendor = await User.create({
       firstName: 'Pedro',
       lastName: 'Carolina',
-      email: 'pedro.carolina@polygon.pt',
+      email: Config.get('database.email'),
       password: Config.get('database.password'),
       role: 'vendor'
     });
