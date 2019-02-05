@@ -10,8 +10,13 @@
       <v-card>
         <v-container>
           <v-flex xs12>
-            <h2>Images: </h2>
-            <input type="file" name="files" ref="files" multiple v-on:change="handleFileUploads()"/>
+            <h2>Images*</h2>
+            <input v-validate="'required'" class="hidden" type="file" name="images" id="images" ref="images" multiple v-on:change="handleFileUploads()"/>
+            <label class="pointer" for="images"><v-icon class="mr-2">add_to_photos</v-icon>Choose your product's image(s)</label>
+            <ul class="removeBullets mb-4">
+              <li v-for="(image, index) in this.imageFiles" :key="index"><v-icon @click="removeImageFile(index)" class="pointer" color="red">close</v-icon> {{ image.name }} </li>
+            </ul>
+            <span>{{ errors.first('images') }}</span>
           </v-flex>
           <ProductForm ref="productForm" :name="name" @onInputName="name = $event"
           :price="price" @onInputPrice="price = parseFloat($event)|| 0" @preventUndesiredChars="preventUndesiredChars($event)"
@@ -44,10 +49,11 @@ export default {
       category: '',
       description: '',
       price: undefined,
-      files: '',
+      images: '',
       showDialog: false,
       messageDialog: '',
-      titleDialog: ''
+      titleDialog: '',
+      imageFiles: []
     }
   },
   components: {
@@ -57,10 +63,11 @@ export default {
   methods: {
     async saveProduct() {
       const validation = await this.$refs.productForm.validateAll();
+      await this.$validator.validateAll();
       if (validation) {
         let formData = new FormData();
-        for( var i = 0; i < this.files.length; i++ ){
-          formData.append('image_path[' + i + ']', this.files[i]);
+        for( var i = 0; i < this.imageFiles.length; i++ ){
+          formData.append('image_path[' + i + ']', this.imageFiles[i]);
         }
         formData.append('name', this.name);
         formData.append('description', this.description);
@@ -74,13 +81,18 @@ export default {
           }
         }
       )
-      .then(({ response }) => {
+      .then(response => {
         this.titleDialog = 'Success';
         this.messageDialog = 'Your product was successfully created.';
       })
-      .catch(() => {
-        this.titleDialog = 'Server Error';
-        this.messageDialog = 'Something went wrong. Your product could not be created.';
+      .catch(error => {
+        if (error.response.status === 422) {
+          this.titleDialog = 'Invalid product name';
+          this.messageDialog = 'You must provide a unique product name.';
+        } else {
+          this.titleDialog = 'Server Error';
+          this.messageDialog = 'Something went wrong. Your product could not be created.';
+        }
       })
     } else {
       this.titleDialog = 'Validation Error';
@@ -89,17 +101,33 @@ export default {
     this.showDialog = true;
   },
   handleFileUploads(){
-    this.files = this.$refs.files.files;
+    this.images = this.$refs.images.files;
+    this.imageFiles = Array.from(this.images);
   },
   hideDialog() {
     this.showDialog = false;
   },
   preventUndesiredChars(event) {
     (event.keyCode >= 189 && event.keyCode <= 192) ? event.preventDefault() : ''
+  },
+  removeImageFile(index) {
+    this.imageFiles.splice(index,1);
   }
 }
 }
 </script>
 
-<style lang="css">
+<style scoped>
+  .hidden {
+    display: none;
+  }
+  .pointer {
+    cursor: pointer;
+  }
+  .removeBullets {
+    list-style-type: none;
+  }
+  span {
+    color: red;
+  }
 </style>

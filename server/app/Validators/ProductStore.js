@@ -6,7 +6,7 @@ class ProductStore {
   get rules () {
     const user_id = this.ctx.auth.user.id;
     return {
-      name: 'required|string|min:3|max:255',
+      name: 'required|string|min:3|max:255|notExists:products,name',
       description: 'required|string|min:3|max:255',
       category: 'required|string|min:3|max:255|in:terrestrial,giant,dwarf',
       price: 'number|range:0,99999'
@@ -16,6 +16,7 @@ class ProductStore {
   get messages () {
     return {
       'name.required': 'You must provide a name.',
+      'name.notExists': 'You must provide a unique product name.',
       'description.required': 'You must provide a description.',
       'category.required': 'You must provide a category.',
       'category.in': 'You must provide a valid category',

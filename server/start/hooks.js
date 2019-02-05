@@ -10,6 +10,7 @@ hooks.after.providersBooted(() => {
   const Validator = use('Validator')
 
   Validator.extend('exists', existsFn)
+  Validator.extend('notExists', notExistsFn)
   Validator.extend('existsArray', existsArrayFn)
   Validator.extend('hasAuthorization', hasAuthorizationFn)
   Validator.extend('validateStatus', validateStatusFn)
@@ -46,6 +47,31 @@ const existsFn = async (data, field, message, args, get) => {
   const row = await query.first();
 
   if (!row) {
+    throw message
+  }
+}
+
+const notExistsFn = async (data, field, message, args, get) => {
+  const Database = use('Database')
+
+  const value = get(data, field)
+  if (!value) {
+    /**
+    * skip validation if value is not defined. `required` rule
+    * should take care of it.
+    */
+    return
+  }
+
+  const [table, column] = args
+
+  const query = Database.query()
+  .from(table)
+  .where(column, value)
+
+  const row = await query.first();
+
+  if (row) {
     throw message
   }
 }
