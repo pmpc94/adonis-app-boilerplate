@@ -21,6 +21,8 @@ export default {
   mutations: {
     setToken(state, token) {
       state.token = token;
+      state.loginEmail = '';
+      state.loginPassword = '';
     },
     setLoginError(state, error) {
       state.loginError = error;
