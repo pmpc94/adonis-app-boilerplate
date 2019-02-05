@@ -17,8 +17,10 @@ export default {
   mutations: {
     add(state, { product, quantity }) {
       const index = state.products.findIndex(obj => obj.id === product.id);
-      index === -1 ? product.quantity = 1 : '';
+      index === -1 ? product.quantity = quantity : '';
       index === -1 ? state.products.push(product) : state.products[index].quantity += quantity;
+      if (index !== -1)
+        Vue.set(state.products, index, state.products[index]);
     },
     update(state, { product, quantity }) {
       const index = state.products.findIndex(obj => obj.id === product.id);
