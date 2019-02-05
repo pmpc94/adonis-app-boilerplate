@@ -74,6 +74,7 @@ class ProductController {
         .with('images').with('thumbnail')
         .where('slug', slug)
         .firstOrFail()
+        product['quantity'] = 0;
         return response.ok('The product that you requested.', product);
       }
       const user = await auth.getUser();

@@ -27,16 +27,16 @@
             <div class="mb-5">
               <div class="input-group mb-3" style="max-width: 120px;">
                 <div class="input-group-prepend">
-                  <button @click="currentProduct.quantity > 1 ? currentProduct.quantity-- : ''" class="btn btn-outline-primary js-btn-minus" type="button">&minus;</button>
+                  <button @click="count > 1 ? count-- : ''" class="btn btn-outline-primary js-btn-minus" type="button">&minus;</button>
                 </div>
-                <input @keydown="preventUndesiredChars" @input="currentProduct.quantity = parseInt($event.target.value)" v-model="currentProduct.quantity" type="text" min="1" step="1" class="form-control text-center" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
+                <input @keydown="preventUndesiredChars" @input="count = parseInt($event.target.value)" v-model="count" type="number" min="1" step="1" class="form-control text-center">
                 <div class="input-group-append">
-                  <button @click="currentProduct.quantity++" class="btn btn-outline-primary js-btn-plus" type="button">&plus;</button>
+                  <button @click="count++" class="btn btn-outline-primary js-btn-plus" type="button">&plus;</button>
                 </div>
               </div>
 
             </div>
-            <button class="buy-now btn btn-sm btn-primary" @click="$root.showModal = true, addToCart(currentProduct)">Add To Cart</button>
+            <button class="buy-now btn btn-sm btn-primary" @click="$root.showModal = true, addToCart({ product: currentProduct, quantity: count }), count = 1">Add To Cart</button>
           </div>
         </div>
       </div>
@@ -60,7 +60,8 @@ export default {
     return {
       currentProduct: '',
       currentImage: '',
-      isLoading: true
+      isLoading: true,
+      count: 1
     }
   },
   mounted() {
@@ -75,7 +76,6 @@ export default {
       await HTTP().get(`/product/${slug}`)
       .then(response => {
         this.currentProduct = response.data.data;
-        this.currentProduct.quantity = 1;
         this.currentImage = this.currentProduct.thumbnail.url;
         this.isLoading = false;
       })

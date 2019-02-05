@@ -32,7 +32,7 @@
                     <h3><router-link :to="`/product/${product.slug}`" >{{ product.name }}</router-link></h3>
                     <p class="mb-0">{{ product.category }}</p>
                     <p class="text-primary font-weight-bold">€{{ product.price }}</p>
-                    <button class="btn btn-primary" @click="$root.showModal = true, addToCart(product)">Add To Cart</button>
+                    <button class="btn btn-primary" @click="$root.showModal = true, addToCart({ product, quantity: 1 })">Add To Cart</button>
                   </div>
                 </div>
               </div>

@@ -240,6 +240,7 @@ export default {
     },
     async handleResult(result) {
       if (result.token) {
+        this.disableFields();
         // Use the token to create a charge or a customer
         // https://stripe.com/docs/charges
         // this.token = result.token.id
@@ -279,7 +280,6 @@ export default {
     },
     async submitPurchase() {
       this.loading = true;
-      this.disableFields();
       const validation = await this.$validator.validateAll()
       if (validation) {
         let cardData = {
