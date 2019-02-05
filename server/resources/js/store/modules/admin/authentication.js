@@ -21,7 +21,6 @@ export default {
   mutations: {
     setToken(state, token) {
       state.token = token;
-      state.loginEmail = '';
       state.loginPassword = '';
     },
     setLoginError(state, error) {
@@ -37,7 +36,7 @@ export default {
   actions: {
     logout({ commit }) {
       commit('setToken', null);
-      router.push('/login');
+      router.push('/backoffice/login');
     },
     login({ commit, state }) {
       commit('setLoginError', null);
@@ -48,7 +47,7 @@ export default {
       })
       .then(({ data }) => {
         commit('setToken', data.data.token);
-        router.push('/products');
+        router.push('/backoffice/products');
       })
       .catch(() => {
         commit('setLoginError', 'An error has occured trying to login.');

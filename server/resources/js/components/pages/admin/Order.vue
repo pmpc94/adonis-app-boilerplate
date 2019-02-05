@@ -11,6 +11,7 @@
       <v-card>
         <v-form>
           <v-card-text primary-title>This order was fulfilled by {{ first_name }} {{ last_name }} <span class="purple-span">({{ email }})</span></v-card-text>
+          <v-card-text primary-title>Address: {{ address1 }} {{ address2 }}</v-card-text>
           <v-divider></v-divider>
           <v-card-text primary-title>Update your Order status (currently set to <span class="purple-span">{{ currentCategory }}</span>)</v-card-text>
           <v-container>
@@ -127,7 +128,7 @@ export default {
       this.showDialog = false;
     },
     goToProductPage(product) {
-      this.$router.push(`/product-section/${product.id}`)
+      this.$router.push(`/backoffice/product-section/${product.id}`)
     }
   }
 }

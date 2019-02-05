@@ -58,7 +58,7 @@ export default {
         .then(response => {
           this.alertType = 'success';
           this.message = 'Your password was successfully updated.';
-          this.$router.push('/login');
+          this.$router.push('/backoffice/login');
         })
         .catch(error => {
           this.alertType = 'error';

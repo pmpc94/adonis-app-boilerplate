@@ -7,7 +7,7 @@
       <v-select outline name="category" v-validate:category="'required'" :items="categories" :value="category" @input="$emit('onInputCategory', $event)" placeholder="ex: terrestrial"></v-select>
       <span>{{ errors.first('category') }}</span>
       <h2>Description*</h2>
-        <v-textarea outline name="description" v-validate="'required'" :v-html="description" :value="description" @input="$emit('onInputDescription', $event)" placeholder="ex: The people who purchase this planet have the power to live forever." hint=""></v-textarea>
+        <v-textarea outline name="description" v-validate="'required'" :value="description" @input="$emit('onInputDescription', $event)" placeholder="ex: The people who purchase this planet have the power to live forever." hint=""></v-textarea>
       <span>{{ errors.first('description') }}</span>
       <h2>Price*</h2>
       <v-text-field outline name="price" v-validate="'min_value:0|required'" type="number" min="0" :value="price" @input="$emit('onInputPrice', $event)" @keydown="$emit('preventUndesiredChars', $event)" placeholder="ex: 33" class="headline mb-0"></v-text-field>

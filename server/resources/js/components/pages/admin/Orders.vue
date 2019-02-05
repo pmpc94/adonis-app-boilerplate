@@ -59,7 +59,7 @@ export default {
       this.orders = data.data;
     },
     goToOrderPage(order) {
-      this.$router.push(`/order/${order.id}`)
+      this.$router.push(`/backoffice/order/${order.id}`)
     }
   },
   watch: {

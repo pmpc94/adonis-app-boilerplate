@@ -60,7 +60,7 @@ export default {
       this.totalPages = data.data.total;
     },
     goToProductPage(product) {
-      this.$router.push(`/product-section/${product.id}`)
+      this.$router.push(`/backoffice/product-section/${product.id}`)
     }
   },
   watch: {

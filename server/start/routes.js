@@ -43,15 +43,9 @@ Route.group(() => {
   Route.post('webhooks', 'StripeController.store');
 
   //BACK OFFICE RENDERING
-  Route.on('/login').render('backoffice')
-  Route.on('/menu').render('backoffice')
-  Route.on('/product').render('backoffice')
-  Route.on('/products').render('backoffice')
-  Route.on('/product-section').render('backoffice')
-  Route.on('/product-section/:id').render('backoffice')
-  Route.on('/orders').render('backoffice')
-  Route.on('/order/:id').render('backoffice')
-  Route.on('/passwordReset/:email/:token').render('backoffice')
+  Route.group(() => {
+    Route.any('*', ({ view }) => view.render('backoffice'))
+  }).prefix('backoffice');
 
   //SHOP RENDERING
   Route.on('*').render('landing')

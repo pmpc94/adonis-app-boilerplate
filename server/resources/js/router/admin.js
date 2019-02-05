@@ -23,36 +23,36 @@ export default new Router({
   mode: 'history', // use HTML5 history instead of hashes
   routes: [
     {
-      path: '/menu',
+      path: '/backoffice',
       name: 'Menu',
       component: Menu,
       children: [
         {
-          path: '/products',
+          path: 'products',
           name: 'Products',
           component: Products,
           beforeEnter: ifAuthenticated
         },
         {
-          path: '/product-section/:id',
+          path: 'product-section/:id',
           name: 'ProductEdit',
           component: ProductEdit,
           beforeEnter: ifAuthenticated
         },
         {
-          path: '/product-section',
+          path: 'product-section',
           name: 'ProductAdd',
           component: ProductAdd,
           beforeEnter: ifAuthenticated
         },
         {
-          path: '/orders',
+          path: 'orders',
           name: 'Orders',
           component: Orders,
           beforeEnter: ifAuthenticated
         },
         {
-          path: '/order/:id',
+          path: 'order/:id',
           name: 'Order',
           component: Order,
           beforeEnter: ifAuthenticated
@@ -60,14 +60,18 @@ export default new Router({
       ]
     },
     {
-      path: '/login',
-      name: 'Login',
+        path: '/backoffice/login',
+        name: 'Login',
       component: Login
     },
     {
-      path: '/passwordReset/:email/:token',
+      path: '/backoffice/passwordReset/:email/:token',
       name: 'PasswordReset',
       component: PasswordReset
+    },
+    {
+      path: '*',
+      redirect: '/backoffice'
     }
   ]
 })

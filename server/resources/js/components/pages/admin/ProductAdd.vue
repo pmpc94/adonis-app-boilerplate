@@ -1,36 +1,36 @@
 <template>
   <v-layout>
     <v-flex xs12 sm6 offset-sm3>
-        <v-card-title style="color: white"
-        class="headline purple"
-        primary-title
-        >
-          Product Information
-      </v-card-title>
-      <v-card>
-        <v-container>
-          <v-flex xs12>
-            <h2>Images*</h2>
-            <input v-validate="'required'" class="hidden" type="file" name="images" id="images" ref="images" multiple v-on:change="handleFileUploads()"/>
-            <label class="pointer" for="images"><v-icon class="mr-2">add_to_photos</v-icon>Choose your product's image(s)</label>
-            <ul class="removeBullets mb-4">
-              <li v-for="(image, index) in this.imageFiles" :key="index"><v-icon @click="removeImageFile(index)" class="pointer" color="red">close</v-icon> {{ image.name }} </li>
-            </ul>
-            <span>{{ errors.first('images') }}</span>
-          </v-flex>
-          <ProductForm ref="productForm" :name="name" @onInputName="name = $event"
-          :price="price" @onInputPrice="price = parseFloat($event)|| 0" @preventUndesiredChars="preventUndesiredChars($event)"
-          :categories="categories" :category="category" @onInputCategory="category = $event"
-          :description="description" @onInputDescription="description = $event">
-        </ProductForm>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn @click="saveProduct" color="success">Save</v-btn>
-        </v-card-actions>
-      </v-container>
-    </v-card>
-    <Dialog @onInputChange="showDialog = $event" @hide="hideDialog()" :dialog="showDialog" :message="messageDialog" :title="titleDialog"></Dialog>
-  </v-flex>
+      <v-card-title style="color: white"
+      class="headline purple"
+      primary-title
+      >
+      Product Information
+    </v-card-title>
+    <v-card>
+      <v-container>
+        <v-flex xs12>
+          <h2>Images*</h2>
+          <input v-validate="'required'" class="hidden" type="file" name="images" id="images" ref="images" multiple v-on:change="handleFileUploads()"/>
+          <label class="pointer" for="images"><v-icon class="mr-2">add_to_photos</v-icon>Choose your product's image(s)</label>
+          <ul class="removeBullets mb-4">
+            <li v-for="(image, index) in this.imageFiles" :key="index"><v-icon @click="removeImageFile(index)" class="pointer" color="red">close</v-icon> {{ image.name }} </li>
+          </ul>
+          <span>{{ errors.first('images') }}</span>
+        </v-flex>
+        <ProductForm ref="productForm" :name="name" @onInputName="name = $event"
+        :price="price" @onInputPrice="price = parseFloat($event)|| 0" @preventUndesiredChars="preventUndesiredChars($event)"
+        :categories="categories" :category="category" @onInputCategory="category = $event"
+        :description="description" @onInputDescription="description = $event">
+      </ProductForm>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn @click="saveProduct" color="success">Save</v-btn>
+      </v-card-actions>
+    </v-container>
+  </v-card>
+  <Dialog @onInputChange="showDialog = $event" @hide="hideDialog()" :dialog="showDialog" :message="messageDialog" :title="titleDialog"></Dialog>
+</v-flex>
 </v-layout>
 </template>
 
@@ -102,7 +102,14 @@ export default {
   },
   handleFileUploads(){
     this.images = this.$refs.images.files;
-    this.imageFiles = Array.from(this.images);
+    const tempArray = Array.from(this.images);
+    this.imageFiles = this.imageFiles.length === 0 ? Array.from(this.images) : '';
+    for (let i=0; i<tempArray.length; i++) {
+      let index = this.imageFiles.indexOf(tempArray[i].name);
+      if (index > -1) {
+        this.imageFiles.push(tempArray[i]);
+      }
+    }
   },
   hideDialog() {
     this.showDialog = false;
@@ -118,16 +125,16 @@ export default {
 </script>
 
 <style scoped>
-  .hidden {
-    display: none;
-  }
-  .pointer {
-    cursor: pointer;
-  }
-  .removeBullets {
-    list-style-type: none;
-  }
-  span {
-    color: red;
-  }
+.hidden {
+  display: none;
+}
+.pointer {
+  cursor: pointer;
+}
+.removeBullets {
+  list-style-type: none;
+}
+span {
+  color: red;
+}
 </style>

@@ -81,6 +81,7 @@ export default {
       })
       .catch(error => {
         this.isLoading = false;
+        error.response.status === 404 ? this.$router.push('/') : ''
       });
     },
     preventUndesiredChars(event) {

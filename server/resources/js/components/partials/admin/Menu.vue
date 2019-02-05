@@ -106,9 +106,9 @@ export default {
     dialog: false,
     drawer: null,
     items: [
-      { icon: 'add', text: 'Product', link: '/product-section' },
-      { icon: 'list', text: 'Products', link: '/products' },
-      { icon: 'history', text: 'Orders' , link: '/orders'}
+      { icon: 'add', text: 'Product', link: '/backoffice/product-section' },
+      { icon: 'list', text: 'Products', link: '/backoffice/products' },
+      { icon: 'history', text: 'Orders' , link: '/backoffice/orders'}
     ],
   }),
   computed: {
