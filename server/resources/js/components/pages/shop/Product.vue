@@ -22,7 +22,7 @@
           <div class="col-md-6">
             <h2 class="text-black">{{ currentProduct.name }}</h2>
             <p>{{ currentProduct.category }}</p>
-            <p class="mb-4">{{ currentProduct.description }}</p>
+            <p v-html="currentProduct.description" class="mb-4"></p>
             <p><strong class="text-primary h4">€{{ currentProduct.price }}</strong></p>
             <div class="mb-5">
               <div class="input-group mb-3" style="max-width: 120px;">
