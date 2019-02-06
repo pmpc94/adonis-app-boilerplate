@@ -11,7 +11,7 @@
       <v-card>
         <v-form>
           <v-card-text primary-title>This order was fulfilled by {{ first_name }} {{ last_name }} <span class="purple-span">({{ email }})</span></v-card-text>
-          <v-card-text primary-title>Address: {{ address1 }} {{ address2 }}</v-card-text>
+          <v-card-text primary-title>Address: <span class="purple-span">{{ address1 }}</span> ({{ address2 }})</v-card-text>
           <v-divider></v-divider>
           <v-card-text primary-title>Update your Order status (currently set to <span class="purple-span">{{ currentCategory }}</span>)</v-card-text>
           <v-container>
@@ -62,6 +62,8 @@ export default {
       category: '',
       first_name: '',
       last_name: '',
+      address1: '',
+      address2: '',
       email: '',
       currentCategory: '',
       products: [],
@@ -85,6 +87,8 @@ export default {
         const currentOrder = response.data.data;
         this.first_name = currentOrder.first_name;
         this.last_name = currentOrder.last_name;
+        this.address1 = currentOrder.address1;
+        this.address2 = currentOrder.address2;
         this.email = currentOrder.receipt_email;
         this.category = currentOrder.status;
         this.currentCategory = currentOrder.status;

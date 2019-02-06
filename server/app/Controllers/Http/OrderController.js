@@ -11,7 +11,7 @@ class OrderController {
   async index({ auth, request, response }) {
     try {
       const user = await auth.getUser();
-      const orders = await Order
+      let orders = await Order
       .query()
       .whereHas('orderProducts', (builder) => {
         builder.join('products', 'order_products.product_id', '=', 'products.id').where('products.user_id', user.id)
@@ -29,7 +29,7 @@ class OrderController {
   async show({ auth, request, response }) {
     try {
       const { id } = request.params;
-      const order = await Order
+      let order = await Order
       .query()
       .whereHas('orderProducts', (builder) => {
         builder.join('products', 'order_products.product_id', '=', 'products.id').where('products.user_id', auth.user.id)
@@ -39,6 +39,7 @@ class OrderController {
       })
       .where('id', id)
       .first()
+
       response.ok('The order that you requested.', order);
     } catch (error) {
       response.errorHandler({}, error);

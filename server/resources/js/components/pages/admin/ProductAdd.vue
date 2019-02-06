@@ -103,10 +103,9 @@ export default {
   handleFileUploads(){
     this.images = this.$refs.images.files;
     const tempArray = Array.from(this.images);
-    this.imageFiles = this.imageFiles.length === 0 ? Array.from(this.images) : '';
-    for (let i=0; i<tempArray.length; i++) {
+    for (let i = 0; i < tempArray.length; i++) {
       let index = this.imageFiles.indexOf(tempArray[i].name);
-      if (index > -1) {
+      if (index === -1) {
         this.imageFiles.push(tempArray[i]);
       }
     }

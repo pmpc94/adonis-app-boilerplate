@@ -15,15 +15,10 @@ export default {
     }
   },
   mutations: {
-    add(state, { product, quantity }) {
-      const index = state.products.findIndex(obj => obj.id === product.id);
-      index === -1 ? product.quantity = quantity : '';
-      index === -1 ? state.products.push(product) : state.products[index].quantity += quantity;
-      if (index !== -1)
-        Vue.set(state.products, index, state.products[index]);
+    add(state, { product, quantity, index }) {
+      Vue.set(state.products, index, state.products[index]);
     },
-    update(state, { product, quantity }) {
-      const index = state.products.findIndex(obj => obj.id === product.id);
+    update(state, { product, quantity, index }) {
       state.products[index].quantity = quantity;
     },
     remove(state, product) {
@@ -34,14 +29,20 @@ export default {
     }
   },
   actions: {
-    addToCart({ commit, state }, product, quantity) {
-      commit('add', product, quantity);
+    addToCart({ commit, state }, payload) {
+      const index = state.products.findIndex(obj => obj.id === payload.product.id);
+      index === -1 ? payload.product.quantity = quantity : '';
+      index === -1 ? state.products.push(product) : state.products[index].quantity += payload.quantity;
+      payload.index = index;
+      payload.index !== -1 ? commit('add', payload) : '';
     },
-    updateCart({ commit, state }, product, quantity) {
-      commit('update', product, quantity);
+    updateCart({ commit, state }, payload) {
+      const index = state.products.findIndex(obj => obj.id === payload.product.id);
+      payload.index = index;
+      commit('update', payload);
     },
-    removeFromCart({ commit }, product) {
-      commit('remove', product);
+    removeFromCart({ commit }, payload) {
+      commit('remove', payload);
     },
     emptyCart({ commit }) {
       commit('empty');
