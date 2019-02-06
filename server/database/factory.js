@@ -34,7 +34,8 @@ Factory.blueprint('App/Models/Product', async (faker) => {
     description: faker.paragraph({ sentences: 2}),
     category: helper.getRandomElement(helper.categoryArray),
     price: faker.floating({ min:50, max: 200}),
-    user_id: randomUser.id
+    user_id: randomUser.id,
+    deleted: false
   }
 });
 

@@ -113,6 +113,8 @@ export default {
       .catch(error => {
         if (error.response.status === 401) {
           this.$router.push('/backoffice');
+        } else if (error.response.status === 404) {
+          this.$router.push('/backoffice');
         }
       });
     },

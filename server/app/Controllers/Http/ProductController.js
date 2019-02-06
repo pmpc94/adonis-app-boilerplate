@@ -23,8 +23,8 @@ class ProductController {
         .query()
         .orderBy(column, order)
         .with('thumbnail')
-        .where('price', '>', min).where('price', '<=', max)
-        .paginate(page, MAX_PRODUCTS) : await Product.query().orderBy(column, order).with('thumbnail').where('category', category).where('price', '>', min).where('price', '<=', max).paginate(page, MAX_PRODUCTS)
+        .where('price', '>', min).where('price', '<=', max).where('deleted', 0)
+        .paginate(page, MAX_PRODUCTS) : await Product.query().orderBy(column, order).with('thumbnail').where('category', category).where('price', '>', min).where('price', '<=', max).where('deleted', 0).paginate(page, MAX_PRODUCTS)
         return response.ok('The clicked page has the following list of products.', products);
       }
       const user = await auth.getUser();
@@ -32,6 +32,7 @@ class ProductController {
       .query()
       .with('thumbnail')
       .where('products.user_id', user.id)
+      .where('deleted', 0)
       .paginate(page, 10)
       response.ok('The list of your products.', products);
     } catch (error) {
@@ -72,7 +73,7 @@ class ProductController {
         const product = await Product
         .query()
         .with('images').with('thumbnail')
-        .where('slug', slug)
+        .where('slug', slug).where('deleted', 0)
         .firstOrFail()
         product['quantity'] = 0;
         return response.ok('The product that you requested.', product);
@@ -81,7 +82,7 @@ class ProductController {
       const product = await Product
       .query()
       .with('images').with('thumbnail')
-      .where('id', slug)
+      .where('id', slug).where('deleted', 0)
       .firstOrFail()
       response.ok('The product that you requested.', product);
     } catch (error) {
@@ -142,7 +143,8 @@ class ProductController {
     try {
       const { id } = request.params;
       const product = await Product.findOrFail(id);
-      await product.delete();
+      product.merge({ deleted: true });
+      product.save();
       response.ok('Your product was deleted from the database.', product);
     } catch (error) {
       response.errorHandler({}, error);

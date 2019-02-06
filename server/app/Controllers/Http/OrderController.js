@@ -39,7 +39,6 @@ class OrderController {
       })
       .where('id', id)
       .first()
-
       response.ok('The order that you requested.', order);
     } catch (error) {
       response.errorHandler({}, error);

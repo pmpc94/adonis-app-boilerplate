@@ -13,6 +13,7 @@ class ProductsSchema extends Schema {
       table.float('price').notNullable()
       table.integer('user_id').unsigned().references('users.id').onDelete('SET NULL').onUpdate('SET NULL')
       table.string('slug', 255).notNullable()
+      table.boolean('deleted').defaultTo(false)
       table.timestamps()
     })
   }

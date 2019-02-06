@@ -44,8 +44,9 @@ Route.group(() => {
 
   //BACK OFFICE RENDERING
   Route.group(() => {
+    Route.get('/', ({ view }) => view.render('backoffice'))
     Route.any('*', ({ view }) => view.render('backoffice'))
   }).prefix('backoffice');
 
   //SHOP RENDERING
-  Route.on('*').render('landing')
+    Route.on('*').render('landing')
