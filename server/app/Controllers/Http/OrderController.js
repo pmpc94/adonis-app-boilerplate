@@ -6,6 +6,7 @@ const Product = use ('App/Models/Product');
 const User = use('App/Models/User');
 const Config = use('Config');
 const Database = use('Database');
+const OrderLogger = use('App/Models/OrderLogger');
 
 class OrderController {
   async index({ auth, request, response }) {
@@ -99,6 +100,15 @@ class OrderController {
       order.merge({ total_price, stripe_customer_id: charge.id, receipt_email: charge.receipt_email });
       await order.save(trx);
       trx.commit();
+      let orderLogger = new OrderLogger({
+        first_name: first_name,
+        last_name: last_name,
+        address1: address1,
+        address2: address2,
+        total_price: total_price,
+        receipt_email: email
+      })
+      orderLogger.save();
       response.ok('Your order was successfully created.', order);
     } catch(error) {
       response.errorHandler({}, error);

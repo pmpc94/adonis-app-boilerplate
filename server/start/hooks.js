@@ -1,14 +1,17 @@
 const { hooks } = require('@adonisjs/ignitor')
+const mongoose = require('mongoose');
 
 hooks.after.providersBooted(() => {
-  const View = use('View')
   const Config = use('Config');
+  
+  mongoose.connect(`mongodb://${Config.get('mongo.host')}/${Config.get('mongo.db')}`);
+
+  const View = use('View')
   View.global('stripeKey', () => {
     return Config.get('stripe.public')
   })
 
   const Validator = use('Validator')
-
   Validator.extend('exists', existsFn)
   Validator.extend('notExists', notExistsFn)
   Validator.extend('existsArray', existsArrayFn)
