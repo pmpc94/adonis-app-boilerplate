@@ -1,10 +1,7 @@
 const { hooks } = require('@adonisjs/ignitor')
-const mongoose = require('mongoose');
 
 hooks.after.providersBooted(() => {
   const Config = use('Config');
-  
-  mongoose.connect(`mongodb://${Config.get('mongo.host')}/${Config.get('mongo.db')}`);
 
   const View = use('View')
   View.global('stripeKey', () => {

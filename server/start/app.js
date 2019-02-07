@@ -23,7 +23,9 @@ const providers = [
   '@adonisjs/auth/providers/AuthProvider',
   '@adonisjs/mail/providers/MailProvider',
   '@adonisjs/validator/providers/ValidatorProvider',
-  Helpers.appRoot('app/Providers/ExtendResponseProvider')]
+  Helpers.appRoot('app/Providers/ExtendResponseProvider'),
+  Helpers.appRoot('app/Providers/MongooseProvider'),
+]
 
 /*
 |--------------------------------------------------------------------------

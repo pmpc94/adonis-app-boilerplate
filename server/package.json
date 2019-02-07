@@ -31,6 +31,7 @@
     "@adonisjs/shield": "^1.0.8",
     "@adonisjs/validator": "^5.0.6",
     "@fortawesome/vue-fontawesome": "^0.1.5",
+    "bluebird": "^3.5.3",
     "mysql": "^2.16.0",
     "stripe": "^6.20.0"
   },

@@ -4,6 +4,7 @@ const Order = use('App/Models/Order');
 const OrderProduct = use('App/Models/OrderProduct');
 const Mail = use('Mail');
 const Config = use('Config');
+const OrderLogger = use('App/Models/OrderLogger');
 
 class StripeController {
   async store({ request, response }) {
@@ -16,9 +17,30 @@ class StripeController {
       if (type === 'charge.succeeded') {
         order.merge({ status: 'paid' });
         order.save();
+        const res = await OrderLogger.create({
+          order_id: order.id,
+          first_name: order.first_name,
+          last_name: order.last_name,
+          address1: order.address1,
+          address2: order.address2,
+          total_price: order.total_price,
+          status: 'paid',
+          receipt_email: order.email
+        });
+        console.log("REs", res)
       } else if (type === 'charge.expired' || type === 'charge.failed') {
         order.merge({ status: 'canceled' });
         order.save();
+        await OrderLogger.create({
+          order_id: order.id,
+          first_name: order.first_name,
+          last_name: order.last_name,
+          address1: order.address1,
+          address2: order.address2,
+          total_price: order.total_price,
+          status: 'canceled',
+          receipt_email: order.email
+        });
       } else {
         order.merge({ status: 'created' });
         order.save();
