@@ -6,7 +6,7 @@ const Product = use ('App/Models/Product');
 const User = use('App/Models/User');
 const Config = use('Config');
 const Database = use('Database');
-const OrderLogger = use('App/Models/OrderLogger');
+const OrderLogger = use('App/Models/MongoDB/OrderLogger');
 
 class OrderController {
   async index({ auth, request, response }) {

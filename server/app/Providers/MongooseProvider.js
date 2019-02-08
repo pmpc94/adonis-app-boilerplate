@@ -14,6 +14,7 @@ class MongooseProvider extends ServiceProvider {
   register () {
     this.app.bind('Mongoose', () => {
       mongoose.Promise = require('bluebird');
+      mongoose.plugin(require('../Models/MongoDB/PluginTimeout'));
       return mongoose;
     })
   }
@@ -28,7 +29,7 @@ class MongooseProvider extends ServiceProvider {
    */
   boot () {
     const Config = use('Config');
-    mongoose.connect(`mongodb://${Config.get('mongo.host')}/${Config.get('mongo.db')}`);
+    mongoose.connect(`mongodb://${Config.get('mongo.host')}/${Config.get('mongo.db')}`, { useNewUrlParser: true });
   }
 }
 

@@ -4,7 +4,7 @@ const Order = use('App/Models/Order');
 const OrderProduct = use('App/Models/OrderProduct');
 const Mail = use('Mail');
 const Config = use('Config');
-const OrderLogger = use('App/Models/OrderLogger');
+const OrderLogger = use('App/Models/MongoDB/OrderLogger');
 
 class StripeController {
   async store({ request, response }) {

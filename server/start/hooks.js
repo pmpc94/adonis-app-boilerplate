@@ -1,5 +1,11 @@
 const { hooks } = require('@adonisjs/ignitor')
 
+hooks.after.httpServer(() => {
+  const Server = use('Adonis/Src/Server')
+
+    Server.getInstance().timeout = 5000;
+})
+
 hooks.after.providersBooted(() => {
   const Config = use('Config');
 
