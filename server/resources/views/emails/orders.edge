@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Order Confirmed</title>
+  {{ style('style') }}
+</head>
+<body>
+  <section>
+    <div class="logo"></div>
+    <div class="title"></div>
+    <div class="subtitle">
+      <h1>Hi {{ first_name }} {{ last_name }}. </h1>
+      <p>{{ customer_first_name }} {{ customer_last_name }} ({{ customer_email }}) just bought some product(s) from you. </p>
+      <p><a href="http://localhost:3333/order/{{ order_id }}">Order number #{{ order_id }}</a></p>
+      <ul>
+        <table>
+          <tr>
+            <th>Product Name</th>
+            <th>Quantity</th>
+            <th>Price</th>
+          </tr>
+          @each(product in products)
+          <tr>
+            <td>{{ product.product_name }}</td>
+            <td>{{ product.quantity }}</td>
+            <td>€{{ product.price }}</td>
+          </tr>
+          @endeach
+          <tfoot>
+            <tr>
+              <th colspan="2">Total :</th>
+              <td>€{{ total }}</td>
+            </tr>
+          </tfoot>
+        </table>
+      </ul>
+    </div>
+    <p>We wish you a happy selling!</p>
+    <p><a href="http://localhost:3333/order/{{ order_id }}">Click this link to see your order.</a></p>
+  </section>
+</body>
+</html>
+
+<style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+</style>

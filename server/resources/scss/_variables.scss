@@ -1,0 +1,30 @@
+// Body
+$body-bg: #f8fafc;
+
+// Typography
+// $font-awesome: 'Font Awesome 5 Pro';
+$font-family-sans-serif: "Mukta", sans-serif;
+$font-size-base: 0.9rem;
+$line-height-base: 1.6;
+
+$primary: #7971ea;
+// Colors
+$blue: #3490dc;
+$indigo: #6574cd;
+$purple: #9561e2;
+$pink: #f66D9b;
+$red: #e3342f;
+$orange: #f6993f;
+$yellow: #ffed4a;
+$green: #38c172;
+$teal: #4dc0b5;
+$cyan: #6cb2eb;
+
+$gray-1: #25262a;
+$gray-2: #5c626e;
+$gray-3: #c4c7ce;
+$gray-4: #edf0f5;
+
+$animationDuration: 0.5s; // specify animation duration. Default value: 1s
+
+$link-hover-color: darken($primary, 15%) !default;

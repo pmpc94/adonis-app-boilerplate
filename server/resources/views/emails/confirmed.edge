@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Order Confirmed</title>
+  {{ style('style') }}
+</head>
+<body>
+  <section>
+    <div class="logo"></div>
+    <div class="title"></div>
+    <div class="subtitle">
+      <h1>Hi {{ first_name }} {{ last_name }}. </h1>
+      <p>Thank you for your purchase, see your order details below.</p>
+      <p>Order number #{{ order_id }}</p>
+      <ul>
+        <table>
+          <tr>
+            <th>Product Name</th>
+            <th>Quantity</th>
+            <th>Price</th>
+          </tr>
+          @each(orderProduct in orderProducts)
+          <tr>
+            <td>{{ orderProduct.product_name }}</td>
+            <td>{{ orderProduct.quantity }}</td>
+            <td>€{{ orderProduct.price }}</td>
+          </tr>
+          @endeach
+          <tfoot>
+            <tr>
+              <th colspan="2">Total :</th>
+              <td>€{{ total }}</td>
+            </tr>
+          </tfoot>
+        </table>
+      </ul>
+    </div>
+    <p>Thank you for choosing us!</p>
+  </section>
+</body>
+</html>
+
+<style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+</style>
