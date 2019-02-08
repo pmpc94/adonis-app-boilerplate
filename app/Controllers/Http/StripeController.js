@@ -27,7 +27,6 @@ class StripeController {
           status: 'paid',
           receipt_email: order.email
         });
-        console.log("REs", res)
       } else if (type === 'charge.expired' || type === 'charge.failed') {
         order.merge({ status: 'canceled' });
         order.save();

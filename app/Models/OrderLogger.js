@@ -13,6 +13,15 @@ const OrderLoggerSchema = new Schema({
   timestamp : { type : Date, default: Date.now }
 });
 
+// OrderLoggerSchema.methods.findAndUpdate = (query, update, options, function (error, doc) => {
+//
+// })
+
+// OrderLoggerSchema.pre('save', async function() {
+//   await Promise.resolve();
+//   throw new Error('something went wrong');
+// });
+
 const OrderLogger = Mongoose.model('OrderLogger', OrderLoggerSchema);
 
 module.exports = OrderLogger
