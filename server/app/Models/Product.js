@@ -7,9 +7,8 @@ class Product extends Model {
   static boot () {
     super.boot()
 
-    this.addHook('beforeSave', 'ProductHook.createSlugs')
-    this.addHook('afterCreate', 'LoggerHook.createLog')
-    this.addHook('afterUpdate', 'LoggerHook.updateLog')
+    this.addHook('beforeSave', 'Product.createSlugs')
+    this.addTrait('Audit')
   }
   user () {
     return this.belongsTo('App/Models/User')

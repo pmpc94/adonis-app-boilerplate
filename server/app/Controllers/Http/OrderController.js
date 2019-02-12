@@ -47,7 +47,7 @@ class OrderController {
 
   async store({ request, response }) {
     const trx = await Database.beginTransaction();
-    // try {
+    try {
       const {
         first_name,
         last_name,
@@ -101,10 +101,10 @@ class OrderController {
       await order.save(trx);
       trx.commit();
       response.ok('Your order was successfully created.', order);
-    // } catch(error) {
-    //   response.errorHandler({}, error);
-    //   trx.rollback();
-    // }
+    } catch(error) {
+      response.errorHandler({}, error);
+      trx.rollback();
+    }
   }
 
   async update({ auth, request, response }) {

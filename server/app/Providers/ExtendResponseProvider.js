@@ -54,8 +54,9 @@ class ExtendResponseProvider extends ServiceProvider {
         })
     })
     Response.macro('errorHandler', function (data=null, error) {
+      error.status = error.status === undefined ? 500 : error.status;
         this.status(error.status).json({
-          message: 'An error occured.',
+          message: error.message,
           status: error.status,
           code: error.code,
           data: data,

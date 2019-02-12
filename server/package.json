@@ -45,7 +45,6 @@
     "@fortawesome/fontawesome-pro": "^5.6.3",
     "@fortawesome/fontawesome-svg-core": "^1.2.12",
     "@fortawesome/pro-solid-svg-icons": "^5.6.3",
-    "adonis-mongorito": "0.0.2",
     "axios": "^0.18.0",
     "babel-helper-vue-jsx-merge-props": "^2.0.3",
     "babel-plugin-syntax-jsx": "^6.18.0",

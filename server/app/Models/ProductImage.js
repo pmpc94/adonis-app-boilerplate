@@ -5,6 +5,10 @@ const Model = use('Model')
 const Config = use('Config');
 
 class ProductImage extends Model {
+  static boot () {
+    super.boot()
+    this.addTrait('Audit')
+  }
   product () {
     return this.belongsTo('App/Models/Product')
   }

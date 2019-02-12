@@ -1,12 +1,12 @@
 const Mongoose = use('Mongoose');
 const Schema = Mongoose.Schema;
 
-const LoggerSchema = new Schema({
+const AuditSchema = new Schema({
   object: Object,
   type: String,
   timestamp : { type : Date, default: Date.now }
 });
 
-const Logger = Mongoose.model('Logger', LoggerSchema);
+const Audit = Mongoose.model('Audit', AuditSchema);
 
-module.exports = Logger
+module.exports = Audit
