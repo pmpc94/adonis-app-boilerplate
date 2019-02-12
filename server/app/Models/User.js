@@ -14,6 +14,8 @@ class User extends Model {
      * it to the database.
      */
     this.addHook('beforeSave', 'UserHook.hashPassword')
+    this.addHook('afterCreate', 'LoggerHook.createLog')
+    this.addHook('afterUpdate', 'LoggerHook.updateLog')
   }
 
   /**

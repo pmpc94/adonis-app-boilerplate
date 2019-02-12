@@ -8,6 +8,8 @@ class Product extends Model {
     super.boot()
 
     this.addHook('beforeSave', 'ProductHook.createSlugs')
+    this.addHook('afterCreate', 'LoggerHook.createLog')
+    this.addHook('afterUpdate', 'LoggerHook.updateLog')
   }
   user () {
     return this.belongsTo('App/Models/User')

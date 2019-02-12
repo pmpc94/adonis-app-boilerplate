@@ -6,7 +6,6 @@ const Product = use ('App/Models/Product');
 const User = use('App/Models/User');
 const Config = use('Config');
 const Database = use('Database');
-const OrderLogger = use('App/Models/MongoDB/OrderLogger');
 
 class OrderController {
   async index({ auth, request, response }) {
@@ -48,7 +47,7 @@ class OrderController {
 
   async store({ request, response }) {
     const trx = await Database.beginTransaction();
-    try {
+    // try {
       const {
         first_name,
         last_name,
@@ -74,6 +73,7 @@ class OrderController {
         address1,
         address2,
         total_price,
+        status: 'created',
         stripe_customer_id: 0,
         receipt_email: 'undefined'
       }, trx);
@@ -100,20 +100,11 @@ class OrderController {
       order.merge({ total_price, stripe_customer_id: charge.id, receipt_email: charge.receipt_email });
       await order.save(trx);
       trx.commit();
-      await OrderLogger.create({
-        order_id: order.id,
-        first_name: first_name,
-        last_name: last_name,
-        address1: address1,
-        address2: address2,
-        total_price: total_price,
-        receipt_email: email
-      });
       response.ok('Your order was successfully created.', order);
-    } catch(error) {
-      response.errorHandler({}, error);
-      trx.rollback();
-    }
+    // } catch(error) {
+    //   response.errorHandler({}, error);
+    //   trx.rollback();
+    // }
   }
 
   async update({ auth, request, response }) {
@@ -123,16 +114,6 @@ class OrderController {
       const order = await Order.findOrFail(id);
       order.merge(request.only(['status']));
       await order.save();
-      await OrderLogger.create({
-        order_id: order.id,
-        first_name: order.first_name,
-        last_name: order.last_name,
-        address1: order.address1,
-        address2: order.address2,
-        total_price: order.total_price,
-        status: status,
-        receipt_email: order.email
-      });
       response.ok('Your order was updated.', order);
     } catch (error) {
       response.errorHandler({}, error);

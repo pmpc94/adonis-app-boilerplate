@@ -1,21 +1,13 @@
 module.exports = exports = function pluginTimeout (schema, options) {
 
-  schema.pre('save', function (error, result, next) {
-    console.log("pre")
-      console.log("READY STATE", Mongoose.connection.readyState)
-      if (Mongoose.connection.readyState === 0 || Mongoose.connection.readyState === 3) {
-        console.log("MongoDB disconnected.")
-      }
-      next()
-  });
-
-  schema.post('save', function (error, result, next) {
-    console.log("post")
+  schema.pre('save', function (next) {
     if (Mongoose.connection.readyState === 0 || Mongoose.connection.readyState === 3) {
-      console.log("MongoDB disconnected.")
+      const error = new Error('MongoDB disconnected from server.');
+      return next(error);
     }
     next();
   });
+
 }
 
 const Mongoose = use('Mongoose');

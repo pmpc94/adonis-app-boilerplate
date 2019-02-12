@@ -91,7 +91,6 @@ class ProductController {
   }
 
   async store({ auth, request, response }) {
-    console.log("request", request.all())
     const trx = await Database.beginTransaction();
     try {
       const user = await auth.getUser();
