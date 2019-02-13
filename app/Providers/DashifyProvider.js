@@ -3,7 +3,7 @@
 const { ServiceProvider } = require('@adonisjs/fold')
 const dashify = require('dashify');
 
-class MongooseProvider extends ServiceProvider {
+class DashifyProvider extends ServiceProvider {
   /**
    * Register namespaces to the IoC container
    *
@@ -18,4 +18,4 @@ class MongooseProvider extends ServiceProvider {
   }
 }
 
-module.exports = MongooseProvider
+module.exports = DashifyProvider
